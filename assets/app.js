@@ -11,13 +11,13 @@ import './styles/app.css';
 // start the Stimulus application
 import './bootstrap';
 
+
 var toTopButton = document.getElementById('to-top-button');
 
 // Show/hide the button based on the scroll position
 window.addEventListener('scroll', function () {
     if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
         toTopButton.classList.remove('invisible');
-        console.log("test");
     } else {
         toTopButton.classList.add('invisible');
     }
