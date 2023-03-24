@@ -58,6 +58,23 @@ class Formation
     #[ORM\ManyToOne(targetEntity: 'User')]
     private $idFormateur;
 
+    private $nomFormateur;
+
+    /**
+     * @return mixed
+     */
+    public function getNomFormateur()
+    {
+        return $this->nomFormateur;
+    }
+
+    /**
+     * @param mixed $nomFormateur
+     */
+    public function setNomFormateur($nomFormateur): void
+    {
+        $this->nomFormateur = $nomFormateur;
+    }
     public function getIdFormation(): ?int
     {
         return $this->idFormation;

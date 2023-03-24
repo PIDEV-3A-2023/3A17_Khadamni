@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Formation;
+use App\Entity\User;
 use App\Form\FormationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -15,12 +16,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class FormationController extends AbstractController
 {
     #[Route('/', name: 'app_formation_index')]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(EntityManagerInterface $em): Response
     {
-        $formations = $entityManager
+        $formations = $em
             ->getRepository(Formation::class)
             ->findAll();
-
         return $this->render('formation/index.html.twig', [
             'formations' => $formations,
         ]);
@@ -55,7 +55,7 @@ class FormationController extends AbstractController
             $entityManager->persist($formation);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_formation_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_mes_formations', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('formation/new.html.twig', [

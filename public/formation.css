@@ -33,44 +33,18 @@
 
 }
 .panel {
-    display: grid;
-    width: 80%;
-    grid-template-columns: 1fr 3fr;
-
+    display: flex;
+    flex-direction: column;
+    width: 70%;
     flex:1;
     background: rgb(255,255,255,0.1);
     border: 2px solid transparent;
     border-radius: 7px;
-}
-.leftp {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 15px;
-    grid-column: 1;
-
-}
-.leftp.active {
-    grid-column: span 2;
+    padding: 20px;
 }
 
-.leftp > div {
-    border: 1px solid white;
-    border-radius: 7px;
-    background: rgb(255,255,255,0.8);
-}
-.rightp {
-    border-left: 3px solid white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.rightp.hide {
-    display: none;
-}
 .ligne {
     background: rgb(255,255,255,0.15);
-
 }
 
 

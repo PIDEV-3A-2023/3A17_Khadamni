@@ -20,12 +20,15 @@ class FormationType extends AbstractType
                 'attr' => ['placeholder' => 'formation symfony']
             ])
             ->add('description',TextareaType::class,[
-                'attr' => ['placeholder' => 'votre description ...']
+                'attr' => ['placeholder' => 'votre description ...',
+                 'rows' => 5
+                    ]
             ])
             ->add('duree',IntegerType::class,[
                 'attr' => [
                     'placeholder' => '2 semaines',
-                    'min' => 1
+                    'min' => 1,
+
                 ]
             ])
             ->add('prix',IntegerType::class,[

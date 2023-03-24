@@ -7,28 +7,27 @@
     {{ encore_entry_link_tags('app') }}
 {% endblock %}
 {% block javascripts %}
-    <script defer src="{{ asset('formation.js') }}"></script>
     {{ encore_entry_script_tags('app') }}
 {% endblock %}
 
 
 {% block content %}
-    <div class="panel">
+    <div class="panel shadow-2xl">
 
-        <div class="leftp active">
-
-
-                <table class="w-full text-sm text-left text-gray-400">
-                    <caption class="p-5 text-lg font-semibold text-right  text-white">
-                        <button id="ajBtn" class=" uppercase text-sm font-bold tracking-wide bg-blue-900 text-gray-100 p-3 rounded-lg w-auto
+        <a href="{{ path('app_formation_new') }}" class=" uppercase self-end text-sm font-bold tracking-wide bg-blue-900 text-gray-100 p-3 rounded-lg w-auto
                       focus:outline-none focus:shadow-outline">
-                            Ajouter une formation
-                        </button>
+            Ajouter une formation
+        </a>
+                <table class="w-full text-sm text-left">
+                    <caption class="p-5 text-lg font-bold text-left  text-white shadow-2xl">
+                        Mes Formations:
+                        <p class="mt-1 text-sm font-normal white">Vous pouvez gérer vos formations éxistantes  ou ajouter une nouvelle formation. </p>
+
                     </caption>
 
 
 
-                    <thead class="text-xs  whitespace-nowrap uppercase bg-gray-700 text-gray-400">
+                    <thead class="text-xs  whitespace-nowrap uppercase bg-gray-700 text-gray-300">
 
                     <tr>
                         <th scope="col" class="px-6 py-3">
@@ -67,7 +66,7 @@
                                 {{ f.prix }} TND
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <a href="#" class="modBtn font-bold text-blue-800 hover:underline">Modifier</a>
+                                <a href="#" class="font-bold text-blue-800 hover:underline">Modifier</a>
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <a href="#" class="font-bold text-blue-800 hover:underline">Supprimer</a>
@@ -80,44 +79,7 @@
 
 
         </div>
-        <div class="rightp hidden">
 
 
-                <!-- COMPONENT CODE -->
-                <div class="container mx-auto  px-4 ">
-
-                    <div class="my-4 md:px-12 flex flex-col  gap-5  mr-auto rounded-2xl shadow-2xl">
-                        <div class="flex">
-                            <h1 id="rptitle" class="font-bold uppercase text-white text-5xl">Ajouter une formation</h1>
-                        </div>
-                        <div>
-
-                            {{ form_row(form.nomFormation) }}
-
-                            <div class="grid  gap-5 grid-cols-2 mt-5">
-                                {{ form_row(form.duree) }}
-                                {{ form_row(form.prix) }}
-                            </div>
-                            <div class="my-4">
-                                {{ form_widget(form.description) }}
-                            </div>
-                        </div>
-
-                        <div class="my-2 self-center w-1/4">
-                            <button class=" uppercase text-sm font-bold tracking-wide bg-blue-900 text-gray-100 p-3 rounded-lg w-auto
-                      focus:outline-none focus:shadow-outline">
-                                Confirmer
-                            </button>
-                        </div>
-                    </div>
-
-
-
-                </div>
-                <!-- COMPONENT CODE -->
-
-
-        </div>
-    </div>
 
 {% endblock %}

@@ -3,11 +3,38 @@
 
 
  {% block content %}
-    <h1>Create new Formation</h1>
+     <div class="rightp">
 
-    {{ include('formation/_form.html.twig') }}
+         <!-- COMPONENT CODE -->
+         <div class="container mx-auto  px-4 ">
 
-    <a href="{{ path('app_formation_index') }}">back to list</a>
+             <div class="my-4 md:px-12 flex flex-col  gap-10  mr-auto rounded-2xl shadow-2xl">
+                 <div class="flex">
+                     <h1  class="font-bold uppercase text-white text-5xl">Ajouter une formation</h1>
+                 </div>
+                 {{ form_start(form) }}
+                 <div>
+                     {{ form_row(form.nomFormation) }}
+                     <div class="grid  gap-5 grid-cols-2 mt-5">
+                         {{ form_row(form.duree) }}
+                         {{ form_row(form.prix) }}
+                     </div>
+                     <div class="my-4">
+                         {{ form_widget(form.description) }}
+                     </div>
+                 </div>
+
+                 <div class="my-2 self-center">
+                     <button class="block uppercase text-sm font-bold tracking-wide bg-blue-900 text-gray-100 p-3 my-0 mx-auto rounded-lg w-auto
+                      focus:outline-none focus:shadow-outline">
+                         Ajouter
+                     </button>
+                 </div>
+                 {{ form_end(form) }}
+             </div>
+         </div>
+         <!-- COMPONENT CODE -->
+     </div>
 
 {% endblock %}
 
