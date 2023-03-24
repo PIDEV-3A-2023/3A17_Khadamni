@@ -8,18 +8,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class EmploiFrontController extends AbstractController
 {
-    #[Route('/emploi/front', name: 'app_emploi_front')]
+    #[Route('/emp/front', name: 'app_emploi_front')]
     public function affiche(): Response
     {
-        return $this->render('emploi_front/emploiF.html.twig', [
+        return $this->render('emploi/emploiF.html.twig', [
             'controller_name' => 'EmploiFrontController',
         ]);
     }
 
-    #[Route('/emploi/detail', name: 'emploi_details')]
+    #[Route('/emp/detail', name: 'emploi_details')]
     public function detail(): Response
     {
-        return $this->render('emploi_front/detailEmp.html.twig', [
+        return $this->render('emploi/detailEmp.html.twig', [
             'controller_name' => 'EmploiFrontController',
         ]);
     }
