@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Evenement Index{% endblock %}
+
+{% block content %}
+    <h1>Evenement index</h1>
+
+    <table class="table">
+        <thead>
+            <th>ID événement</th>
+            <th>Nom événement</th>
+            <th>Description événement</th>
+            <th>Invité</th>
+            <th>Date événement</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+        {% for evenement in evenements %}
+            <tr>
+                <td>{{ evenement.idevenement }}</td>
+                <td>{{ evenement.nomevenement }}</td>
+                <td>{{ evenement.descriptionevenement }}</td>
+                <td>{{ evenement.inviter }}</td>
+                <td>{{ evenement.dateevenement ? evenement.dateevenement|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_evenement_show', {'idevenement': evenement.idevenement}) }}">Afficher</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <button class="bg-blue-400 text-white font-bold py-2 px-4 border-blue-500 rounded" onclick="window.location.href='{{ path('app_evenement_new') }}'">Créer un événement</button>
+{% endblock %}

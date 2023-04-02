@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <!-- <h1>Evenement index</h1> -->
+
+    <table class="table" >
+        <thead>
+            <tr>
+                <th>Nom événement</th>
+                <th>Invité</th>
+                <th>Date événement</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for evenement in evenements %}
+            <tr>
+                <td>{{ evenement.nomevenement }}</td>
+                <td>{{ evenement.inviter }}</td>
+                <td>{{ evenement.dateevenement ? evenement.dateevenement|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_evenement_showFront', {'idevenement': evenement.idevenement}) }}">Show</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

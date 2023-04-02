@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Evenement{% endblock %}
+
+{% block content %}
+    <h1>Edit Evenement</h1>
+
+    {{ include('evenement/_form.html.twig', {'button_label': 'Valider'}) }}
+
+    <a href="{{ path('app_evenement_index') }}">Retour</a>
+
+{% endblock %}

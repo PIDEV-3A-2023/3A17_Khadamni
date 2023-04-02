@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Evenement{% endblock %}
+
+{% block content %}
+    <h1>Evenement</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Nom événement</th>
+                <td>{{ evenement.nomevenement }}</td>
+            </tr>
+            <tr>
+                <th>Description événement</th>
+                <td>{{ evenement.descriptionevenement }}</td>
+            </tr>
+            <tr>
+                <th>Invité</th>
+                <td>{{ evenement.inviter }}</td>
+            </tr>
+            <tr>
+                <th>Date événement</th>
+                <td>{{ evenement.dateevenement ? evenement.dateevenement|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_evenement_front') }}">Retour à la liste</a>
+
+{% endblock %}
