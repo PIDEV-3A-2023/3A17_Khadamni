@@ -3,7 +3,10 @@
 
 
  {% block content %}
-     <div class="rightp">
+     <div class="block uppercase text-sm font-bold tracking-wide  my-0 ml-11 mr-auto w-auto">
+         <a href="{{ path('app_mes_formations') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"> Retour </a>
+     </div>
+     <div>
 
          <!-- COMPONENT CODE -->
          <div class="container mx-auto  px-4 ">
@@ -12,28 +15,38 @@
                  <div class="flex">
                      <h1  class="font-bold uppercase text-white text-5xl">Ajouter une formation</h1>
                  </div>
-                 {{ form_start(form) }}
+                 {{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
                  <div>
-                     {{ form_row(form.nomFormation) }}
-                     <div class="grid  gap-5 grid-cols-2 mt-5">
-                         {{ form_row(form.duree) }}
-                         {{ form_row(form.prix) }}
+                     {{ form_label(form.nomFormation) }}
+                     {{ form_widget(form.nomFormation) }}
+                     {{ form_errors(form.nomFormation) }}
+                     <div class="grid  gap-5 grid-cols-2 mt-7">
+                         <div>
+                             {{ form_label(form.duree,'Durée') }}
+                             {{ form_widget(form.duree) }}
+                             {{ form_errors(form.duree) }}
+                         </div>
+                         <div>
+                             {{ form_label(form.prix) }}
+                             {{ form_widget(form.prix) }}
+                             {{ form_errors(form.prix) }}
+                         </div>
                      </div>
-                     <div class="my-4">
+                     <div class="mt-7">
+                         {{ form_label(form.description,'Déscription') }}
                          {{ form_widget(form.description) }}
+                         {{ form_errors(form.description) }}
                      </div>
                  </div>
 
                  <div class="my-2 self-center">
-                     <button class="block uppercase text-sm font-bold tracking-wide bg-blue-900 text-gray-100 p-3 my-0 mx-auto rounded-lg w-auto
-                      focus:outline-none focus:shadow-outline">
+                     <button class="block uppercase text-sm font-bold tracking-wide bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded my-10 mx-auto  w-auto  ">
                          Ajouter
                      </button>
                  </div>
                  {{ form_end(form) }}
              </div>
          </div>
-         <!-- COMPONENT CODE -->
      </div>
 
 {% endblock %}

@@ -1,10 +1,10 @@
-.contenu-formation {
+.contenu {
     display: flex;
     flex-direction: column;
     text-align: center;
-    padding: 25px;
+    padding: 45px;
 }
-.secondhead {
+.heading {
     margin-top: 55px;
 }
 .cards {
@@ -22,15 +22,26 @@
 
 }
 
-.cards > div > img {
-    opacity: 1;
-}
-
 .tableformations {
     margin-top: 45px;
     padding: 10px;
     flex:1;
 
+}
+#prev-tab tr,
+#new-tab tr {
+    background: rgb(255,255,255,0.1);
+    color: white;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+#prev-tab tr td ,
+#new-tab tr td {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 .panel {
     display: flex;
@@ -40,11 +51,58 @@
     background: rgb(255,255,255,0.1);
     border: 2px solid transparent;
     border-radius: 7px;
-    padding: 20px;
+    padding: 45px;
+
 }
 
 .ligne {
     background: rgb(255,255,255,0.15);
+}
+.dropdown-btn {
+    position: relative;
+    display: inline-flex;
+
+
+}
+#menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width:118px ;
+
+
+}
+#menu-btn > svg {
+    margin-left: auto;
+}
+.Btntxt {
+    flex:1;
+    text-align: center;
+}
+
+.dropdown-btn > button {
+    cursor: pointer;
+}
+
+.drop {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    text-align: center;
+
+
+}
+.drop > li > button {
+    width: 100%;
+}
+
+.drop.hidden {
+    display: none;
 }
 
 

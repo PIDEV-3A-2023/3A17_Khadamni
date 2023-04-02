@@ -17,7 +17,8 @@ class FormationType extends AbstractType
     {
         $builder
             ->add('nomFormation',TextType::class,[
-                'attr' => ['placeholder' => 'formation symfony']
+                'attr' => ['placeholder' => 'formation symfony',
+                   ]
             ])
             ->add('description',TextareaType::class,[
                 'attr' => ['placeholder' => 'votre description ...',
@@ -26,15 +27,12 @@ class FormationType extends AbstractType
             ])
             ->add('duree',IntegerType::class,[
                 'attr' => [
-                    'placeholder' => '2 semaines',
-                    'min' => 1,
-
+                    'placeholder' => '2 semaines'
                 ]
             ])
             ->add('prix',IntegerType::class,[
                 'attr' => [
-                    'placeholder' => '100 TND',
-                    'min' => 1
+                    'placeholder' => '100 TND'
                 ]
             ])
 

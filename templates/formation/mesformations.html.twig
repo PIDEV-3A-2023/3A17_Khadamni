@@ -14,7 +14,7 @@
 {% block content %}
     <div class="panel shadow-2xl">
 
-        <a href="{{ path('app_formation_new') }}" class=" uppercase self-end text-sm font-bold tracking-wide bg-blue-900 text-gray-100 p-3 rounded-lg w-auto
+        <a href="{{ path('app_formation_new') }}" class=" uppercase self-end text-sm font-bold tracking-wide bg-blue-900 text-gray-100 p-2 rounded-lg w-auto
                       focus:outline-none focus:shadow-outline">
             Ajouter une formation
         </a>
@@ -48,11 +48,12 @@
                         <th scope="col" class="px-6 py-3">
                             <span class="sr-only">Del</span>
                         </th>
+
                     </tr>
                     </thead>
                     <tbody>
                     {% for f in formations %}
-                        <tr class="ligne text-white font-medium whitespace-nowrap ">
+                       <tr class="ligne text-white font-medium whitespace-nowrap ">
                             <th scope="row" class="px-6 py-4">
                                 {{ f.nomFormation|upper() }}
                             </th>
@@ -66,20 +67,21 @@
                                 {{ f.prix }} TND
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <a href="#" class="font-bold text-blue-800 hover:underline">Modifier</a>
+                                <a href="{{ path('app_formation_edit',{'idFormation':f.idFormation}) }}" class="font-bold text-blue-800 hover:underline expand-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Modifier</a>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <a href="#" class="font-bold text-blue-800 hover:underline">Supprimer</a>
-                            </td>
+                                <div>
+                                    <form method="post" action="{{ path('app_formation_delete', {'idFormation': f.idFormation}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ??');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ f.idFormation) }}">
+                                        <button class="font-bold text-blue-800 hover:underline expand-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Supprimer</button>
+                                    </form>
+                                </div>
+
+                        </td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
-
-
-
         </div>
-
-
 
 {% endblock %}

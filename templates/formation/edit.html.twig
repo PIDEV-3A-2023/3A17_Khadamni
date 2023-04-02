@@ -1,11 +1,57 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1>Edit Formation</h1>
+    <div class="block uppercase text-sm font-bold tracking-wide  my-0 ml-11 mr-auto w-auto">
+        <a href="{{ path('app_mes_formations') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Retour </a>
+    </div>
+    <div>
 
-    {{ include('formation/_form.html.twig', {'button_label': 'Update'}) }}
+        <div class="container mx-auto  px-4 ">
 
-    <a href="{{ path('app_formation_index') }}">back to list</a>
+            <div class="my-4 md:px-12 flex flex-col  gap-10  mr-auto rounded-2xl shadow-2xl">
+                <div class="flex">
+                    <h1  class="font-bold uppercase text-white text-5xl">Modifier une formation</h1>
+                </div>
+                {{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
+                <div>
+                    {{ form_label(form.nomFormation) }}
+                    {{ form_widget(form.nomFormation) }}
+                    {{ form_errors(form.nomFormation) }}
+                    <div class="grid  gap-5 grid-cols-2 mt-7">
+                        <div>
+                            {{ form_label(form.duree,'Durée') }}
+                            {{ form_widget(form.duree) }}
+                            {{ form_errors(form.duree) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.prix) }}
+                            {{ form_widget(form.prix) }}
+                            {{ form_errors(form.prix) }}
+                        </div>
+                    </div>
+                    <div class="mt-7">
+                        {{ form_label(form.description,'Déscription') }}
+                        {{ form_widget(form.description) }}
+                        {{ form_errors(form.description) }}
+                    </div>
 
-    {{ include('formation/_delete_form.html.twig') }}
+
+                </div>
+
+                <div class="my-2 self-center">
+                    <button class="block uppercase text-sm font-bold tracking-wide bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded my-10 mx-auto  w-auto  ">
+                    Modifier
+                    </button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
 {% endblock %}

@@ -9,7 +9,7 @@
 {%- endblock form_row -%}
 
 {%- block widget_attributes -%}
-    {%- set attr = attr|merge({ class: attr.class|default(widget_class|default('appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline')) ~ (disabled ? ' ' ~ widget_disabled_class|default('border-gray-300 text-gray-500')) ~ (errors|length ? ' ' ~ widget_errors_class|default('border-red-700')) }) -%}
+    {%- set attr = attr|merge({ class: attr.class|default(widget_class|default('appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none')) ~ (disabled ? ' ' ~ widget_disabled_class|default('border-gray-300 text-gray-500')) ~ (errors|length ? ' ' ~ widget_errors_class|default('border-red-700')) }) -%}
     {{- parent() -}}
 {%- endblock widget_attributes -%}
 
@@ -27,7 +27,7 @@
     {%- if errors|length > 0 -%}
         <ul>
             {%- for error in errors -%}
-                <li class="{{ error_item_class|default('text-red-700') }}">{{ error.message }}</li>
+                <li class="{{ error_item_class|default('text-red-600 inline-block p-1 rounded font-semibold' ) }}">{{ error.message|default(' ') }}</li>
             {%- endfor -%}
         </ul>
     {%- endif -%}
