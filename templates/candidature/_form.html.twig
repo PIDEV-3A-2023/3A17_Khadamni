@@ -1,0 +1,22 @@
+{{ form_start(form) }}
+<div class="grid gap-6 mb-6 md:grid-cols-2">
+	<div>
+		{{ form_label(form.date, 'Titre du poste', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
+		{{ form_widget(form.date, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-300 dark:border-gray-200 dark:placeholder-gray-400 dark:text-blackdark:focus:ring-blue-500 dark:focus:border-blue-500'}}) }}
+		{{ form_errors(form.date) }}
+	</div>
+	<div>
+		{{ form_label(form.idEmploi, 'Salaire', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
+		{{ form_widget(form.idEmploi, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-300 dark:border-gray-200 dark:placeholder-gray-200 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500'}}) }}
+		{{ form_errors(form.idEmploi) }}
+	</div>
+</div>
+
+
+<div class="mt-8">
+	<button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+		Sauvegarder
+	</button>
+
+</div>
+{{ form_end(form) }}

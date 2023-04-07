@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Emploi
+{% endblock %}
+
+{% block content %}
+	<h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white text-center">
+		Ajouter
+		<span class="text-blue-600 dark:text-blue-500">un Emploi</span>
+
+	</h1>
+
+	{{ include('emploi/_form.html.twig') }}
+
+	<a href="{{ path('app_emploi_index') }}" class="block text-gray-500 font-bold py-2 px-4 hover:text-gray-800 bg-gray-100">
+		back to list
+	</a>
+
+{% endblock %}
