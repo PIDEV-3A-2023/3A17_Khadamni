@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class EmploiType extends AbstractType
 {
@@ -43,6 +44,7 @@ class EmploiType extends AbstractType
                 ],
             ])
             ->add('datePublication')
+
             ->add('salaire', TextType::class, [
                 'constraints' => [
                     new Assert\NotBlank(),

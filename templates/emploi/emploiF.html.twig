@@ -48,8 +48,8 @@
 									Author Name
 								</p>
 							</a>
-							<form method="POST" action="">
-								<input type="hidden" name="" value="">
+							<form method="POST" action="{{ path('emploi_favoris', {'idEmploi': emploi.idEmploi}) }}">
+								<input type="hidden" name="idEmploi" value="{{ emploi.idEmploi }}">
 								<button type="submit" class="no-underline text-grey-darker hover:text-red-dark">
 									<svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor">
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
@@ -57,6 +57,7 @@
 									<i class="fa fa-heart"></i>
 								</button>
 							</form>
+
 							<a href="{{ path('detail_emploi_front', {'idEmploi': emploi.idEmploi}) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
 								<button class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Voir plus</button>
 							</a>

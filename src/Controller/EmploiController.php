@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Emploi;
+use App\Entity\Favoris;
 use App\Entity\User;
 use App\Form\EmploiType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -107,4 +108,40 @@ class EmploiController extends AbstractController
             'emploi' => $emploi,
         ]);
     }
+
+    #[Route('/like/{idEmploi}', name: 'app_emploi_like', methods: ['GET'])]
+    public function showlike(Emploi $emploi): Response
+    {
+        return $this->render('emploi/like.html.twig', [
+            'emploi' => $emploi,
+        ]);
+    }
+
+    #[Route('/emploiss/{idEmploi}/favoris', name: 'emploi_favoris', methods: ['POST'])]
+
+    public function addFavoris(Emploi $emploi, EntityManagerInterface $entityManager): Response
+    {
+        $favoris = new Favoris();
+        $favoris->setIdEmploi($emploi);
+        // $favoris->setIdUser($this->getUser());
+
+        $entityManager->persist($favoris);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_favoris_index');
+    }
+
+
+    // #[Route('/likedEmploi', name: 'app_emploi_liked', methods: ['GET'])]
+    // public function showLikedEmploi(EntityManagerInterface $entityManager): Response
+    // {
+    //     $userId = 1;
+    //     $favorisRepo = $entityManager->getRepository(Favoris::class);
+    //     // $emplois = $favorisRepo->findEmploisByUserId($userId);
+    //     $emplois = $favorisRepo->findAll();
+
+    //     return $this->render('emploi/favoris.html.twig', [
+    //         'emplois' => $emplois,
+    //     ]);
+    // }
 }
