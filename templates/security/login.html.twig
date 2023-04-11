@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+{% block header %}
+    <nav class="top-0 left-0 w-full py-6">
+        <div class="container mx-auto flex justify-between">
+            <div class="mb-6 md:mb-0">
+                <a href="{{ path('app_home') }}" class="flex items-center">
+                    <img src="{{  asset('LOGOKHADAMNI.png') }}" class="block  h-20 rounded-full  sm:shrink-0 animate-bounce"
+                         alt="logo" />
+                    <span
+                            class="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900  text-white self-center px-1  whitespace-nowrap  animate-bounce">KHADAMNI</span>
+                </a>
+            </div>
+
+        </div>
+    </nav>
+{% endblock %}
+{% block content %}
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    {% if app.user %}
+        <div class="mb-3">
+            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+        </div>
+    {% else %}
+
+            <div class="px-6 border-2 border-blue-50 bg-blue-50 bg-opacity-30  rounded-2xl shadow-2xl">
+                <div class="container px-6 py-6  ">
+                    <form method="post" class="flex flex-col gap-5">
+                        <div>
+                            <label for="inputEmail" class="block text-white font-medium">Email</label>
+                            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                        </div>
+                        <div>
+                            <label for="inputPassword" class="block text-white font-medium">Password</label>
+                            <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                        </div>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <div class="self-center">
+                            <button type="submit" class="block uppercase text-sm font-bold tracking-wide bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded my-10 mx-auto w-auto">
+                                Se connecter
+                            </button>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <span class="text-white">Pas de compte?</span>
+                            <a href="{{ path('app_register',{'idrole' : 2}) }}" class="text-blue-700 hover:underline">Créer un compte d'utilisateur</a>
+                            <a href="{{ path('app_register',{'idrole' : 3}) }}" class="text-blue-700 hover:underline">Créer un compte de recruteur</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+    {% endif %}
+{% endblock %}

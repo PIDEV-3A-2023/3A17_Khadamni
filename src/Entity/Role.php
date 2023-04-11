@@ -33,6 +33,13 @@ class Role
         return $this->idRole;
     }
 
+    /**
+     * @param int $idRole
+     */
+    public function setIdRole(int $idRole): void
+    {
+        $this->idRole = $idRole;
+    }
     public function getTypeRole(): ?string
     {
         return $this->typeRole;

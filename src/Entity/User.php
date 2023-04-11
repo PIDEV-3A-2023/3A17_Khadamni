@@ -3,17 +3,18 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * User
- *
- */
+
 #[ORM\Table(name: 'user')]
 #[ORM\Index(name: 'id_role_idx', columns: ['id_role'])]
 #[ORM\UniqueConstraint(name: 'email_UNIQUE', columns: ['email'])]
 #[ORM\UniqueConstraint(name: 'id_user_UNIQUE', columns: ['id_user'])]
 #[ORM\Entity]
-class User
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface,PasswordAuthenticatedUserInterface
 {
     /**
      * @var int
@@ -314,6 +315,79 @@ class User
 
         return $this;
     }
+    /**
+     * The public representation of the user (e.g. a username, an email address, etc.)
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = [];
+
+        // Add the role associated with the $idRole attribute to the roles array
+        if ($this->idRole !== null) {
+            $roles[] = $this->idRole->getTypeRole();
+        }
+
+        // Guarantee every user has at least ROLE_USER
+        $roles[] = 'utilisateur';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->mdp;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->mdp = $password;
+
+        return $this;
+    }
+
+    /**
+     * Returning a salt is only needed if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
 
 
+    public function getUsername()
+    {
+        return $this->email;
+    }
 }

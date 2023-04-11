@@ -12,7 +12,7 @@ import './styles/app.css';
 import './bootstrap';
 
 
-var toTopButton = document.getElementById('to-top-button');
+let toTopButton = document.getElementById('to-top-button');
 
 // Show/hide the button based on the scroll position
 window.addEventListener('scroll', function () {
@@ -28,12 +28,5 @@ toTopButton.addEventListener('click', function () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-const menuBtn = document.getElementById('menu-btn')
-const menu = document.querySelector('.drop')
 
-menuBtn.addEventListener("click",() =>{
-    menu.classList.toggle('hidden')
-
-
-})
 
