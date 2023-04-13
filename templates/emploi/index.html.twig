@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Emploi index{% endblock %}
+
+{% block content %}
+    <h1>Emploi index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdEmploi</th>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>DatePublication</th>
+                <th>Salaire</th>
+                <th>NiveauExperience</th>
+                <th>TypeContrat</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for emploi in emplois %}
+            <tr>
+                <td>{{ emploi.idEmploi }}</td>
+                <td>{{ emploi.titre }}</td>
+                <td>{{ emploi.description }}</td>
+                <td>{{ emploi.datePublication ? emploi.datePublication|date('Y-m-d') : '' }}</td>
+                <td>{{ emploi.salaire }}</td>
+                <td>{{ emploi.niveauExperience }}</td>
+                <td>{{ emploi.typeContrat }}</td>
+                <td>
+                    <a href="{{ path('app_emploi_show', {'idEmploi': emploi.idEmploi}) }}">show</a>
+                    <a href="{{ path('app_emploi_edit', {'idEmploi': emploi.idEmploi}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_emploi_new') }}">Create new</a>
+{% endblock %}
