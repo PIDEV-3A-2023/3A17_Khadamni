@@ -22,7 +22,7 @@ class EmploiController extends AbstractController
             ->getRepository(Emploi::class)
             ->findAll();
 
-        return $this->render('emploi/index.html.twig', [
+        return $this->render('Admin/EmploiBack.html.twig', [
             'emplois' => $emplois,
         ]);
     }
@@ -58,7 +58,7 @@ class EmploiController extends AbstractController
             return $this->redirectToRoute('app_emploi_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('emploi/new.html.twig', [
+        return $this->renderForm('Admin/Addemploi.html.twig', [
             'emploi' => $emploi,
             'form' => $form,
         ]);
