@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Formation;
+use App\Entity\Inscription;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -80,12 +81,36 @@ class FormationRepository extends ServiceEntityRepository
         return null;
     }
 
+    public function findAllExceptMine($id)
+    {
+
+        $em = $this->getEntityManager();
+        $formations = $em->createQuery('
+        SELECT f
+        FROM App\Entity\Formation f
+        WHERE f.idFormateur != :id       
+    ')->setParameter('id', $id)->getResult();
+        foreach ($formations as $key => $formation) {
+            $i = $this->getEntityManager()->getRepository(Inscription::class)->findOneBy(['idFormation'=>$formation->getIdFormation(),
+                'idUser'=>$id]);
+           if (isset($i)) {
+               unset($formations[$key]);
+           }
+        }
+
+        return $formations;
+
+    }
+
+
+
+
 //    /**
 //     * @return Formation[] Returns an array of Formation objects
 //     */
 //    public function findByExampleField($value): array
 //    {
-//        return $this->createQueryBuilder('f')
+//        return $this->createQueryBuilder("f')
 //            ->andWhere('f.exampleField = :val')
 //            ->setParameter('val', $value)
 //            ->orderBy('f.id', 'ASC')

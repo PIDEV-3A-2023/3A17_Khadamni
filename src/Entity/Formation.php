@@ -131,16 +131,20 @@ class Formation
         return $this;
     }
 
-    public function getIdFormateur(): ?int
+    public function getIdFormateur(): ?User
     {
-        return $this->idFormateur->getIdUser();
+        return $this->idFormateur;
     }
 
-    public function setIdFormateur(?int $idFormateur): self
+    public function setIdFormateur(?User $idFormateur): self
     {
         $this->idFormateur = $idFormateur;
 
         return $this;
+    }
+    public function __toString()
+    {
+        return $this->getNomFormation(); // or any other property that uniquely identifies the entity
     }
 
 

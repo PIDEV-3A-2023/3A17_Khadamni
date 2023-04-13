@@ -7,8 +7,35 @@
 
 
 {% block content %}
-    <div class="panel shadow-2xl">
 
+        {% if verified == 'False' %}
+            <div class="panel shadow-2xl h-auto flex items-center justify-center">
+                {% if encours == true %}
+                    <div class="bg-green-500 self-center align-middle flex flex-col items-center justify-center text-center border border-green-600 text-white px-16 py-6 rounded relative shadow-2xl " role="alert">
+                    <div>
+                        <p class="font-medium">
+                            Votre compte est en cours d'activation. Veuillez patienter, cela peut prendre quelques minutes!
+                        </p>
+                    </div>
+                    </div>
+                    {% else %}
+                <div class="bg-red-100 self-center align-middle flex flex-col items-center justify-center text-center border border-red-400 text-red-700 px-16 py-6 rounded relative shadow-2xl " role="alert">
+                <div>
+                    <p class="font-medium">
+                        Pour gagner de l'argent avec Khadamni et créer des formations, vous devez activer vos méthodes de paiement.
+                    </p>
+                    <p class="text-sm mt-2">
+                        Veuillez <a href="{{ path('app_payment_activate') }}" class="text-red-700 font-bold">cliquer ici</a> pour activer vos méthodes de paiement.
+                    </p>
+
+                </div>
+                </div>
+                    {% endif %}
+            </div>
+
+        {% else %}
+
+            <div class="panel shadow-2xl">
         <a href="{{ path('app_formation_new') }}" class=" uppercase self-end text-sm font-bold tracking-wide bg-blue-900 text-gray-100 p-2 rounded-lg w-auto
                       focus:outline-none focus:shadow-outline">
             Ajouter une formation
@@ -77,6 +104,9 @@
                     {% endfor %}
                     </tbody>
                 </table>
-        </div>
+            </div>
+        {% endif %}
+
+
 
 {% endblock %}

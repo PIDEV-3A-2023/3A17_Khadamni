@@ -3,16 +3,22 @@
 namespace App\Controller;
 
 use App\Entity\Formation;
+use App\Entity\Inscription;
 use App\Entity\User;
 use App\Form\FormationType;
 use App\Repository\FormationRepository;
+use App\Service\StripeService;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 #[Route('/formation')]
@@ -22,10 +28,17 @@ class FormationController extends AbstractController
     public function index(EntityManagerInterface $em,ManagerRegistry $doctrine): Response
     {
 
+        $user = $this->getUser();
 
-        $formations = $em
-            ->getRepository(Formation::class)
-            ->findAll();
+        if (isset($user))
+           $formations= $em->getRepository(Formation::class)->findAllExceptMine($user->getIdUser());
+        else {
+            $formations = $em
+                ->getRepository(Formation::class)
+                ->findAll();
+        }
+
+        if (count($formations) > 0)
         foreach ($formations as $f) {
             $name=$doctrine->getRepository(Formation::class)->getNomFormateur($f->getIdFormateur());
             $f->setNomFormateur($name);
@@ -38,44 +51,140 @@ class FormationController extends AbstractController
 
 
     #[Route('/mesformations',name:'app_mes_formations')]
-    public function MesFormations(ManagerRegistry $doctrine ,Request $request) : Response
+    public function MesFormations(ManagerRegistry $doctrine ,Request $request,Session $session) : Response
     {
-        $formations = $doctrine
-            ->getRepository(Formation::class)
-            ->findAll();
-        foreach ($formations as $f) {
-            $name=$doctrine->getRepository(Formation::class)->getNomFormateur($f->getIdFormateur());
-            $f->setNomFormateur($name);
-        }
-        $formation= new Formation();
-        $form = $this->createForm(FormationType::class, $formation,[
-            'method'=> 'POST'
-        ]);
-        $form->handleRequest($request);
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $user = $this->getUser();
 
-        $entityManager = $doctrine->getManager();
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($formation);
-            $entityManager->flush();
+        $stripe = new StripeService();
+      // $stripe->testStripe();
+        $acc=$stripe->retriveAccount($user->getEmail());
 
-            return $this->redirectToRoute('app_mes_formations', [], Response::HTTP_SEE_OTHER);
+        $ref = $request->query->get('from');
+
+
+        if ($ref == 'accountlink') {
+
+           $encours = True;
         }
+        else $encours = False;
+        if (! ($acc->details_submitted && $acc->payouts_enabled)) {
+
+            return  $this->renderForm('formation/mesformations.html.twig', [
+                'verified' => 'False',
+                'encours' => $encours
+            ]);
+        }
+
+
+            $id = $user->getIdUser();
+            $formations = $doctrine
+                ->getRepository(Formation::class)
+                ->findBy(['idFormateur'=>$id]);
+            foreach ($formations as $f) {
+                $name=$doctrine->getRepository(Formation::class)->getNomFormateur($f->getIdFormateur());
+                $f->setNomFormateur($name);
+            }
+            $formation= new Formation();
+            $form = $this->createForm(FormationType::class, $formation,[
+                'method'=> 'POST'
+            ]);
+            $form->handleRequest($request);
+
+            $entityManager = $doctrine->getManager();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager->persist($formation);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('app_mes_formations', [], Response::HTTP_SEE_OTHER);
+            }
+
 
         return  $this->renderForm('formation/mesformations.html.twig', [
             'formations' => $formations,
             'formation' => $formation,
-            'form' => $form
+            'form' => $form,
+            'verified' => 'True'
         ]);
     }
 
+    #[Route('/activate',name: 'app_payment_activate')]
+    public function ActivatePayment(Request $request) {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $user = $this->getUser();
+        $ref = $request->headers->get('referer');
+        if (!strpos($ref,'mesformations') or !isset($ref))  {
+            return $this->redirectToRoute('app_home');
+        }
+
+
+        $stripe = new StripeService();
+        $acc=$stripe->retriveAccount($user->getEmail());
+        $return_url = $this->generateUrl('app_mes_formations', ['from'=>'accountlink'],UrlGeneratorInterface::ABSOLUTE_URL);
+        $account_link = $stripe->finishSignUp($acc,$return_url);
+
+        return new RedirectResponse($account_link->url);
+    }
+
+    #[Route('/checkout/{id}',name: 'app_formation_checkout')]
+    public function checkout(Request $request,Formation $formation,EntityManagerInterface $em) {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $formateur = $em->getRepository(User::class)->find($formation->getIdFormateur());
+        $success_url = $this->generateUrl('app_success', ['from'=>'checkout'],UrlGeneratorInterface::ABSOLUTE_URL);
+
+        // Set session variable
+        $session = $request->getSession();
+        $session->set('formation', $formation);
+
+
+        $stripe = new StripeService();
+        $checkout =$stripe->CreateCheckoutSession($this->getUser(),$formation,$formateur->getEmail(),$success_url);
+        return new RedirectResponse($checkout->url);
+
+
+    }
+
+    #[Route('/success',name: 'app_success')]
+    public function onPaiementSuccess(Request $request,EntityManagerInterface $entityManager)  {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $ref = $request->query->get('from');
+        $user = $this->getUser();
+        if ($ref == 'checkout') {
+            $session = $request->getSession();
+            $formation = $session->get('formation');
+
+            $nf = $entityManager->getRepository(Formation::class)->find($formation->getIdFormation());
+            $inscri = new Inscription();
+            $inscri->setIdFormation($nf);
+            $inscri->setIdUser($user);
+            $inscri->setDateInscription(new \DateTime());
+
+            $entityManager->persist($inscri);
+            $entityManager->flush();
+            $session->getFlashBag()->add('info', 'Félicitations, votre paiement a été effectué avec succès ! Vous pouvez maintenant commencer à suivre la formation.');
+            return $this->redirectToRoute('app_formation_index',[
+
+            ]);
+
+        }
+        return $this->redirectToRoute('app_formation_index',[
+
+        ]);
+
+
+    }
     #[Route('/new', name: 'app_formation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $user =$this->getUser();
+
         $formation = new Formation();
         $form = $this->createForm(FormationType::class, $formation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $formation->setIdFormateur($user);
             $entityManager->persist($formation);
             $entityManager->flush();
 
@@ -92,6 +201,7 @@ class FormationController extends AbstractController
     #[Route('/{idFormation}/edit', name: 'app_formation_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Formation $formation, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
         $form = $this->createForm(FormationType::class, $formation);
         $form->handleRequest($request);
 
@@ -110,6 +220,7 @@ class FormationController extends AbstractController
     #[Route('/{idFormation}', name: 'app_formation_delete', methods: ['POST'])]
     public function delete(Request $request, Formation $formation, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
         if ($this->isCsrfTokenValid('delete'.$formation->getIdFormation(), $request->request->get('_token'))) {
             $entityManager->remove($formation);
             $entityManager->flush();

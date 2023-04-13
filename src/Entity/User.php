@@ -334,11 +334,18 @@ class User implements UserInterface,PasswordAuthenticatedUserInterface
 
         // Add the role associated with the $idRole attribute to the roles array
         if ($this->idRole !== null) {
-            $roles[] = $this->idRole->getTypeRole();
+            $r=$this->idRole->getTypeRole();
+            if($r == 'recruteur')
+                $roles[] = 'ROLE_RECRUTEUR';
+            else if ($r == 'admin') {
+                $roles[] = 'ROLE_RECRUTEUR';
+                $roles[] = 'ROLE_ADMIN';
+            }
+
         }
 
         // Guarantee every user has at least ROLE_USER
-        $roles[] = 'utilisateur';
+        $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }

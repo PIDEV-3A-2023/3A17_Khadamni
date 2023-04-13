@@ -1,0 +1,41 @@
+{# templates/user/list.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>User List</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Address</th>
+                <th>Age</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        <tbody>
+           {% for user in users %}
+    <tr>
+        <td>{{ user.idUser }}</td>
+        <td>{{ user.nom }}</td>
+        <td>{{ user.prenom }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.numTel }}</td>
+        <td>{{ user.adresse }}</td>
+        <td>{{ user.age }}</td>
+        <td>{{ user.idRole.getIdRole() }}</td>
+        <td>
+            <a href="{{ path('app_admin_modify', {'id': user.idUser}) }}">Modifier</a>
+             <td><a href="{{ path('app_user_delete', {'idUser': user.idUser}) }}">Delete</a></td>
+        </td>
+    </tr>
+{% endfor %}
+
+        </tbody>
+    </table>
+{% endblock %}
