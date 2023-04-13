@@ -4,7 +4,9 @@ const mainBtn = document.getElementById('menu-btn');
 const mainBtnTxt = document.querySelector('.Btntxt');
 const dropMenu = document.querySelector('.drop');
 
-
+mainBtn.addEventListener("click",() =>{
+    dropMenu.classList.toggle('hidden')
+})
 mainBtn.addEventListener('blur', function(event) {
     if (!event.relatedTarget || !event.relatedTarget.classList.contains('dbtns')) {
         dropMenu.classList.toggle('hidden');

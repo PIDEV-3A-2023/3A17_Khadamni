@@ -101,6 +101,29 @@ class FormationRepository extends ServiceEntityRepository
         return $formations;
 
     }
+    public function findFormationInscrit($id) {
+        $inscriptions = $this->getEntityManager()->getRepository(Inscription::class)
+            ->findBy(['idUser' => $id]);
+
+        // Create an array to store the formations
+        $formations = [];
+
+        // Iterate through each Inscription entity and retrieve the associated Formation entity
+        foreach ($inscriptions as $inscription) {
+            // Retrieve Formation entity by formation ID
+            $formation = $this->getEntityManager()->getRepository(Formation::class)
+                ->find($inscription->getIdFormation());
+
+            if ($formation) {
+                // Add the Formation entity to the formations array
+                $formations[] = $formation;
+            }
+        }
+
+        return $formations;
+    }
+
+    }
 
 
 
@@ -129,4 +152,4 @@ class FormationRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
-}
+

@@ -7,9 +7,11 @@
 	{% block stylesheets %}
 		<link rel="shortcut icon" type="image/x-icon" href="{{  asset('LOGOKHADAMNI.png') }}">
 		{{ encore_entry_link_tags('app') }}
+
 	{% endblock %}
 	{% block javascripts %}
 		{{ encore_entry_script_tags('app') }}
+
 	{% endblock %}
 </head>
 <body class="main">
@@ -18,7 +20,6 @@
 		{% block header %}
 			<nav class="top-0 left-0 w-full py-6">
 				<div class="container mx-auto flex justify-between">
-
 					<div class="mb-6 md:mb-0">
 						<a href="{{ path('app_home') }}" class="flex items-center">
 							<img src="{{  asset('LOGOKHADAMNI.png') }}" class="block  h-20 rounded-full  sm:shrink-0 animate-bounce"
@@ -57,8 +58,8 @@
 							<button id="dropdownAvatarNameButton" data-dropdown-toggle="dropdownAvatarName" class="flex items-center text-sm font-medium text-gray-900 rounded-full hover:text-blue-600 dark:hover:text-blue-500 md:mr-0  dark:text-white" type="button">
 								<span class="sr-only">Open user menu</span>
 								<img class="w-8 h-8 mr-2 rounded-full bg-white border-2" src="{{ asset('profilePicture.png') }}" alt="user photo">
-								<a class="text-teal-400">{{ app.user.prenom ~ ' ' ~ app.user.nom }}</a>
-								<svg class="w-4 h-4 mx-1.5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+								<a class="text-teal-400">{{ app.user.prenom | upper() ~ ' ' ~ app.user.nom|upper() }}</a>
+								<svg class="w-4 h-4 mx-1.5" aria-hidden="true" fill="white" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
 							</button>
 
 							<!-- Dropdown menu -->

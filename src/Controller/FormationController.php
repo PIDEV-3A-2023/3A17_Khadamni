@@ -29,7 +29,6 @@ class FormationController extends AbstractController
     {
 
         $user = $this->getUser();
-
         if (isset($user))
            $formations= $em->getRepository(Formation::class)->findAllExceptMine($user->getIdUser());
         else {
@@ -57,25 +56,23 @@ class FormationController extends AbstractController
         $user = $this->getUser();
 
         $stripe = new StripeService();
-      // $stripe->testStripe();
         $acc=$stripe->retriveAccount($user->getEmail());
 
         $ref = $request->query->get('from');
 
-
+        $encours = False;
         if ($ref == 'accountlink') {
-
-           $encours = True;
+            $acc->details_submitted ? $encours = True : $encours = false;
         }
-        else $encours = False;
-        if (! ($acc->details_submitted && $acc->payouts_enabled)) {
 
+
+
+        if (!$acc->payouts_enabled) {
             return  $this->renderForm('formation/mesformations.html.twig', [
                 'verified' => 'False',
                 'encours' => $encours
             ]);
         }
-
 
             $id = $user->getIdUser();
             $formations = $doctrine
@@ -139,6 +136,7 @@ class FormationController extends AbstractController
 
         $stripe = new StripeService();
         $checkout =$stripe->CreateCheckoutSession($this->getUser(),$formation,$formateur->getEmail(),$success_url);
+        $session->set('checkout_session_id',$checkout->id);
         return new RedirectResponse($checkout->url);
 
 
@@ -151,6 +149,8 @@ class FormationController extends AbstractController
         $user = $this->getUser();
         if ($ref == 'checkout') {
             $session = $request->getSession();
+            $id = $session->get('checkout_session_id');
+
             $formation = $session->get('formation');
 
             $nf = $entityManager->getRepository(Formation::class)->find($formation->getIdFormation());
@@ -198,13 +198,56 @@ class FormationController extends AbstractController
     }
 
 
+
+    #[Route('/inscrit',name: 'app_inscrit')]
+    public function inscritFormation(EntityManagerInterface $entityManager,Request $request) {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $user = $this->getUser();
+
+        $formations = $entityManager->getRepository(Formation::class)->findFormationInscrit($user->getIdUser());
+        if (count($formations) > 0)
+            foreach ($formations as $f) {
+                $name=$entityManager->getRepository(Formation::class)->getNomFormateur($f->getIdFormateur());
+                $f->setNomFormateur($name);
+            }
+        return $this->render('formation/inscritFormation.html.twig', [
+            'formations' => $formations,
+        ]);
+
+    }
+
+    #[Route('/refund/{id}',name: 'app_formation_refund')]
+    public function refundInscription(EntityManagerInterface $entityManager,Formation $formation,Request $request) {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $user = $this->getUser();
+        $formateur = $formation->getIdFormateur();
+        $stripe = new StripeService();
+        $c = $stripe->refundMoney($user,$formation,$formateur);
+        if (!isset($c)) {
+            $session = $request->getSession();
+            $session->getFlashBag()->add('info', 'Erreur!');
+        }
+        else {
+            $inscription = $entityManager->getRepository(Inscription::class)->findOneBy([
+                'idFormation' => $formation,
+                'idUser' => $user
+            ]);
+            $entityManager->remove($inscription);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_inscrit');
+
+    }
     #[Route('/{idFormation}/edit', name: 'app_formation_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Formation $formation, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $user = $this->getUser();
         $form = $this->createForm(FormationType::class, $formation);
         $form->handleRequest($request);
-
+        $stripe = new StripeService();
+        $stripe->refundMoney($user,$formation,$formation->getIdFormateur());
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 

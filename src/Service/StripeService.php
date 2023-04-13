@@ -114,9 +114,11 @@ public function __construct()
          'success_url' => $success_url,
          'cancel_url' => 'http://127.0.0.1:8000/formation',
          'payment_intent_data' => [
+             'metadata' => ['source'=>$user->getIdUser().$formation->getIdFormation()],
              'application_fee_amount' => $prix->unit_amount * 0.1,
              'transfer_data' => [
-                 'destination' => $acc->id,
+                 'destination' => $acc->id
+
              ],
              'setup_future_usage' => 'on_session',
          ],
@@ -124,27 +126,36 @@ public function __construct()
          'customer' => $customer->id,
          'payment_method_types' => ['card'],
          'locale' => 'fr',
-     ]);
 
+     ]);
     return $checkout;
 
  }
- public function testStripe () {
+ public function refundMoney($user,$formation,$formateur) {
+     $customer = $this->retrieveCustomer($user);
+     $receiver = $this->retriveAccount($formateur->getEmail());
 
-     $stripe = new \Stripe\StripeClient(
-         $_ENV['STRIPE_API_KEY']
+     $key = $user->getIdUser().$formation->getIdFormation();
+
+     $query = "status:'succeeded' AND metadata['source']:'" . $key . "' AND customer:'" . $customer->id . "'";
+
+
+
+     $p = $this->stripe->paymentIntents->search(['query' => $query,'limit' => '1'
+     ]);
+     $t = $this->stripe->transfers->all(['destination' => $receiver->id , 'transfer_group' => $p->data[0]->transfer_group
+     ]);
+     return $this->stripe->transfers->createReversal(
+         $t->data[0]->id,
+         ['refund_application_fee' => true]
      );
-    // $stripe->accounts->delete('acct_1MvlBMFk4JlEMLQB');
-     $accounts = \Stripe\Account::all();
-     dd($accounts);
-/*
-         $data = $accounts->data;
-         foreach ($data as $acc) {
-             dump($acc->details_submitted);
-             $stripe->accounts->delete($acc->id);
-             $id = $acc;
+ }
 
-         }*/
+ public function testStripe ($id) {
+
+       $tr= $this->stripe->transfers->retrieveReversal($id);
+        dd($tr);
+
 
 
      }
