@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 		<meta charset="UTF-8">
 		<title>
 			{% block title %}Khadamni
@@ -41,7 +45,7 @@
 
 							<ul class="list text-white text-sm tracking-wide items-center flex gap-x-8">
 								<li class="hover:scale-125 duration-300 py-1 hover:text-teal-400">
-									<a href="{{ path('app_home') }}" class="cursor-pointer">Acceuil</a>
+									<a href="{{ path('app_home') }}" class="cursor-pointer">Accueil</a>
 								</li>
 								<li class="hover:scale-125 duration-300 py-1 hover:text-teal-400">
 									<a href="{{ path('app_emploi_front') }}" class="cursor-pointer">Emplois</a>
@@ -53,7 +57,7 @@
 									<a class="cursor-pointer">Formations</a>
 								</li>
 								<li class="hover:scale-125 duration-300 py-1 hover:text-teal-400">
-									<a class="cursor-pointer">Evenements</a>
+									<a href="{{ path('app_evenement_front') }}" class="cursor-pointer">Evènements</a>
 								</li>
 								<li class="hover:scale-125 duration-300 py-1 hover:text-teal-400">
 									<a class="cursor-pointer">Contact</a>

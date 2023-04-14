@@ -48,8 +48,10 @@ class EvenementController extends AbstractController
     #[Route('/back/{idevenement}', name: 'app_evenement_show', methods: ['GET'])]
     public function show(Evenement $evenement): Response
     {
+        
         return $this->render('evenement/show.html.twig', [
             'evenement' => $evenement,
+            
         ]);
     }
 

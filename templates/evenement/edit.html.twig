@@ -3,10 +3,10 @@
 {% block title %}Edit Evenement{% endblock %}
 
 {% block content %}
-    <h1>Edit Evenement</h1>
+    <h1>Editer Evènement</h1>
 
     {{ include('evenement/_form.html.twig', {'button_label': 'Valider'}) }}
 
-    <a href="{{ path('app_evenement_index') }}">Retour</a>
+    <a href="{{ path('app_evenement_show', {'idevenement': evenement.idevenement}) }}">Retour</a>
 
 {% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Avis index{% endblock %}
+
+{% block content %}
+    <h1>Avis index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID Avis</th>
+                <th>Note</th>
+                <th>Commentaire</th>
+                <th>Date Création</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for avi in avis %}
+            <tr>
+                <td>{{ avi.idAvis }}</td>
+                <td>{{ avi.note }}</td>
+                <td>{{ avi.commentaire }}</td>
+                <td>{{ avi.dateCreation ? avi.dateCreation|date('Y-m-d') : '' }}</td>
+                <td>
+                    
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    
+
+{% endblock %}

@@ -32,6 +32,7 @@
 
     <a href="{{ path('app_evenement_edit', {'idevenement': evenement.idevenement}) }}">Modifier</a>
     {{ include('evenement/_delete_form.html.twig') }}
+    <a href="{{ path('app_avis_index', {'idevenement': evenement.idevenement}) }}">Voir les avis</a>
     <a href="{{ path('app_evenement_index') }}">Retour</a>
 
     

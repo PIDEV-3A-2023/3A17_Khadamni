@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>Liste des avis</h1>
+
+    <table class="table" >
+        <thead>
+            <tr>
+                <th>Note</th>
+                <th>Commentaire</th>
+                <th>Date Création</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for avi in avis %}
+            <tr>
+                <td>{{ avi.note }}</td>
+                <td>{{ avi.commentaire }}</td>
+                <td>{{ avi.dateCreation ? avi.dateCreation|date('Y-m-d') : '' }}</td>  
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

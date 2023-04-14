@@ -62,7 +62,17 @@ class Evenement
 
     public function setNomevenement(string $nomevenement): self
     {
-        $this->nomevenement = $nomevenement;
+        $nomEvenement = trim($nomevenement);
+
+        if (empty($nomEvenement)) {
+            throw new \InvalidArgumentException('Le nom de l\'événement ne peut pas être vide.');
+        }
+
+        if (strlen($nomEvenement) > 255) {
+            throw new \LengthException('Le nom de l\'événement ne peut pas dépasser 255 caractères.');
+        }
+
+        $this->nomevenement = $nomEvenement;
 
         return $this;
     }
@@ -74,7 +84,17 @@ class Evenement
 
     public function setDescriptionevenement(string $descriptionevenement): self
     {
-        $this->descriptionevenement = $descriptionevenement;
+        $descriptionEvenement = trim($descriptionevenement);
+
+        if (empty($descriptionEvenement)) {
+            throw new \InvalidArgumentException('La description de l\'événement ne peut pas être vide.');
+        }
+
+        if (strlen($descriptionEvenement) > 255) {
+            throw new \LengthException('La description de l\'événement ne peut pas dépasser 255 caractères.');
+        }
+
+        $this->descriptionevenement = $descriptionEvenement;
 
         return $this;
     }
@@ -86,6 +106,16 @@ class Evenement
 
     public function setInviter(string $inviter): self
     {
+        $inviter = trim($inviter);
+
+        if (empty($inviter)) {
+            throw new \InvalidArgumentException('Le nom de l\'invité ne peut pas être vide.');
+        }
+
+        if (strlen($inviter) > 255) {
+            throw new \LengthException('Le nom de l\'invité ne peut pas dépasser 255 caractères.');
+        }
+
         $this->inviter = $inviter;
 
         return $this;
