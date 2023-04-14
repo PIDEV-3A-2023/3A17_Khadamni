@@ -1,0 +1,128 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+	<link rel="icon" type="image/x-icon" href="{{ asset('LOGOKHADAMNI.png') }}">
+	<link rel="stylesheet" href="{{ asset('formation.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('LOGOKHADAMNI.png') }}">
+    <link rel="stylesheet" href="{{ asset('stage.css') }}">
+    
+	{{ encore_entry_link_tags('app') }}
+{% endblock %}
+
+{# {% block stylesheets %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('LOGOKHADAMNI.png') }}">
+    <link rel="stylesheet" href="{{ asset('stage.css') }}">
+    {{ encore_entry_link_tags('app') }}
+{% endblock %} #}
+
+
+
+
+{% block content %}
+    <div class="contenu-stage">
+        <div>
+            <h1 class="mb-4 text-3xl font-extrabold  text-white md:text-5xl lg:text-6xl">
+                Obtenir de l'experience en IT avec
+                <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">Khadamni</span>
+            </h1>
+            <p class="text-lg font-normal text-gray-300 lg:text-xl ">PLus de 1000 opportunités de Stage</p>
+        </div>
+
+
+
+
+
+        </br>
+
+
+
+                <div class="cards">
+                {% for stage in stages %}
+
+            <div class="flex flex-col items-center">
+                <img class="w-24 h-24 mb-3 rounded-full shadow-lg bg-gray-900" src="{{ asset('stageImg.png') }}" alt="image"/>
+                <h5 class="text-lg text-gray-300">Nom entreprise: {{ stage.nomEntreprise }}</h5>
+                <span class="text-lg text-gray-300"><span class="text-amber-800 ">Poste:</span> {{ stage.poste }} </span>
+                <span class="text-lg text-gray-300">Adresse du stage: {{ stage.adresseStage }} </span>
+                <span class="text-lg text-gray-300">Durée du stage: {{ stage.dureeStage }} </span>
+                <span class="text-lg text-gray-300">Type du stage: {{ stage.typeStage }} </span>
+                                </br>
+
+                                <td class="px-6 py-4">
+<a href="{{ path('app_stage_postuler', {'idStage': stage.idStage}) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Postuler</a> 
+						</td>
+
+            </div>
+                {% endfor %}
+
+        </div>
+    {# <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    IdStage
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Poste
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    nomEntreprise
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    adresseStage
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    DureeStage
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    TypeStage
+                </th>
+                <th scope="col" class="px-6 py-3">
+             
+               
+                
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+                {% for stage in stages %}
+            <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {{ stage.idStage }}
+                </th>
+                <td class="px-6 py-4">
+                    {{ stage.poste }}
+                </td>
+                <td class="px-6 py-4">
+                    {{ stage.nomEntreprise }}
+                </td>
+                <td class="px-6 py-4">
+                    {{ stage.adresseStage }}               </td>
+                <td class="px-6 py-4">
+                    {{ stage.dureeStage }}
+                </td>
+                <td class="px-6 py-4">
+                    {{ stage.typeStage }}
+                </td>
+                <td class="px-6 py-4">
+<a href="{{ path('app_stage_postuler', {'idStage': stage.idStage}) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Postuler</a>
+						</td>
+              
+
+            </tr>
+
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table> #}
+
+    
+
+{% endblock %}
+
+
+

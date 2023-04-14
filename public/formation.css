@@ -1,0 +1,50 @@
+.contenu-formation {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 25px;
+}
+.secondhead {
+    margin-top: 55px;
+}
+.cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:25px;
+
+}
+.cards > div {
+    border-radius: 20px;
+    border: 10px solid transparent;
+    background: rgba(255, 255, 255, 0.09);
+    padding: 25px;
+
+}
+
+.cards > div > img {
+    opacity: 1;
+}
+
+.tableformations {
+    margin-top: 45px;
+    padding: 10px;
+    flex:1;
+
+}
+.panel {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    flex:1;
+    background: rgb(255,255,255,0.1);
+    border: 2px solid transparent;
+    border-radius: 7px;
+    padding: 20px;
+}
+
+.ligne {
+    background: rgb(255,255,255,0.15);
+}
+
+

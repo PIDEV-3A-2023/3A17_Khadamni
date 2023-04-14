@@ -1,0 +1,26 @@
+
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>Liste des candidats</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for candidat in candidats %}
+                <tr>
+                    <td>{{ candidat.nom }}</td>
+                    <td>{{ candidat.prenom }}</td>
+                                        <td>{{ candidat.email }}</td>
+
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

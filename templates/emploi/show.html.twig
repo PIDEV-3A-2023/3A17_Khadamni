@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Emploi{% endblock %}
+
+{% block body %}
+    <h1>Emploi</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdEmploi</th>
+                <td>{{ emploi.idEmploi }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ emploi.titre }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ emploi.description }}</td>
+            </tr>
+            <tr>
+                <th>DatePublication</th>
+                <td>{{ emploi.datePublication ? emploi.datePublication|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Salaire</th>
+                <td>{{ emploi.salaire }}</td>
+            </tr>
+            <tr>
+                <th>NiveauExperience</th>
+                <td>{{ emploi.niveauExperience }}</td>
+            </tr>
+            <tr>
+                <th>TypeContrat</th>
+                <td>{{ emploi.typeContrat }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_emploi_index') }}">back to list</a>
+
+    <a href="{{ path('app_emploi_edit', {'idEmploi': emploi.idEmploi}) }}">edit</a>
+
+    {{ include('emploi/_delete_form.html.twig') }}
+{% endblock %}
