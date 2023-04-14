@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "style.css";
+@import "formation.css";
+
+
+.hidden {
+    display: none;
+}
