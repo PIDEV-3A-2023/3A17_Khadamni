@@ -208,6 +208,16 @@ public function messages(Request $request, $idReclamation)
 
 
 
-    
+#[Route('/back/ok', name: 'app_reclamation_back', methods: ['GET'])]
+public function back(EntityManagerInterface $entityManager): Response
+{
+    $reclamations = $entityManager
+        ->getRepository(Reclamation::class)
+        ->findAll();
+
+    return $this->render('Admin/RaclamtionBack.html.twig', [
+        'reclamations' => $reclamations,
+    ]);
+}
     
 }
