@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Formation;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,18 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class AdminController extends AbstractController
 {
-    #[Route('/admin', name: 'app_admin')]
-    public function index(): Response
-    {
 
-
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $users = $this->getDoctrine()->getRepository(User::class)->findAll();
-
-        return $this->render('admin/index.html.twig', [
-            'users' => $users,
-        ]);
-    }
 
 
     #[Route('/admin/modify/{id}', name: 'app_admin_modify')]
@@ -34,7 +25,7 @@ class AdminController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-    
+
         $form = $this->createFormBuilder($user)
             ->add('nom', TextType::class)
             ->add('prenom', TextType::class)
@@ -42,19 +33,19 @@ class AdminController extends AbstractController
             ->add('numTel', TextType::class)
             ->add('adresse', TextType::class)
             ->add('age', IntegerType::class)
-  
+
             ->add('save', SubmitType::class, ['label' => 'Modifier'])
             ->getForm();
-    
+
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
-    
-            return $this->redirectToRoute('app_admin');
+
+            return $this->redirectToRoute('app_admin_gererusers');
         }
-    
+
         return $this->render('admin/modify.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -67,6 +58,24 @@ class AdminController extends AbstractController
         $entityManager->remove($user);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_admin');
+        return $this->redirectToRoute('app_admin_gererusers');
+    }
+    #[Route('/admin/formation',name: 'app_admin_gererformation')]
+    public function gererFormation(EntityManagerInterface $em) {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $formations = $em->getRepository(Formation::class)->findAll();
+        return $this->render('admin/FormationBack.html.twig',[
+            'formations' => $formations
+        ]);
+
+    }
+    #[Route('/admin/users_list',name: 'app_admin_gererusers')]
+    public function gererUsers(EntityManagerInterface $em) {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $users = $em->getRepository(User::class)->findAll();
+        return $this->render('admin/usersBack.html.twig',[
+            'users' => $users
+        ]);
+
     }
 }

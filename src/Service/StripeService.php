@@ -131,7 +131,7 @@ public function __construct()
     return $checkout;
 
  }
- public function refundMoney($user,$formation,$formateur) {
+ public function refundMoney($user,$formation,$formateur,$amount) {
      $customer = $this->retrieveCustomer($user);
      $receiver = $this->retriveAccount($formateur->getEmail());
 
@@ -145,10 +145,12 @@ public function __construct()
      ]);
      $t = $this->stripe->transfers->all(['destination' => $receiver->id , 'transfer_group' => $p->data[0]->transfer_group
      ]);
+
      return $this->stripe->transfers->createReversal(
          $t->data[0]->id,
-         ['refund_application_fee' => true]
+         ['amount' => $amount , 'refund_application_fee' => true]
      );
+
  }
 
  public function testStripe ($id) {

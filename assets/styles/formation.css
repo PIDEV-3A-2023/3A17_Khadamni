@@ -3,6 +3,7 @@
     flex-direction: column;
     text-align: center;
     padding: 45px;
+
 }
 .heading {
     margin-top: 55px;
@@ -21,7 +22,21 @@
     padding: 25px;
 
 }
+.cards-grid {
 
+    margin-top: 6px;
+    padding: 15px;
+    grid-gap: 20px;
+    flex:1;
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+
+}
+.forma-card {
+    justify-self: center;
+
+}
 .tableformations {
     margin-top: 45px;
     padding: 10px;

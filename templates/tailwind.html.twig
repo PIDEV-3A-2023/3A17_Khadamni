@@ -15,7 +15,7 @@
 {%- endblock widget_attributes -%}
 
 {%- block form_label -%}
-    {%- set label_attr = label_attr|merge({ class: label_attr.class|default(label_class|default('block mb-2 text-sm font-medium text-gray-900 dark:text-white px-2 whitespace-nowrap')) }) -%}
+    {%- set label_attr = label_attr|merge({ class: label_attr.class|default(label_class|default('block mb-2 text-sm font-medium text-white px-2 whitespace-nowrap')) }) -%}
     {{- parent() -}}
 {%- endblock form_label -%}
 

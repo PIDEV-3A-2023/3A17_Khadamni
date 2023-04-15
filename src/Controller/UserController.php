@@ -12,38 +12,20 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/user')]
 class UserController extends AbstractController
+{#[Route('/', name: 'app_user_index', methods: ['GET'])]
+public function index(EntityManagerInterface $entityManager): Response
 {
-    #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
-    {
-        $users = $entityManager
-            ->getRepository(User::class)
-            ->findAll();
+    $user = $this->getUser();
+    $userEntity = $entityManager
+        ->getRepository(User::class)
+        ->findOneBy(['idUser' => $user->getIdUser()]);
 
-        return $this->render('user/index.html.twig', [
-            'users' => $users,
-        ]);
-    }
+    return $this->render('user/index.html.twig', [
+        'user' => $userEntity,
+    ]);
+}
 
-    #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('user/new.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
-    }
 
     #[Route('/{idUser}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response
@@ -71,14 +53,5 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{idUser}', name: 'app_user_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$user->getIdUser(), $request->request->get('_token'))) {
-            $entityManager->remove($user);
-            $entityManager->flush();
-        }
 
-        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
-    }
 }

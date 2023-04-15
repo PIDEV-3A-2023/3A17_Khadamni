@@ -20,13 +20,7 @@ class UserType extends AbstractType
             ->add('adresseEntreprise')
             ->add('nomEntreprise')
             ->add('email')
-            ->add('mdp')
-            ->add('cv')
-            ->add('etatUser')
             ->add('age')
-            ->add('note')
-            ->add('rating')
-            ->add('idRole')
         ;
     }
 
