@@ -11,7 +11,3 @@ login_success:
     path: /login/success
     controller: App\Controller\SecurityController::loginSuccess
 
-send_sms:
-    path: /send-sms
-    controller: App\Controller\SmsTelController::sendSMS
-    methods: [POST]

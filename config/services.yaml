@@ -11,17 +11,6 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    twilio:
-        class: Twilio\Rest\Client
-        arguments:
-            - '%env(ACce15af1244abdc2ffe799d047b731092)%'
-            - '%env(c8659a1fe9d8bbb677f20f96f4ecf8c9)%'
-        
-    Twilio\Rest\Client: '@twilio'
-
-    App\Controller\SmsTelController:
-        arguments:
-            $twilio: '@twilio'
     
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

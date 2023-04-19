@@ -8,40 +8,30 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Twilio\Rest\Client;
 
+
+
 class SmsTelController extends AbstractController
 {
-    private $twilio;
-
-    public function __construct(Client $twilio)
-    {
-        $this->twilio = $twilio;
-    }
-
+   
     // rest of the controller code
-
+    #[Route('/app-sms', name: 'app_sms', methods: ['POST','GET'])]
     public function sendSMS(Request $request)
 {
     $toPhoneNumber = $request->request->get('toPhoneNumber');
-    if (empty($toPhoneNumber)) {
-        $this->addFlash('error', 'Please enter a phone number.');
-        return $this->redirectToRoute('app_home');
-    }
+    
+    $sid = 'AC365277a31739ad33daf6760f7ebeb80b';
+    $token = 'fdaece6c4fb34bd8deb46a6113e9442f';
+    $client = new Client($sid, $token);
+    $message = $client->messages->create(
+        "+216".$toPhoneNumber,
+        [
+            'from' => '+16205428363', 
+            'body' => 'La réclamation du Client Foulen Ben Foulen a été éditée le ',
+        ]
+    );
+  
+    //$em->flush();
+    return $this->redirectToRoute('app_reclamation_index', [], Response::HTTP_SEE_OTHER);
 
-    $currentDate = new DateTime();
-    $messageText = 'La réclamation du Client Foulen Ben Foulen a été éditée le ' . $currentDate->format('d/m/Y');
-
-    try {
-        $message = $this->twilio->messages->create($toPhoneNumber, [
-            'from' => getenv('TWILIO_NUMBER'),
-            'body' => $messageText,
-        ]);
-
-        $this->addFlash('success', 'SMS sent successfully to ' . $toPhoneNumber . '!');
-    } catch (Exception $e) {
-        $this->addFlash('error', 'Error sending SMS to ' . $toPhoneNumber . '.');
-    }
-
-    return $this->redirectToRoute('app_home');
 }
-
 }
