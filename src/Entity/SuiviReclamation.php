@@ -22,12 +22,13 @@ class SuiviReclamation
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $idSuivi;
 
-    /**
-     * @var string
-     *
-     */
-    #[ORM\Column(name: 'etat_reclamation', type: 'string', length: 45, nullable: false)]
-    private $etatReclamation;
+  /**
+ * @var string
+ *
+ */
+#[ORM\Column(name: 'etat_reclamation', type: 'string', length: 45, nullable: false)]
+private $etatReclamation ;
+
 
     /**
      * @var string
@@ -57,6 +58,7 @@ class SuiviReclamation
     #[ORM\JoinColumn(name: 'id_reclamation', referencedColumnName: 'id_reclamation')]
     #[ORM\ManyToOne(targetEntity: 'Reclamation')]
     private $idReclamation;
+   
 
     public function getIdSuivi(): ?int
     {
@@ -122,6 +124,31 @@ class SuiviReclamation
 
         return $this;
     }
+
+/**
+ * @ORM\ManyToOne(targetEntity=Reclamation::class, inversedBy="suiviReclamations")
+ * @ORM\JoinColumn(nullable=false)
+ */
+private $reclamation;
+
+public function getReclamation(): ?Reclamation
+{
+    return $this->reclamation;
+}
+
+public function setReclamation(?Reclamation $reclamation): self
+{
+    $this->reclamation = $reclamation;
+
+    return $this;
+}
+
+
+/**
+ * @ORM\ManyToOne(targetEntity=Reclamation::class, inversedBy="suiviReclamations")
+ * @ORM\JoinColumn(name="id_reclamation", referencedColumnName="id_reclamation", nullable=false)
+ */
+
 
 
 }

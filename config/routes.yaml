@@ -7,3 +7,11 @@ app_user_reclamations:
 app_reclamation_messages:
     path: '/reclamation/messages/{idReclamation}'
     controller: 'App\Controller\ReclamationController::messages'
+login_success:
+    path: /login/success
+    controller: App\Controller\SecurityController::loginSuccess
+
+send_sms:
+    path: /send-sms
+    controller: App\Controller\SmsTelController::sendSMS
+    methods: [POST]

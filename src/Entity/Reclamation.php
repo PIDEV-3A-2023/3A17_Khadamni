@@ -4,7 +4,8 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 /**
  * Reclamation
  *
@@ -123,6 +124,44 @@ class Reclamation
 
         return $this;
     }
+/**
+ * @ORM\OneToMany(targetEntity=SuiviReclamation::class, mappedBy="reclamation")
+ */
+private $suiviReclamations;
+
+public function __construct()
+{
+    $this->suiviReclamations = new ArrayCollection();
+}
+
+public function getSuiviReclamations(): Collection
+{
+    return $this->suiviReclamations;
+}
+
+public function addSuiviReclamation(SuiviReclamation $suiviReclamation): self
+{
+    if (!$this->suiviReclamations->contains($suiviReclamation)) {
+        $this->suiviReclamations[] = $suiviReclamation;
+        $suiviReclamation->setReclamation($this);
+    }
+
+    return $this;
+}
+
+public function removeSuiviReclamation(SuiviReclamation $suiviReclamation): self
+{
+    if ($this->suiviReclamations->removeElement($suiviReclamation)) {
+        // set the owning side to null (unless already changed)
+        if ($suiviReclamation->getReclamation() === $this) {
+            $suiviReclamation->setReclamation(null);
+        }
+    }
+
+    return $this;
+}
+
+
 
 
 }

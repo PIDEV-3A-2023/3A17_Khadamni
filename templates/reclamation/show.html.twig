@@ -29,6 +29,10 @@
             </tr>
         </tbody>
     </table>
+     {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('modifier') }}</button>
+{{ form_end(form) }}
 
     <a href="{{ path('app_reclamation_index') }}">back to list</a>
 

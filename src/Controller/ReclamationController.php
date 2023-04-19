@@ -19,6 +19,7 @@ use App\Form\SuiviReclamationType;
 use Symfony\Component\Mime\Message;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use App\Form\EtatReclamationType;
 
 use Symfony\Component\Validator\Constraints\Valid;
 #[Route('/reclamation')]
@@ -37,6 +38,29 @@ class ReclamationController extends AbstractController
             'reclamations' => $reclamations,
         ]);
     }
+
+   
+
+
+    #[Route('/modifier/{id}', name: 'app_reclamation_etat')]
+    public function modifier_etat(EntityManagerInterface $entityManager,Reclamation $reclamation): Response
+    {
+        $reclamations = $entityManager
+            ->getRepository(Reclamation::class)
+            ->findAll();
+
+        return $this->render('reclamation/index.html.twig', [
+            'reclamations' => $reclamations,
+        ]);
+    }
+
+
+
+
+
+
+
+
 
 
   #[Route('/front', name: 'app_reclamation_front', methods: ['GET'])]
@@ -69,6 +93,11 @@ class ReclamationController extends AbstractController
         
             $entityManager->persist($reclamation);
             $entityManager->flush();
+            $suivi = new SuiviReclamation() ; 
+            $suivi->setEtatReclamation("non traitee");
+            $suivi->setIdReclamation($reclamation);
+            $entityManager->persist($suivi);
+            $entityManager->flush();
     
             return $this->redirectToRoute('app_reclamation_front', [], Response::HTTP_SEE_OTHER);
         }
@@ -80,11 +109,30 @@ class ReclamationController extends AbstractController
     }
     
 
-    #[Route('/{idReclamation}', name: 'app_reclamation_show', methods: ['GET'])]
-    public function show(Reclamation $reclamation): Response
+    #[Route('/{idReclamation}', name: 'app_reclamation_show')]
+    public function show(Reclamation $reclamation,EntityManagerInterface $entityManager,Request $request): Response
     {
-        return $this->render('reclamation/show.html.twig', [
+        $suivi = new SuiviReclamation() ; 
+                $form = $this->createForm(EtatReclamationType::class,$suivi);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            $suivi = $entityManager->getRepository(SuiviReclamation::class)->findOneBy(['idReclamation' => $reclamation->getIdReclamation()]);
+
+        
+            if ($suivi) {
+                $suivi->setEtatReclamation($form->get("etatReclamation")->getData());
+                
+                $entityManager->flush();
+            } else {
+                // Handle the case where the entity is not found
+            }
+        
+            return $this->redirectToRoute('app_reclamation_index', [], Response::HTTP_SEE_OTHER);
+        }
+         return $this->renderForm('reclamation/show.html.twig', [
             'reclamation' => $reclamation,
+            'form'=>$form , 
         ]);
     }
 
@@ -219,5 +267,7 @@ public function back(EntityManagerInterface $entityManager): Response
         'reclamations' => $reclamations,
     ]);
 }
-    
+
+
+
 }
