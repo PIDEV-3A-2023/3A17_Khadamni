@@ -121,6 +121,7 @@ public function __construct()
 
              ],
              'setup_future_usage' => 'on_session',
+             'receipt_email' => 'atefbadreddine05@gmail.com'
          ],
          'phone_number_collection' => ['enabled' => false],
          'customer' => $customer->id,

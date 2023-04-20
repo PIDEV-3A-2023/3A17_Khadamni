@@ -248,7 +248,7 @@
 
                                             <td>
 
-                                                <form method="post" action="{{ path('app_formation_delete', {'idFormation': formation.idFormation}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                                <form method="post" action="{{ path('app_formation_delete', {'idFormation': formation.idFormation}) }}" onsubmit="return confirm('Êtes-vous sûr(e) de vouloir supprimer cet élément ?');">
                                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ formation.idFormation) }}">
                                                     <button class="btn">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 24 24">

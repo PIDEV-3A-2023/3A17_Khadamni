@@ -7,6 +7,7 @@ use App\Entity\Inscription;
 use App\Entity\User;
 use App\Form\FormationType;
 use App\Repository\FormationRepository;
+use App\Service\MailerService;
 use App\Service\StripeService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -127,11 +128,20 @@ class FormationController extends AbstractController
     public function checkout(Request $request,Formation $formation,EntityManagerInterface $em) {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
         $formateur = $em->getRepository(User::class)->find($formation->getIdFormateur());
+        $user = $this->getUser();
+        $formations = $em->getRepository(Formation::class)->findFormationInscrit($user->getIdUser());
+
+        if ($user->getIdUser() == $formateur->getIdUser() || in_array($formation,$formations)  ) {
+            $session = $request->getSession();
+            $session->getFlashBag()->add('error', 'Vous ne pouvez pas s\'inscrire à cette formation !');
+            return $this->redirectToRoute('app_formation_index',[
+           ]);
+        }
         $success_url = $this->generateUrl('app_success', ['from'=>'checkout'],UrlGeneratorInterface::ABSOLUTE_URL);
 
-        // Set session variable
+        // Set session variablecomp
         $session = $request->getSession();
-        $session->set('formation', $formation);
+        $session->set('formationID', $formation->getIdFormation());
 
 
         $stripe = new StripeService();
@@ -149,23 +159,21 @@ class FormationController extends AbstractController
         $user = $this->getUser();
         if ($ref == 'checkout') {
             $session = $request->getSession();
-            $id = $session->get('checkout_session_id');
+            $IDformation = $session->get('formationID');
 
-            $formation = $session->get('formation');
-
-            $nf = $entityManager->getRepository(Formation::class)->find($formation->getIdFormation());
+            $nf = $entityManager->getRepository(Formation::class)->find($IDformation);
             $inscri = new Inscription();
             $inscri->setIdFormation($nf);
             $inscri->setIdUser($user);
             $inscri->setDateInscription(new \DateTime());
 
-
             $entityManager->persist($inscri);
             $entityManager->flush();
-            $session->getFlashBag()->add('info', 'Félicitations, votre paiement a été effectué avec succès ! Vous pouvez maintenant commencer à suivre la formation.');
-            return $this->redirectToRoute('app_formation_index',[
 
-            ]);
+            $session->set('formationID',$IDformation);
+             return $this->redirectToRoute('app_mailer',[
+
+             ]);
 
         }
         return $this->redirectToRoute('app_formation_index',[
@@ -188,7 +196,6 @@ class FormationController extends AbstractController
             $formation->setIdFormateur($user);
             $entityManager->persist($formation);
             $entityManager->flush();
-
             return $this->redirectToRoute('app_mes_formations', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -324,21 +331,13 @@ class FormationController extends AbstractController
     {
         $searchValue = $req->get('searchValue');
         $critere = $req->get('critere');
-        if (preg_match('/(?<=\S) {2,}(?=\S)/', $searchValue)) {
-            $formations = [];
-        }
-        else if ($critere == 'nomFormateur') {
-            $nomPrenom = explode(' ',$searchValue,2);
-            if (!isset($nomPrenom[1])) $nomPrenom[1]='';
-            $formations= $fr->findformationByNomFormateur($nomPrenom[0],$nomPrenom[1]);
-        }
-        else $formations = $fr->findformationByX($searchValue,$critere);
+
+        $formations = $fr->findformationByX($searchValue,$critere);
         if (count($formations) > 0) {
             foreach ($formations as $f) {
                 $name=$doctrine->getRepository(Formation::class)->getNomFormateur($f->getIdFormateur());
                 $f->setNomFormateur($name);
             }
-
         }
         $jsonContent = $normalizer->normalize($formations,'json');
         $retour = json_encode($jsonContent);

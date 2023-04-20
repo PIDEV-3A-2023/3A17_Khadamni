@@ -24,6 +24,10 @@
                 {% if error %}
                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                 {% endif %}
+                {% for flashMessage in app.session.flashbag.get('note') %}
+                    <div class="alert alert-info bg-red-100 flex flex-col w-full items-center justify-center text-center border border-red-400 text-red-700   py-4 mb-6 font-medium rounded relative shadow-2xl">
+                        {{ flashMessage }}</div>
+                {% endfor %}
 
                 {% if app.user %}
                 <div class="mb-3">

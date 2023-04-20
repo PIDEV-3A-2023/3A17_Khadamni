@@ -16,6 +16,10 @@
             <div class="alert alert-info bg-green-500 flex flex-col w-full items-center justify-center text-center border border-green-600 text-white  py-4 mb-6 font-medium rounded relative shadow-2xl">
                 {{ flashMessage }}</div>
         {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('error') %}
+            <div class="alert alert-info bg-red-100 flex flex-col w-full items-center justify-center text-center border border-red-400 text-red-700   py-4 mb-6 font-medium rounded relative shadow-2xl">
+                {{ flashMessage }}</div>
+        {% endfor %}
         <div>
             <h1 class="mb-4 text-3xl font-extrabold  text-white md:text-5xl lg:text-6xl">
                 Développez votre carrière en IT avec

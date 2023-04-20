@@ -37,12 +37,7 @@
     justify-self: center;
 
 }
-.tableformations {
-    margin-top: 45px;
-    padding: 10px;
-    flex:1;
 
-}
 #prev-tab tr,
 #new-tab tr {
     background: rgb(255,255,255,0.1);
@@ -53,25 +48,28 @@
 }
 #prev-tab tr td ,
 #new-tab tr td {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding: 1rem 1.5rem;
 }
+#new-tab tr td:nth-last-child(1),
+#new-tab tr td:nth-last-child(2) {
+    text-align: right;
+}
+
 .panel {
     display: flex;
     flex-direction: column;
-    width: 70%;
     flex:1;
-    background: rgb(255,255,255,0.1);
+    background: rgb(255,255,255,0.05);
     border: 2px solid transparent;
     border-radius: 7px;
     padding: 45px;
-
 }
 
 .ligne {
     background: rgb(255,255,255,0.15);
+    font-weight: 500;
+    white-space: nowrap;
+    color: white;
 }
 .dropdown-btn {
     position: relative;

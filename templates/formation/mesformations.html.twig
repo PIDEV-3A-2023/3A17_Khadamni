@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script defer src="{{ asset('search.js') }}"></script>
 
+{% endblock %}
 
 {% block content %}
 
@@ -30,17 +35,47 @@
             </div>
 
         {% else %}
-
             <div class="panel shadow-2xl">
-        <a href="{{ path('app_formation_new') }}" class=" uppercase self-end text-sm font-bold tracking-wide bg-blue-600 hover:bg-blue-700 text-gray-100 p-2 rounded-lg w-auto
-                      focus:outline-none focus:shadow-outline">
-            Ajouter une formation
-        </a>
-                <table class="w-full text-sm text-left">
-                    <caption class="p-5 text-lg font-bold text-left  text-white shadow-2xl">
-                        Mes Formations:
-                        <p class="mt-1 text-sm font-normal white">Vous pouvez gérer vos formations éxistantes  ou ajouter une nouvelle formation. </p>
 
+                    <div class="flex">
+                        <div class="dropdown-btn flex-shrink-0">
+                            <button id="menu-btn" class=" py-2.5 px-4 text-sm font-medium text-center  bg-blue-700 hover:bg-blue-800  text-white rounded-tl-lg" value="nomFormation" ><span class="Btntxt">Formation</span><svg aria-hidden="true" class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button>
+                            <ul class="drop hidden divide-y-2 divide-gray-100 bg-blue-500">
+                                <li>
+                                    <button class="dbtns px-4 py-1  hover:bg-blue-800 text-sm font-medium text-white" value="prix">Prix</button>
+                                </li>
+
+                            </ul>
+                        </div>
+
+
+
+
+                        <div class="relative w-full">
+                            <input type="search" id="search-dropdown" class="block p-2.5 w-full z-20 text-sm  rounded-r-lg  bg-white bg-opacity-30    placeholder-gray-800 text-blue-900" placeholder="Recherchez les formations par Nom du formation ou par Prix." required>
+                            <button  class="absolute top-0 right-0 p-2.5 text-sm font-medium text-white  rounded-r-lg  bg-blue-700 cursor-default">
+                                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                <span class="sr-only">Search</span>
+                            </button>
+                        </div>
+                    </div>
+
+
+
+                <table class="w-full text-sm text-left">
+
+                    <caption class="p-5 text-lg font-bold text-left  text-white shadow-2xl">
+                        <div class="flex">
+                            <div>
+                                Mes Formations:
+                                <p class="mt-1 text-sm font-normal white">Vous pouvez gérer vos formations éxistantes ou ajouter une nouvelle formation.</p>
+                            </div>
+
+                            <a href="{{ path('app_formation_new') }}" class="ml-auto inline-flex items-center justify-center self-end px-2 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                                Ajouter une formation
+                                <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            </a>
+                        </div>
                     </caption>
 
 
@@ -51,7 +86,7 @@
                         <th scope="col" class="px-6 py-3">
                             Nom du Formation
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col"  class="px-6 py-3" >
                             Déscription
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -69,13 +104,13 @@
 
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="prev-tab">
                     {% for f in formations %}
-                       <tr class="ligne text-white font-medium whitespace-nowrap ">
+                       <tr class="ligne text-white  whitespace-nowrap ">
                             <th scope="row" class="px-6 py-4">
                                 {{ f.nomFormation|upper() }}
                             </th>
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4" style="min-width: 250px;">
                                 {{ f.description }}
                             </td>
                             <td class="px-6 py-4">
@@ -99,6 +134,7 @@
                         </tr>
                     {% endfor %}
                     </tbody>
+                    <tbody id="new-tab"></tbody>
                 </table>
             </div>
         {% endif %}
