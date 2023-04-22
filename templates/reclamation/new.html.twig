@@ -5,6 +5,15 @@
 {% block content %}
     <h1>Create new Reclamation</h1>
 
+    {% for label, messages in app.flashes() %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+               <div class="alert alert-danger">{{ message }}</div>
+
+            </div>
+        {% endfor %}
+    {% endfor %}
+
     {{ include('reclamation/_form.html.twig') }}
 
     <a href="{{ path('app_reclamation_index') }}">back to list</a>

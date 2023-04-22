@@ -22,6 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Form\EtatReclamationType;
 
 use Symfony\Component\Validator\Constraints\Valid;
+
 #[Route('/reclamation')]
 class ReclamationController extends AbstractController
 {
@@ -54,15 +55,6 @@ class ReclamationController extends AbstractController
         ]);
     }
 
-
-
-
-
-
-
-
-
-
   #[Route('/front', name: 'app_reclamation_front', methods: ['GET'])]
     public function front(EntityManagerInterface $entityManager): Response
     {
@@ -75,12 +67,11 @@ class ReclamationController extends AbstractController
         ]);
     }
 
-
   #[Route('/new', name: 'app_reclamation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $reclamation = new Reclamation();
-    
+  public function new(Request $request, EntityManagerInterface $entityManager): Response
+{
+    $reclamation = new Reclamation();
+
     // Set the default value for the dateReclamation field
     $date = new DateTime();
     $formattedDate = $date->format('Y-m-d');
@@ -88,25 +79,37 @@ class ReclamationController extends AbstractController
 
     $form = $this->createForm(ReclamationType::class, $reclamation);
     $form->handleRequest($request);
-    
-        if ($form->isSubmitted() && $form->isValid()) {
+
+    if ($form->isSubmitted() && $form->isValid()) {
         
+        // Detect bad words in the description
+        $description = $form->get('description')->getData();
+        $badWords = ['bad', 'words', 'list'];
+        $pattern = '/\b(' . implode('|', $badWords) . ')\b/i';
+        if (preg_match($pattern, $description)) {
+            // Add a flash message to inform the user that the description contains bad words
+            $this->addFlash('warning', 'Votre description contient des mots interdits.');
+            
+        } else {
+            // Save the reclamation and create a new SuiviReclamation
             $entityManager->persist($reclamation);
             $entityManager->flush();
-            $suivi = new SuiviReclamation() ; 
+            $suivi = new SuiviReclamation();
             $suivi->setEtatReclamation("non traitee");
             $suivi->setIdReclamation($reclamation);
             $entityManager->persist($suivi);
             $entityManager->flush();
-    
+
             return $this->redirectToRoute('app_reclamation_front', [], Response::HTTP_SEE_OTHER);
         }
-    
-        return $this->renderForm('reclamation/new.html.twig', [
-            'reclamation' => $reclamation,
-            'form' => $form,
-        ]);
     }
+
+    return $this->renderForm('reclamation/new.html.twig', [
+        'reclamation' => $reclamation,
+        'form' => $form,
+    ]);
+}
+
     
 
     #[Route('/{idReclamation}', name: 'app_reclamation_show')]
@@ -267,7 +270,6 @@ public function back(EntityManagerInterface $entityManager): Response
         'reclamations' => $reclamations,
     ]);
 }
-
 
 
 }

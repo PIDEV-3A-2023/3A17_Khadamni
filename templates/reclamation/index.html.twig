@@ -63,12 +63,14 @@
                 <td class="px-6 py-4">{{ reclamation.description }}</td>
                 <td class="px-6 py-4">{{ reclamation.typeReclamation }}</td>
                 <td class="px-6 py-4">{{ reclamation.email }}</td>
+
+
                 <td>
                     <a href="{{ path('app_reclamation_show', {'idReclamation': reclamation.idReclamation}) }}"class="font-medium text-blue-600 dark:text-blue-500 hover:underline">show</a>
                     {{ include('reclamation/_delete_form.html.twig') }}
 					<a href="{{ path('app_reclamation_repondre', {'idReclamation': reclamation.idReclamation}) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Répondre</a>
 
-<a href="{{ path('login_success') }}" class="btn btn-primary">Envoyer SMS</a>
+
 
 <form method="POST" action="{{ path('app_sms') }}">
     <div class="form-group">
@@ -89,5 +91,9 @@
         </tbody>
     </table>
 
-    
+   
+                    </div>
+                </div>
+            </div>
+        </div>
 {% endblock %}
