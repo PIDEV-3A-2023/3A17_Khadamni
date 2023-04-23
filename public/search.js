@@ -60,7 +60,7 @@ $("#search-dropdown").keyup(function () {
                     $.each(data, function (i, obj) {
                         $('#new-tab').append(
                             '<tr>' +
-                            '<td>' + obj.nomFormation.toUpperCase() + '</td>' +
+                            '<th scope="row">' + obj.nomFormation.toUpperCase() + '</th>' +
                             '<td style="min-width: 250px;">' + obj.description + '</td>' +
                             '<td>' + obj.duree + ' semaines</td>' +
                             '<td>' + obj.prix + ' TND</td>' +

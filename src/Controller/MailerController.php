@@ -24,6 +24,7 @@ class MailerController extends AbstractController
         $formation = $entityManager->getRepository(Formation::class)->find($IDformation);
         $name=$entityManager->getRepository(Formation::class)->getNomFormateur($formation->getIdFormateur());
         $formation->setNomFormateur($name);
+        date_default_timezone_set('Africa/Tunis');
         $email = (new TemplatedEmail())
             ->from('khadamni12@gmail.com')
             ->to('atefbadreddine05@gmail.com')
@@ -37,7 +38,7 @@ class MailerController extends AbstractController
 
         try {
             $mailer->send($email);
-            $session->getFlashBag()->add('info', 'Félicitations, votre paiement a été effectué avec succès ! Vous pouvez maintenant commencer à suivre la formation.');
+            $session->getFlashBag()->add('info', 'Félicitations, votre paiement a été effectué avec succès et la facture vous a été envoyée par email. ! Vous pouvez maintenant commencer à suivre la formation.');
             return $this->redirectToRoute('app_formation_index', [
             ]);
         } catch (TransportExceptionInterface $e) {

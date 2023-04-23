@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Formation;
 use App\Entity\Inscription;
+use App\Entity\Rating;
 use App\Entity\User;
 use App\Form\FormationType;
 use App\Repository\FormationRepository;
@@ -40,8 +41,20 @@ class FormationController extends AbstractController
 
         if (count($formations) > 0)
         foreach ($formations as $f) {
+            $ratings = $em->getRepository(Rating::class)->findBy([
+                'idformation' => $f->getIdFormation()
+            ]);
+            $sum = 0;
+            if (count($ratings)) {
+                foreach ($ratings as $rating) {
+                    $sum += $rating->getNote();
+                }
+                $sum = round($sum / count($ratings),2) ;
+            }
             $name=$doctrine->getRepository(Formation::class)->getNomFormateur($f->getIdFormateur());
             $f->setNomFormateur($name);
+            $f->setRating($sum);
+
         }
         return $this->render('formation/index.html.twig', [
             'formations' => $formations,
@@ -213,11 +226,24 @@ class FormationController extends AbstractController
         $user = $this->getUser();
 
         $formations = $entityManager->getRepository(Formation::class)->findFormationInscrit($user->getIdUser());
-        if (count($formations) > 0)
+        if (count($formations)) {
             foreach ($formations as $f) {
+                $ratings = $entityManager->getRepository(Rating::class)->findBy([
+                    'idformation' => $f->getIdFormation()
+                ]);
+                $sum = 0;
+                if (count($ratings)) {
+                    foreach ($ratings as $rating) {
+                        $sum += $rating->getNote();
+                    }
+                    $sum = round($sum / count($ratings),2) ;
+                }
                 $name=$entityManager->getRepository(Formation::class)->getNomFormateur($f->getIdFormateur());
                 $f->setNomFormateur($name);
+                $f->setRating($sum);
             }
+        }
+
         return $this->render('formation/inscritFormation.html.twig', [
             'formations' => $formations,
         ]);
@@ -233,24 +259,36 @@ class FormationController extends AbstractController
             'idFormation' => $formation,
             'idUser' => $user
         ]);
+
+
         $today = new \DateTime();
-        $stripe = new StripeService();
-        $hours = $today->diff($inscription->getDateInscription())->h;
-        if ($hours < 48 )
-        $stripe->refundMoney($user,$formation,$formateur,$formation->getPrix()*100);
-
-            $entityManager->remove($inscription);
-            $entityManager->flush();
+        $days = $today->diff($inscription->getDateInscription())->d;
 
 
-        return $this->redirectToRoute('app_inscrit');
+        if ($days <3 ) {
+            $stripe = new StripeService();
+            if ($days == 2) {
+                $hours = $today->diff($inscription->getDateInscription())->h;
+                $minutes = $today->diff($inscription->getDateInscription())->i;
+                $seconds = $today->diff($inscription->getDateInscription())->s;
+                if (!($seconds || $minutes || $hours))
+                $stripe->refundMoney($user,$formation,$formateur,1);
+            }
+            else $stripe->refundMoney($user,$formation,$formateur,1);
+            }
+
+        $entityManager->remove($inscription);
+        $entityManager->flush();
+
+
+        return $this->redirectToRoute('app_formation_index',[]);
 
     }
     #[Route('/{idFormation}/edit', name: 'app_formation_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Formation $formation, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
-        $user = $this->getUser();
+
         $form = $this->createForm(FormationType::class, $formation);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -279,50 +317,32 @@ class FormationController extends AbstractController
             if (count($inscriptions)) {
                 $stripe = new StripeService();
                 foreach ($inscriptions as $inscription) {
+                    $i = $entityManager->getRepository(Inscription::class)->find($inscription->getIdInscription());
                     $customer = $inscription->getIdUser();
+
+
                     $date = $inscription->getDateInscription();
                     $today = new \DateTime();
-                    $diff = $today->diff($date);
+                    $diff = $today->diff($date)->d;
                     $duree = $formation->getDuree();
-                    $i = $entityManager->getRepository(Inscription::class)->find($inscription->getIdInscription());
-                    // Check if formation has ended
-                    $endDate = clone $date;
-                    $endDate->add(new \DateInterval('P' . $duree . 'W')); // Add duration in weeks
-                    if ($today > $endDate) {
-                        $entityManager->remove($i);
-                        $entityManager->flush();
-                        continue; // Skip refund if formation has ended
-                    }
 
-                    // Calculate the percentage of refund based on time passed
-                    $percentageRefund = 0;
-                    $weeksPassed = floor($diff->days / 7); // Calculate number of weeks passed
-                    if ($weeksPassed > 0) {
-                        $percentageRefund = ($weeksPassed / $duree) *100; // 50% refund for each week passed
-                    }
+                    $percentageRefund = round($diff / $duree * 7,2);
+                    if ($percentageRefund < 1)
+                        $stripe->refundMoney($customer, $formation, $formateur, 1 - $percentageRefund);
 
-                    // Perform refund if applicable
-                    if ($percentageRefund > 0) {
-                        $refundAmount = ($formation->getPrix() * $percentageRefund) / 100;
-                        $stripe->refundMoney($customer,$formation,$formateur,$refundAmount);
-                    }
                     $entityManager->remove($i);
                     $entityManager->flush();
-
                 }
             }
 
             $entityManager->remove($formation);
             $entityManager->flush();
         }
-        else {
-            if ( strpos($ref,'mesformations'))
-            return $this->redirectToRoute('app_mes_formations',[]);
-            else return $this->redirectToRoute('app_admin_gererformation',[]);
-        }
-        if ( strpos($ref,'mesformations'))
-            return $this->redirectToRoute('app_formation_index', [], Response::HTTP_SEE_OTHER);
-        else return $this->redirectToRoute('app_admin_gererformation',[]);
+
+
+        if ( strpos($ref,'admin'))
+            return $this->redirectToRoute('app_admin_gererformation',[]);
+        else  return $this->redirectToRoute('app_mes_formations', [], Response::HTTP_SEE_OTHER);
 
     }
 
@@ -344,6 +364,107 @@ class FormationController extends AbstractController
         return new Response($retour);
 
     }
+
+
+    #[Route('/show/{id}',name: 'app_show_formation')]
+    function showFormation(Request $request,EntityManagerInterface $entityManager,Formation $formation,ManagerRegistry $doctrine) {
+
+        $name=$doctrine->getRepository(Formation::class)->getNomFormateur($formation->getIdFormateur());
+        $formation->setNomFormateur($name);
+        $user = $this->getUser();
+        $allInscri = $entityManager->getRepository(Inscription::class)->findBy([
+            'idFormation' => $formation
+        ]);
+        isset($allInscri) ? $nbInscrits = count($allInscri) : $nbInscrits = 0;
+
+        $mine = False;
+        $inscri = False;
+        $progress = 0;
+        if (isset($user)) {
+            if ($user->getIdUser() == $formation->getIdFormateur()->getIdUser()) $mine = True;
+            else {
+                $inscription = $doctrine->getRepository(Inscription::class)->findOneBy([
+                    'idUser' => $user->getIdUser(),
+                    'idFormation' => $formation->getIdFormation(),
+                ]);
+                if  (isset($inscription)) {
+                    $inscri = True;
+
+                    $dateinscription = $inscription->getDateInscription();
+                    $now = new \DateTime();
+                    $duree = $formation->getDuree() *7;
+                    $diff = $now->diff($dateinscription);
+
+                    if ($diff->days > 0) {
+                        $progress = floor(($diff->days / $duree)*100);
+                        if ($progress > 100) $progress = 100;
+                    }
+                }
+            }
+
+
+        }
+        $stats = $this->getRatings($formation,$entityManager);
+
+
+        return $this->render('formation/show.html.twig',[
+           'formation' => $formation,
+            'inscrit' => $inscri,
+            'mine' => $mine,
+            'progressPercentage' => $progress,
+            'nbInscrits' => $nbInscrits,
+            'stats' => $stats
+
+        ]);
+    }
+
+    function getRatings($formation,EntityManagerInterface $entityManager) {
+        $ratings = $entityManager->getRepository(Rating::class)->findBy([
+           'idformation' => $formation->getIdFormation()
+        ]);
+        $total = count($ratings);
+        $sum = 0; $perc_5stars=0; $perc_4stars=0; $perc_3stars=0; $perc_2stars=0; $perc_1stars=0;
+        if ($total)  {
+            $total_5_stars = count(array_filter($ratings, function ($rating) {
+                return $rating->getNote() === 5;
+            }));
+            $perc_5stars =  floor(($total_5_stars/$total)*100);
+            $total_4_stars = count(array_filter($ratings, function ($rating) {
+                return $rating->getNote() === 4;
+            }));
+            $perc_4stars =  floor(($total_4_stars/$total)*100);
+            $total_3_stars = count(array_filter($ratings, function ($rating) {
+                return $rating->getNote() === 3;
+            }));
+            $perc_3stars =  floor(($total_3_stars/$total)*100);
+            $total_2_stars = count(array_filter($ratings, function ($rating) {
+                return $rating->getNote() === 2;
+            }));
+            $perc_2stars =  floor(($total_2_stars/$total)*100);
+            $total_1_stars = count(array_filter($ratings, function ($rating) {
+                return $rating->getNote() === 1;
+            }));
+            $perc_1stars = floor(($total_1_stars/$total)*100);
+            foreach ($ratings as $rating) {
+                $sum += $rating->getNote();
+            }
+            $sum = round($sum / $total,2) ;
+
+        }
+        return [
+            'total' => $total,
+            'rating' => $sum,
+            'perc_5_stars' => $perc_5stars,
+            'perc_4_stars' => $perc_4stars,
+            'perc_3_stars' => $perc_3stars,
+            'perc_2_stars' => $perc_2stars,
+            'perc_1_stars' => $perc_1stars,
+        ];
+    }
+
+
+
+
 }
 
 

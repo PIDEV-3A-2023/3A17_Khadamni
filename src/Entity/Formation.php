@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\FormationRepository;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -65,7 +67,23 @@ class Formation
     private $idFormateur;
 
     private $nomFormateur;
+    private float $rating;
 
+    /**
+     * @return float
+     */
+    public function getRating(): float
+    {
+        return $this->rating;
+    }
+
+    /**
+     * @param float $rating
+     */
+    public function setRating(float $rating): void
+    {
+        $this->rating = $rating;
+    }
 
 
     public function getIdFormation(): ?int
@@ -146,6 +164,8 @@ class Formation
     {
         return $this->getNomFormation(); // or any other property that uniquely identifies the entity
     }
+
+
 
 
 }

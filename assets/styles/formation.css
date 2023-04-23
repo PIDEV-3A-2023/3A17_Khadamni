@@ -46,14 +46,17 @@
     white-space: nowrap;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
-#prev-tab tr td ,
-#new-tab tr td {
+#prev-tab tr td,
+#new-tab tr td,
+#new-tab th
+{
     padding: 1rem 1.5rem;
 }
 #new-tab tr td:nth-last-child(1),
 #new-tab tr td:nth-last-child(2) {
     text-align: right;
 }
+
 
 .panel {
     display: flex;
@@ -63,6 +66,7 @@
     border: 2px solid transparent;
     border-radius: 7px;
     padding: 45px;
+    min-width: 60%;
 }
 
 .ligne {
@@ -118,4 +122,62 @@
     display: none;
 }
 
+.f-cont {
+    background: rgb(255,255,255,0.3);
+    padding: 30px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto;
+    gap: 15px;
+
+}
+.f-info {
+    background: rgb(255,255,255,0.8);
+    border-radius: 7px;
+    grid-column: 2/-1;
+    grid-row: 1/ span 2 ;
+    display: flex;
+    flex-direction: column;
+}
+.f-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border-radius: 7px;
+    margin: 15px;
+    height: 100%;
+    position: relative;
+}
+.f-stats {
+    background: rgb(255,255,255,0.8);
+    border-radius: 7px;
+    grid-row: 2/-1;
+    grid-column: 1/2;
+    padding: 25px;
+
+}
+.f-prog {
+    background: rgb(255,255,255,0.8);
+    border-radius: 7px;
+    grid-row: 1/2;
+    grid-column: 1/2;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+
+}
+
+#m-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.h-star {
+    width: 1.25rem;
+    height: 1.25rem;
+    padding: 1px;
+}
 

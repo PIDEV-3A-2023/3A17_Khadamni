@@ -132,7 +132,7 @@ public function __construct()
     return $checkout;
 
  }
- public function refundMoney($user,$formation,$formateur,$amount) {
+ public function refundMoney($user,$formation,$formateur,$refundPercentage) {
      $customer = $this->retrieveCustomer($user);
      $receiver = $this->retriveAccount($formateur->getEmail());
 
@@ -144,9 +144,11 @@ public function __construct()
 
      $p = $this->stripe->paymentIntents->search(['query' => $query,'limit' => '1'
      ]);
+
      $t = $this->stripe->transfers->all(['destination' => $receiver->id , 'transfer_group' => $p->data[0]->transfer_group
      ]);
 
+      $amount = $t->data[0]->amount * $refundPercentage;
      return $this->stripe->transfers->createReversal(
          $t->data[0]->id,
          ['amount' => $amount , 'refund_application_fee' => true]
