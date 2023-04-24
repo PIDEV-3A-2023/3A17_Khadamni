@@ -22,6 +22,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Form\EtatReclamationType;
 
 use Symfony\Component\Validator\Constraints\Valid;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/reclamation')]
 class ReclamationController extends AbstractController
@@ -29,14 +31,18 @@ class ReclamationController extends AbstractController
 
 
     #[Route('/', name: 'app_reclamation_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(EntityManagerInterface $entityManager,PaginatorInterface $paginator,Request $request): Response
     {
         $reclamations = $entityManager
             ->getRepository(Reclamation::class)
             ->findAll();
 
+            $pagination =   $paginator->paginate(
+                $reclamations,
+                $request->query->getInt('page', 1), 5
+            );
         return $this->render('reclamation/index.html.twig', [
-            'reclamations' => $reclamations,
+            'pagination' => $pagination,
         ]);
     }
 
@@ -136,6 +142,8 @@ class ReclamationController extends AbstractController
          return $this->renderForm('reclamation/show.html.twig', [
             'reclamation' => $reclamation,
             'form'=>$form , 
+            
+
         ]);
     }
 
@@ -268,6 +276,18 @@ public function back(EntityManagerInterface $entityManager): Response
 
     return $this->render('Admin/RaclamtionBack.html.twig', [
         'reclamations' => $reclamations,
+    ]);
+}
+
+
+#[Route('/reclamation/{id}', name: 'reclamation_increment', methods: ['POST'])]
+public function incrementernbr_vue(Request $request, Reclamation $reclamation): JsonResponse
+{
+    $reclamation->incrementernbr_vue();
+    $this->getDoctrine()->getManager()->flush();
+
+    return $this->json([
+        'nombreClics' => $reclamation->getNbr_vue(),
     ]);
 }
 

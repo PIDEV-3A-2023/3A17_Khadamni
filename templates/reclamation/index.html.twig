@@ -56,7 +56,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for reclamation in reclamations %}
+        {% for reclamation in pagination %}
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 <td class="px-6 py-4">{{ reclamation.idReclamation }}</td>
                 <td class="px-6 py-4">{{ reclamation.dateReclamation ? reclamation.dateReclamation|date('Y-m-d') : '' }}</td>
@@ -90,6 +90,11 @@
         {% endfor %}
         </tbody>
     </table>
+    <br>
+    </div>
+    <div class="pagination">
+    {{ knp_pagination_render(pagination, 'pagination.html.twig') }}
+</div>
 
    
                     </div>

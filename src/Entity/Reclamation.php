@@ -161,7 +161,32 @@ public function removeSuiviReclamation(SuiviReclamation $suiviReclamation): self
     return $this;
 }
 
+/**
+     * @var int|null
+     *
+     */
 
+    
+    #[ORM\Column(name: 'nbr_vue', type: 'integer', nullable: true)]
+    private $nbr_vue = 0;
 
+    public function getNbr_vue(): ?int
+    {
+        return $this->nbr_vue;
+    }
+    
+    public function setNbr_vue(?int $nbr_vue): self
+    {
+        $this->nbr_vue = $nbr_vue;
+    
+        return $this;
+    }
+    
+    public function incrementernbr_vue(): self
+    {
+        $this->nbr_vue++;
+    
+        return $this;
+    }
 
 }
