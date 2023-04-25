@@ -124,6 +124,19 @@ class Reclamation
 
         return $this;
     }
+    private String $etat ;
+
+    public function getEtat ():String{
+        return $this->etat;
+    }
+
+    public function setEtat(String $etat)
+    {
+        $this->etat = $etat;
+
+       
+    }
+
 /**
  * @ORM\OneToMany(targetEntity=SuiviReclamation::class, mappedBy="reclamation")
  */
@@ -167,8 +180,8 @@ public function removeSuiviReclamation(SuiviReclamation $suiviReclamation): self
      */
 
     
-    #[ORM\Column(name: 'nbr_vue', type: 'integer', nullable: true)]
-    private $nbr_vue = 0;
+    #[ORM\Column(name: 'nbr_vue', type: 'integer', nullable: false)]
+    private $nbr_vue ; 
 
     public function getNbr_vue(): ?int
     {
@@ -182,11 +195,6 @@ public function removeSuiviReclamation(SuiviReclamation $suiviReclamation): self
         return $this;
     }
     
-    public function incrementernbr_vue(): self
-    {
-        $this->nbr_vue++;
     
-        return $this;
-    }
 
 }

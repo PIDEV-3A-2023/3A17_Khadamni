@@ -37,6 +37,15 @@ class ReclamationController extends AbstractController
             ->getRepository(Reclamation::class)
             ->findAll();
 
+            foreach ($reclamations as $reclamation)
+            {
+                    $suivi =$entityManager->getRepository(SuiviReclamation::class)->findOneBy(['idReclamation'=> $reclamation->getIdReclamation()]);
+                    if (isset($suivi))
+                    $reclamation->setEtat($suivi->getEtatReclamation());
+                    else $reclamation->setEtat('non_traitee');
+
+            }
+
             $pagination =   $paginator->paginate(
                 $reclamations,
                 $request->query->getInt('page', 1), 5
@@ -121,6 +130,10 @@ class ReclamationController extends AbstractController
     #[Route('/{idReclamation}', name: 'app_reclamation_show')]
     public function show(Reclamation $reclamation,EntityManagerInterface $entityManager,Request $request): Response
     {
+        $reclamation->setNbr_vue($reclamation->getNbr_vue() + 1);
+        $entityManager->flush();
+
+
         $suivi = new SuiviReclamation() ; 
                 $form = $this->createForm(EtatReclamationType::class,$suivi);
         $form->handleRequest($request);
