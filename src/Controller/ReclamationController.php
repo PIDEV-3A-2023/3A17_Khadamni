@@ -24,6 +24,8 @@ use App\Form\EtatReclamationType;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use Symfony\UX\Chartjs\Model\Chart;
 
 #[Route('/reclamation')]
 class ReclamationController extends AbstractController
@@ -55,10 +57,58 @@ class ReclamationController extends AbstractController
         ]);
     }
 
-   
 
 
-    #[Route('/modifier/{id}', name: 'app_reclamation_etat')]
+    #[Route('/stat', name: 'app_reclamation_stat')]
+public function stat(ChartBuilderInterface $chartBuilder, EntityManagerInterface $entityManager): Response
+{
+   // $data = $suiviReclamationRepository->countByEtatReclamation();
+$x=0;
+$y=0;
+$z=0;
+
+    $suiviReclamation = $entityManager
+    ->getRepository(SuiviReclamation::class)
+    ->findAll();
+
+
+    $chart = $chartBuilder->createChart(Chart::TYPE_BAR);
+for($i=0;$i<count($suiviReclamation);$i++){
+    if($suiviReclamation[$i]->getEtatReclamation()=="en_cours"){
+        $x+=1;
+    }else 
+    if($suiviReclamation[$i]->getEtatReclamation()=="non traitée"){
+        $y+=1;
+}else {$z+=1;} 
+}
+
+    $chart->setData([
+        'labels' => ['En Cours', 'Non Traitée', 'Traité'],
+        'datasets' => [
+            [
+                'label' => 'Réclamations',
+                'backgroundColor' => ['#007bff', '#28a745', '#dc3545'],
+                'borderColor' => ['#007bff', '#28a745', '#dc3545'],
+                'data' => [$x,$y,$z],
+            ],
+        ],
+    ]);
+
+    $chart->setOptions([
+        'scales' => [
+            'y' => [
+                'suggestedMin' => 0,
+                'suggestedMax' => 100,
+            ],
+        ],
+    ]);
+
+    return $this->render('reclamation/stat.html.twig', [
+        'chart' => $chart,
+    ]);
+}
+
+   #[Route('/modifier/{id}', name: 'app_reclamation_etat')]
     public function modifier_etat(EntityManagerInterface $entityManager,Reclamation $reclamation): Response
     {
         $reclamations = $entityManager
@@ -94,17 +144,15 @@ class ReclamationController extends AbstractController
 
     $form = $this->createForm(ReclamationType::class, $reclamation);
     $form->handleRequest($request);
-
+    $badWordsFile = 'C:\Users\USER\Desktop\mots interdites.txt';
+$badWords = file($badWordsFile, FILE_IGNORE_NEW_LINES);
+    $pattern = '/\b(' . implode('|', $badWords) . ')\b/i';
     if ($form->isSubmitted() && $form->isValid()) {
-        
         // Detect bad words in the description
         $description = $form->get('description')->getData();
-        $badWords = ['bad', 'words', 'list'];
-        $pattern = '/\b(' . implode('|', $badWords) . ')\b/i';
         if (preg_match($pattern, $description)) {
             // Add a flash message to inform the user that the description contains bad words
             $this->addFlash('warning', 'Votre description contient des mots interdits.');
-            
         } else {
             // Save the reclamation and create a new SuiviReclamation
             $entityManager->persist($reclamation);
@@ -114,7 +162,7 @@ class ReclamationController extends AbstractController
             $suivi->setIdReclamation($reclamation);
             $entityManager->persist($suivi);
             $entityManager->flush();
-
+    
             return $this->redirectToRoute('app_reclamation_front', [], Response::HTTP_SEE_OTHER);
         }
     }
@@ -125,9 +173,7 @@ class ReclamationController extends AbstractController
     ]);
 }
 
-    
-
-    #[Route('/{idReclamation}', name: 'app_reclamation_show')]
+ #[Route('/{idReclamation}', name: 'app_reclamation_show')]
     public function show(Reclamation $reclamation,EntityManagerInterface $entityManager,Request $request): Response
     {
         $reclamation->setNbr_vue($reclamation->getNbr_vue() + 1);
@@ -278,8 +324,6 @@ public function messages(Request $request, $idReclamation)
     ]);
 }
 
-
-
 #[Route('/back/ok', name: 'app_reclamation_back', methods: ['GET'])]
 public function back(EntityManagerInterface $entityManager): Response
 {
@@ -293,16 +337,6 @@ public function back(EntityManagerInterface $entityManager): Response
 }
 
 
-#[Route('/reclamation/{id}', name: 'reclamation_increment', methods: ['POST'])]
-public function incrementernbr_vue(Request $request, Reclamation $reclamation): JsonResponse
-{
-    $reclamation->incrementernbr_vue();
-    $this->getDoctrine()->getManager()->flush();
-
-    return $this->json([
-        'nombreClics' => $reclamation->getNbr_vue(),
-    ]);
-}
 
 
 }
