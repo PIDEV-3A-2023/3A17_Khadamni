@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 @import "style.css";
+@import "formation.css";
+
 
 .hidden {
     display: none;

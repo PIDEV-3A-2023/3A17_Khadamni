@@ -13,8 +13,8 @@
 					<p
 						class="text-sm text-gray-600 flex items-center">
 						{# <svg class="fill-current text-gray-500 w-3 h-3 mr-2" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20">
-																																																																																																																																																																			<path d="M4 8V6a6 6 0 1 1 12 0v2h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-8c0-1.1.9-2 2-2h1zm5 6.73V17h2v-2.27a2 2 0 1 0-2 0zM7 6v2h6V6a3 3 0 0 0-6 0z"/>
-																																																																																																																																																																		</svg> #}
+																																																																																																																																																																																																	<path d="M4 8V6a6 6 0 1 1 12 0v2h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-8c0-1.1.9-2 2-2h1zm5 6.73V17h2v-2.27a2 2 0 1 0-2 0zM7 6v2h6V6a3 3 0 0 0-6 0z"/>
+																																																																																																																																																																																																</svg> #}
 						Salaire:
 						<span class="text-blue-600 dark:text-blue-500">
 							{{ emploi.salaire }}
@@ -42,7 +42,11 @@
 					<p>Competence:
 						<span class="text-blue-600 dark:text-blue-500">{{ emploi.typeContrat }}</span>
 					</p>
-					<a href="{{ path('app_candidature_new') }}">
+					<p>Competence:
+						<span class="text-blue-600 dark:text-blue-500">{{ emploi.idEmploi }}</span>
+					</p>
+
+					<a href="{{ path('app_candidature_new',{'IdEmploi':emploi.idEmploi}) }} ">
 						<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded float-right ">
 							Ajouter votre Candidature
 						</button>

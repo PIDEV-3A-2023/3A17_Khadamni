@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\FormationRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Formation
@@ -10,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Table(name: 'formation')]
 #[ORM\Index(name: 'id_formateur_idx_idx', columns: ['id_formateur'])]
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: FormationRepository::class)]
 class Formation
 {
     /**
@@ -27,6 +29,7 @@ class Formation
      *
      */
     #[ORM\Column(name: 'nom_formation', type: 'string', length: 45, nullable: false)]
+    #[Assert\Length(min: 4,minMessage: "le nom doit contenir au moins 4 caracteres")]
     private $nomFormation;
 
     /**
@@ -34,6 +37,7 @@ class Formation
      *
      */
     #[ORM\Column(name: 'description', type: 'string', length: 45, nullable: false)]
+    #[Assert\Length(min: 10,minMessage: "la déscription doit contenir au moins 10 caracteres")]
     private $description;
 
     /**
@@ -41,6 +45,7 @@ class Formation
      *
      */
     #[ORM\Column(name: 'duree', type: 'integer', nullable: false)]
+    #[Assert\GreaterThanOrEqual(1,message: "la valeur doit etre supérieur à 1")]
     private $duree;
 
     /**
@@ -48,6 +53,7 @@ class Formation
      *
      */
     #[ORM\Column(name: 'prix', type: 'integer', nullable: false)]
+    #[Assert\GreaterThanOrEqual(1,message: "la valeur doit etre supérieur à 1")]
     private $prix;
 
     /**
@@ -57,6 +63,10 @@ class Formation
     #[ORM\JoinColumn(name: 'id_formateur', referencedColumnName: 'id_user')]
     #[ORM\ManyToOne(targetEntity: 'User')]
     private $idFormateur;
+
+    private $nomFormateur;
+
+
 
     public function getIdFormation(): ?int
     {
@@ -73,6 +83,16 @@ class Formation
         $this->nomFormation = $nomFormation;
 
         return $this;
+    }
+
+    public function setNomFormateur($nomFormateur): void
+    {
+        $this->nomFormateur = $nomFormateur;
+    }
+
+    public function getNomFormateur()
+    {
+        return $this->nomFormateur;
     }
 
     public function getDescription(): ?string
@@ -121,6 +141,10 @@ class Formation
         $this->idFormateur = $idFormateur;
 
         return $this;
+    }
+    public function __toString()
+    {
+        return $this->getNomFormation(); // or any other property that uniquely identifies the entity
     }
 
 

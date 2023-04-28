@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * Emploi
@@ -160,5 +161,18 @@ class Emploi
         $this->idUser = $idUser;
 
         return $this;
+    }
+
+
+    private bool $liked;
+
+    public  function  getLiked(): bool
+    {
+        return $this->liked;
+    }
+
+    public function setLiked(bool $liked)
+    {
+        $this->liked = $liked;
     }
 }

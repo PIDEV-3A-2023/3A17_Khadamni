@@ -38,6 +38,30 @@
             "./migrations/.gitignore"
         ]
     },
+    "google/apiclient": {
+        "version": "2.13",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "2.10",
+            "ref": "07a97ec434d43b7903c78069a04c92adb6442e52"
+        },
+        "files": [
+            "./config/packages/google_apiclient.yaml"
+        ]
+    },
+    "nyholm/psr7": {
+        "version": "1.7",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "0cd4d2d0e7f646fda75f9944f747a56e6ed13d4c"
+        },
+        "files": [
+            "./config/packages/nyholm_psr7.yaml"
+        ]
+    },
     "phpunit/phpunit": {
         "version": "9.6",
         "recipe": {
@@ -118,6 +142,15 @@
             "./src/Controller/.gitignore",
             "./src/Kernel.php"
         ]
+    },
+    "symfony/linked-in-notifier": {
+        "version": "5.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.2",
+            "ref": "21d7ed2d9f265bcef8e55acff05be602957055e6"
+        }
     },
     "symfony/mailer": {
         "version": "5.4",

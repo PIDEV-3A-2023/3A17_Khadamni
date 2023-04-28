@@ -6,6 +6,7 @@ use App\Entity\Emploi;
 use App\Entity\Favoris;
 use App\Entity\User;
 use App\Form\EmploiType;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,38 +28,61 @@ class EmploiController extends AbstractController
         ]);
     }
 
+
+    public function isLikedByUser($idEmploi, $idUser, EntityManagerInterface $entityManager)
+    {
+        $favoris = $entityManager->getRepository(Favoris::class)->findOneBy([
+            'idEmploi' => $idEmploi,
+            'idUser' => $idUser
+        ]);
+
+        return $favoris;
+    }
+
     #[Route('/front', name: 'app_emploi_front', methods: ['GET'])]
     public function userfront(EntityManagerInterface $entityManager): Response
     {
         $emplois = $entityManager
             ->getRepository(Emploi::class)
             ->findAll();
+        $user = $this->getUser(); {
+            foreach ($emplois as $emploi) {
+                if (isset($user)) {
+                    $Liked = $this->isLikedByUser($emploi->getIdEmploi(), $user->getIdUser(), $entityManager);
 
+                    if (isset($Liked)) {
+                        $emploi->setLiked(true);
+                    } else  $emploi->setLiked(false);
+                } else  $emploi->setLiked(false);
+            }
+        }
         return $this->render('emploi/emploiF.html.twig', [
             'emplois' => $emplois,
+
+
         ]);
     }
 
     #[Route('/new', name: 'app_emploi_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $user = $this->getUser();
         $emploi = new Emploi();
+        $emploi->setDatePublication(new DateTime());
+        $emploi->setIdUser($user);
+
         $form = $this->createForm(EmploiType::class, $emploi);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Récupération de l'utilisateur connecté
-
-            // Affectation de l'utilisateur à l'emploi
-            $emploi->setIdUser($entityManager->getReference(User::class, 1));
-
             $entityManager->persist($emploi);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_emploi_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('Admin/Addemploi.html.twig', [
+        return $this->renderForm('emploi/new.html.twig', [
             'emploi' => $emploi,
             'form' => $form,
         ]);
@@ -121,15 +145,25 @@ class EmploiController extends AbstractController
 
     public function addFavoris(Emploi $emploi, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $user = $this->getUser();
+        $Liked = $this->isLikedByUser($emploi->getIdEmploi(), $user->getIdUser(), $entityManager);
+        if (isset($Liked)) {
+            return $this->redirectToRoute('app_favoris_index');
+        }
         $favoris = new Favoris();
         $favoris->setIdEmploi($emploi);
-        // $favoris->setIdUser($this->getUser());
+        $favoris->setIdUser($user);
 
         $entityManager->persist($favoris);
         $entityManager->flush();
 
         return $this->redirectToRoute('app_favoris_index');
     }
+
+
+
+
 
 
     // #[Route('/likedEmploi', name: 'app_emploi_liked', methods: ['GET'])]
@@ -141,6 +175,22 @@ class EmploiController extends AbstractController
     //     $emplois = $favorisRepo->findAll();
 
     //     return $this->render('emploi/favoris.html.twig', [
+    //         'emplois' => $emplois,
+    //     ]);
+    // }
+
+
+    // #[Route('/mesemplois', name: 'app_mesemplois', methods: ['GET'])]
+    // public function mesEmploi(EntityManagerInterface $entityManager): Response
+    // {
+    //     $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+    //     $user = $this->getUser();
+    //     $emplois = $entityManager
+
+    //         ->getRepository(Emploi::class)
+    //         ->findBy(["idUser" => $user]);
+
+    //     return $this->render('Admin/mesemploi.html.twig', [
     //         'emplois' => $emplois,
     //     ]);
     // }

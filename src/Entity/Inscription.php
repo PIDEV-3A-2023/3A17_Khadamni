@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\InscriptionRepository;
 
 /**
  * Inscription
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'inscription')]
 #[ORM\Index(name: 'id_formation_idx', columns: ['id_formation'])]
 #[ORM\Index(name: 'id_user_idx', columns: ['id_user'])]
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: InscriptionRepository::class)]
 class Inscription
 {
     /**

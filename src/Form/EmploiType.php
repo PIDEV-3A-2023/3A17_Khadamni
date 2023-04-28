@@ -43,7 +43,7 @@ class EmploiType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('datePublication')
+
 
             ->add('salaire', TextType::class, [
                 'constraints' => [

@@ -33,6 +33,13 @@ class Role
         return $this->idRole;
     }
 
+    /**
+     * @param int $idRole
+     */
+    public function setIdRole(int $idRole): void
+    {
+        $this->idRole = $idRole;
+    }
     public function getTypeRole(): ?string
     {
         return $this->typeRole;
@@ -44,6 +51,9 @@ class Role
 
         return $this;
     }
-
+    public function __toString(): string
+    {
+        return $this->getIdRole(); // Replace this with the appropriate property or method that returns the string representation of the Role object
+    }
 
 }
