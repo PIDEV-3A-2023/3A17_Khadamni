@@ -1,4 +1,10 @@
+{% extends 'baseBack.html.twig' %}
+{% block body %}
 <form method="post" action="{{ path('app_evenement_delete', {'idevenement': evenement.idevenement}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ evenement.idevenement) }}">
     <button class="btn">Supprimer</button>
+
+    
+    
 </form>
+{% endblock %}

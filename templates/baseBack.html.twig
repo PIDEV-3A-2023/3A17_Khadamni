@@ -30,12 +30,17 @@
 		{% endblock %}
 	</head>
 	<body class="main">
-		{% block body %}
+	
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          {% block body %}
 		<a href="#" class="navbar-brand mb-6">
           <img src="{{ asset('LOGOKHADAMNI.png') }}" class="block h-20 rounded-full sm:shrink-0 animate-bounce" alt="logo">
           <span class="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900 text-white self-center px-1 whitespace-nowrap animate-bounce">KHADAMNI</span>
         </a>
 			<header class="head">
+			
 			
   {% block header %}
     <nav class="navbar bg-light d-flex flex-column justify-content-start align-items-start">
@@ -44,32 +49,37 @@
       <div class="container mx-auto"> 
 
         <ul class="nav flex-column text-white text-sm tracking-wide items-center gap-y-2">
-          <li class="nav-item hover:scale-125 duration-300">
-            <a class="nav-link cursor-pointer" href="{{ path('app_home') }}">Acceuil</a>
-          </li>
-          <li class="nav-item hover:scale-125 duration-300">
-            <a class="nav-link cursor-pointer" href="{{ path('app_emploi_front') }}">Emplois</a>
-          </li>
-          <li class="nav-item hover:scale-125 duration-300">
-            <a class="nav-link cursor-pointer">Stages</a>
-          </li>
-          <li class="nav-item hover:scale-125 duration-300">
-            <a class="nav-link cursor-pointer">Formations</a>
-          </li>
-          <li class="nav-item hover:scale-125 duration-300">
-            <a class="nav-link cursor-pointer">Événements</a>
-          </li>
-          <li class="nav-item hover:scale-125 duration-300">
-            <a class="nav-link cursor-pointer">Contact</a>
-          </li>
-        </ul>
+  <li class="nav-item">
+    <a class="nav-link cursor-pointer" href="{{ path('app_home') }}">Acceuil</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link cursor-pointer" href="{{ path('app_emploi_front') }}">Emplois</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link cursor-pointer">Stages</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link cursor-pointer">Formations</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link cursor-pointer">Événements</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link cursor-pointer">Contact</a>
+  </li>
+</ul>
+
 
       </div>
     </nav>
   {% endblock %}
-</header>
+        </div>
+        
+  
+		
 
-			<div class="content">
+  <div class="col-sm-9 col-md-10 main">
+          <div class="content">
 				{% block content %}
 					<div class="c1">
 						<h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-6xl ">
@@ -235,5 +245,11 @@
 				{% endblock %}
 			</footer>
 		{% endblock %}
+        </div>
+      </div>
+    </div>
+</header>
+
+			
 	</body>
 </html>

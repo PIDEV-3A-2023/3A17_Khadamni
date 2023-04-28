@@ -30,9 +30,7 @@
         </tbody>
     </table>
     </div>
-
-    <img src="{{ asset('uploads/my-image.jpg') | imagine_filter('thumbnail') }}" alt="My Image">
-
+    {{ knp_pagination_render(pagination) }}
 
     <a href="{{ path('app_avis_edit', {'idAvis': avi.idAvis}) }}">Modifier</a>
 

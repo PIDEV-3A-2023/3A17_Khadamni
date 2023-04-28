@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Evenement;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,6 +17,11 @@ class EvenementType extends AbstractType
             ->add('descriptionevenement')
             ->add('inviter')
             ->add('dateevenement')
+            ->add('imageFile', FileType::class, [
+                'label' => 'Image (JPG, PNG file)',
+                'mapped' => false,
+                'required' => false,
+            ]);
         ;
     }
 

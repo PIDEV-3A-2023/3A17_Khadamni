@@ -4,12 +4,19 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    uploads_directory: '%kernel.project_dir%/public/uploads'
+    meteo_api_key: '76ef4f65db70b36e26f95440670053d2e2c3c9d8c4ac96ba9b483ec0c5ee4e5a'
+
 
 services:
+    App\Service\MeteoConceptService:
+        arguments:
+            $apiKey: '%env(METEO_CONCEPT_API_KEY)%'
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

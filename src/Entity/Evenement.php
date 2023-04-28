@@ -50,6 +50,11 @@ class Evenement
     #[ORM\Column(name: 'dateEvenement', type: 'date', nullable: false)]
     private $dateevenement;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $imageFilename;
+
     public function getIdevenement(): ?int
     {
         return $this->idevenement;
@@ -129,6 +134,18 @@ class Evenement
     public function setDateevenement(\DateTimeInterface $dateevenement): self
     {
         $this->dateevenement = $dateevenement;
+
+        return $this;
+    }
+
+    public function getImageFilename(): ?string
+    {
+        return $this->imageFilename;
+    }
+
+    public function setImageFilename(string $imageFilename): self
+    {
+        $this->imageFilename = $imageFilename;
 
         return $this;
     }
