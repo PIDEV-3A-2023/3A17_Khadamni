@@ -10,7 +10,6 @@ use App\Form\FormationType;
 use App\Repository\FormationRepository;
 use App\Service\MailerService;
 use App\Service\StripeService;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -180,6 +179,7 @@ class FormationController extends AbstractController
             $inscri->setIdUser($user);
             $inscri->setDateInscription(new \DateTime());
 
+
             $entityManager->persist($inscri);
             $entityManager->flush();
 
@@ -251,7 +251,7 @@ class FormationController extends AbstractController
     }
 
     #[Route('/refund/{id}',name: 'app_formation_refund')]
-    public function refundInscription(EntityManagerInterface $entityManager,Formation $formation,Request $request) {
+    public function refundInscription(EntityManagerInterface $entityManager,Formation $formation) {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
         $user = $this->getUser();
         $formateur = $formation->getIdFormateur();
@@ -263,25 +263,24 @@ class FormationController extends AbstractController
 
         $today = new \DateTime();
         $days = $today->diff($inscription->getDateInscription())->d;
+        $duree = $formation->getDuree()*7;
+        $stripe = new StripeService();
 
 
-        if ($days <3 ) {
-            $stripe = new StripeService();
-            if ($days == 2) {
-                $hours = $today->diff($inscription->getDateInscription())->h;
-                $minutes = $today->diff($inscription->getDateInscription())->i;
-                $seconds = $today->diff($inscription->getDateInscription())->s;
-                if (!($seconds || $minutes || $hours))
-                $stripe->refundMoney($user,$formation,$formateur,1);
-            }
-            else $stripe->refundMoney($user,$formation,$formateur,1);
-            }
+        $percentageRefund = round($days / $duree,2) ;
+
+        if ($days < 2 )
+         $stripe->refundMoney($user,$formation,$formateur,1);
+        else $stripe->refundMoney($user,$formation,$formateur,1-$percentageRefund);
+
 
         $entityManager->remove($inscription);
         $entityManager->flush();
 
 
-        return $this->redirectToRoute('app_formation_index',[]);
+        return $this->redirectToRoute('app_show_formation',[
+            'id' => $formation->getIdFormation(),
+        ]);
 
     }
     #[Route('/{idFormation}/edit', name: 'app_formation_edit', methods: ['GET', 'POST'])]
@@ -324,9 +323,9 @@ class FormationController extends AbstractController
                     $date = $inscription->getDateInscription();
                     $today = new \DateTime();
                     $diff = $today->diff($date)->d;
-                    $duree = $formation->getDuree();
+                    $duree = $formation->getDuree() *7;
 
-                    $percentageRefund = round($diff / $duree * 7,2);
+                    $percentageRefund = round($diff / $duree,2) ;
                     if ($percentageRefund < 1)
                         $stripe->refundMoney($customer, $formation, $formateur, 1 - $percentageRefund);
 
@@ -347,18 +346,19 @@ class FormationController extends AbstractController
     }
 
     #[Route('/search',name: 'searchFormationName',methods:['GET'])]
-    public function searchFormationName(Request $req,ManagerRegistry $doctrine,NormalizerInterface $normalizer,FormationRepository $fr)
+    public function searchFormations(Request $req,ManagerRegistry $doctrine,NormalizerInterface $normalizer,FormationRepository $fr)
     {
+        $user = $this->getUser();
         $searchValue = $req->get('searchValue');
-        $critere = $req->get('critere');
+        $minPrix = $req->get('minPrix');
+        $maxPrix = $req->get('maxPrix');
+        $minDur = $req->get('minDuree');
+        $maxDur = $req->get('maxDuree');
+        $referer = $req->headers->get('referer');
+        if (strpos($referer,'mesformations'))
+        $formations = $fr->findformationByX($searchValue,$minPrix,$maxPrix,$minDur,$maxDur,$user->getIdUser());
+        else $formations =  $fr->findformationForAdmin($searchValue,'nomFormation');
 
-        $formations = $fr->findformationByX($searchValue,$critere);
-        if (count($formations) > 0) {
-            foreach ($formations as $f) {
-                $name=$doctrine->getRepository(Formation::class)->getNomFormateur($f->getIdFormateur());
-                $f->setNomFormateur($name);
-            }
-        }
         $jsonContent = $normalizer->normalize($formations,'json');
         $retour = json_encode($jsonContent);
         return new Response($retour);
@@ -380,6 +380,7 @@ class FormationController extends AbstractController
         $mine = False;
         $inscri = False;
         $progress = 0;
+        $userRating = 0;
         if (isset($user)) {
             if ($user->getIdUser() == $formation->getIdFormateur()->getIdUser()) $mine = True;
             else {
@@ -394,7 +395,11 @@ class FormationController extends AbstractController
                     $now = new \DateTime();
                     $duree = $formation->getDuree() *7;
                     $diff = $now->diff($dateinscription);
-
+                    $userRating = $entityManager->getRepository(Rating::class)->findOneBy([
+                      'idformation' => $formation->getIdFormation(),
+                      'iduser' => $user->getIdUser()
+                    ]);
+                    isset($userRating) ? $userRating = $userRating->getNote() : $userRating = 0;
                     if ($diff->days > 0) {
                         $progress = floor(($diff->days / $duree)*100);
                         if ($progress > 100) $progress = 100;
@@ -413,7 +418,8 @@ class FormationController extends AbstractController
             'mine' => $mine,
             'progressPercentage' => $progress,
             'nbInscrits' => $nbInscrits,
-            'stats' => $stats
+            'stats' => $stats,
+            'userRating' => $userRating
 
         ]);
     }

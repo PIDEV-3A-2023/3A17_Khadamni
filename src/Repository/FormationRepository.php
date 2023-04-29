@@ -40,13 +40,35 @@ class FormationRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-    public function findformationByX($value,$critere) {
+    public function findformationByX($value, $minPrix,$maxPrix,$minDur,$maxDur, $id) {
         return $this->createQueryBuilder('formation')
-            ->where('formation.'.$critere.' LIKE :value')
-            ->setParameter('value',$value.'%')
+            ->where('formation.nomFormation LIKE :value')
+            ->andWhere('formation.idFormateur = :id')
+            ->andWhere('formation.prix >= :minPrix')
+            ->andWhere('formation.prix <= :maxPrix')
+            ->andWhere('formation.duree >= :minDur')
+            ->andWhere('formation.duree <= :maxDur')
+            ->setParameters([
+                'value' => $value.'%',
+                'id' => $id,
+                'minPrix' => $minPrix,
+                'maxPrix' => $maxPrix,
+                'minDur' => $minDur,
+                'maxDur'=> $maxDur
+            ])
             ->getQuery()
             ->getResult();
     }
+    public function findformationForAdmin($value, $critere) {
+        return $this->createQueryBuilder('formation')
+            ->where('formation.'.$critere.' LIKE :value')
+            ->setParameter(
+                'value' , $value.'%',
+            )
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findformationByNomFormateur($nom,$prenom) {
         $em = $this->getEntityManager();
         $req = $em->createQuery('

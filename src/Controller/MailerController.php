@@ -24,9 +24,9 @@ class MailerController extends AbstractController
         $formation = $entityManager->getRepository(Formation::class)->find($IDformation);
         $name=$entityManager->getRepository(Formation::class)->getNomFormateur($formation->getIdFormateur());
         $formation->setNomFormateur($name);
-        date_default_timezone_set('Africa/Tunis');
         $email = (new TemplatedEmail())
             ->from('khadamni12@gmail.com')
+            //->to($user->getEmail())
             ->to('atefbadreddine05@gmail.com')
             ->subject('Facture de Paiement Khadamni')
             ->htmlTemplate('formation/FactureMail.html.twig')

@@ -1,10 +1,9 @@
+@import "style.css";
+@import "formation.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import "style.css";
-
-@import "formation.css";
 
 
 .hidden {
