@@ -26,7 +26,7 @@ class SmsTelController extends AbstractController
         "+216".$toPhoneNumber,
         [
             'from' => '+16205428363', 
-            'body' => 'La réclamation du Client Foulen Ben Foulen a été éditée le ',
+            'body' => 'Votre Reclamation a été traitée',
         ]
     );
   

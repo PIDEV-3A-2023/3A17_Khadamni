@@ -62,7 +62,7 @@ class ReclamationController extends AbstractController
     #[Route('/stat', name: 'app_reclamation_stat')]
 public function stat(ChartBuilderInterface $chartBuilder, EntityManagerInterface $entityManager): Response
 {
-   // $data = $suiviReclamationRepository->countByEtatReclamation();
+   
 $x=0;
 $y=0;
 $z=0;
@@ -180,6 +180,10 @@ $badWords = file($badWordsFile, FILE_IGNORE_NEW_LINES);
         $entityManager->flush();
 
 
+        $suiviReclamation = $entityManager
+    ->getRepository(SuiviReclamation::class)
+    ->findOneBy(['idReclamation' => $reclamation->getIdReclamation()]);
+
         $suivi = new SuiviReclamation() ; 
                 $form = $this->createForm(EtatReclamationType::class,$suivi);
         $form->handleRequest($request);
@@ -201,6 +205,7 @@ $badWords = file($badWordsFile, FILE_IGNORE_NEW_LINES);
          return $this->renderForm('reclamation/show.html.twig', [
             'reclamation' => $reclamation,
             'form'=>$form , 
+            'suiviReclamation'=>$suiviReclamation,
             
 
         ]);
@@ -211,13 +216,22 @@ $badWords = file($badWordsFile, FILE_IGNORE_NEW_LINES);
     {
         $form = $this->createForm(ReclamationType::class, $reclamation);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_reclamation_front', [], Response::HTTP_SEE_OTHER);
+            $dateCreation = $reclamation->getDateReclamation();
+            $dateActuelle = new \DateTime();
+    
+            $interval = $dateActuelle->diff($dateCreation);
+            $jours = $interval->days;
+    
+            if ($jours <= 1) { 
+                $entityManager->flush();
+                return $this->redirectToRoute('app_reclamation_front', [], Response::HTTP_SEE_OTHER);
+            } else {
+                $this->addFlash('warning', 'La modification de la réclamation est interdite après 24 heures.');
+            }
         }
-
+    
         return $this->renderForm('reclamation/edit.html.twig', [
             'reclamation' => $reclamation,
             'form' => $form,
@@ -234,6 +248,8 @@ $badWords = file($badWordsFile, FILE_IGNORE_NEW_LINES);
 
         return $this->redirectToRoute('app_reclamation_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    
     #[Route('reclamation/repondre/{idReclamation}', name: 'app_reclamation_repondre', methods: ['GET', 'POST'])]
     public function repondre(Request $request, EntityManagerInterface $entityManager, $idReclamation)
     {
