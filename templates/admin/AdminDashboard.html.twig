@@ -101,9 +101,8 @@
                 <div class="collapse navbar-collapse justify-content-end" id="navigation">
                     <form>
                         <div class="input-group no-border">
-                            {% block search %}
+
                             <input type="text"  class="form-control" placeholder="Search...">
-                            {% endblock %}
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <i class="now-ui-icons ui-1_zoom-bold"></i>
@@ -117,8 +116,8 @@
         </nav>
 
         <div class="panel-header panel-header-sm"></div>
-        <div class="content">
-            {% block content %}
+        <div>
+            {% block body %}
 
 
             {% endblock %}

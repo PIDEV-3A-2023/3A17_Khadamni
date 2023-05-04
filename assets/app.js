@@ -12,8 +12,12 @@ import './styles/app.css';
 import 'flowbite';
 
 
+
+
+
 // start the Stimulus application
 import './bootstrap';
+
 
 
 let toTopButton = document.getElementById('to-top-button');

@@ -31,6 +31,7 @@ class Formation
      *
      */
     #[ORM\Column(name: 'nom_formation', type: 'string', length: 45, nullable: false)]
+    #[Assert\NotBlank(message: 'nomFormation ne doit pas etre vide')]
     #[Assert\Length(min: 4,minMessage: "le nom doit contenir au moins 4 caracteres")]
     private $nomFormation;
 
@@ -39,6 +40,7 @@ class Formation
      *
      */
     #[ORM\Column(name: 'description', type: 'string', length: 45, nullable: false)]
+    #[Assert\NotBlank(message: 'description ne doit pas etre vide')]
     #[Assert\Length(min: 10,minMessage: "la déscription doit contenir au moins 10 caracteres")]
     private $description;
 
@@ -47,7 +49,8 @@ class Formation
      *
      */
     #[ORM\Column(name: 'duree', type: 'integer', nullable: false)]
-    #[Assert\GreaterThanOrEqual(1,message: "la valeur doit etre supérieur à 1")]
+    #[Assert\NotBlank(message: 'duree ne doit pas etre vide')]
+    #[Assert\GreaterThanOrEqual(1,message: "la durée doit etre supérieur à 1")]
     private $duree;
 
     /**
@@ -55,7 +58,8 @@ class Formation
      *
      */
     #[ORM\Column(name: 'prix', type: 'integer', nullable: false)]
-    #[Assert\GreaterThanOrEqual(1,message: "la valeur doit etre supérieur à 1")]
+    #[Assert\NotBlank(message: 'prix ne doit pas etre vide')]
+    #[Assert\GreaterThanOrEqual(1,message: "le prix doit etre supérieur à 1")]
     private $prix;
 
     /**

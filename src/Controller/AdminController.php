@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Formation;
+
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -60,15 +60,7 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('app_admin_gererusers');
     }
-    #[Route('/admin/formation',name: 'app_admin_gererformation')]
-    public function gererFormation(EntityManagerInterface $em) {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $formations = $em->getRepository(Formation::class)->findAll();
-        return $this->render('admin/FormationBack.html.twig',[
-            'formations' => $formations
-        ]);
 
-    }
     #[Route('/admin/users_list',name: 'app_admin_gererusers')]
     public function gererUsers(EntityManagerInterface $em) {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');

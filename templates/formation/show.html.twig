@@ -15,9 +15,9 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script defer>
+    <script>
 
         $(document).ready(function(){
             const note = document.getElementById('note');
@@ -25,13 +25,16 @@
             const alert = document.getElementById('empty-note')
             let rating_data = 0;
 
-            avis_modal.addEventListener('blur', (e) =>{
-                 if(document.activeElement.classList.contains('main') && ( e.relatedTarget === null || (e.relatedTarget.id !== 'actu-btn'))) {
-                     reset_background();
-                     rating_data = 0;
-                     note.textContent = "";
-                 }
-            });
+            if (avis_modal) {
+                avis_modal.addEventListener('blur', (e) =>{
+                    if(document.activeElement.classList.contains('main') && ( e.relatedTarget === null || (e.relatedTarget.id !== 'actu-btn'))) {
+                        reset_background();
+                        rating_data = 0;
+                        note.textContent = "";
+                    }
+                });
+            }
+
 
             function reset_background()
             {

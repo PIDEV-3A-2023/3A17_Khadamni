@@ -21,13 +21,16 @@
 {% endblock %}
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
-    <script defer src="{{ asset('search.js') }}"></script>
+    {{ encore_entry_script_tags('search') }}
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
 
 
+
     <script>
+
         $( function() {
             $( "#price-slider" ).slider({
                 range: true,
@@ -174,7 +177,7 @@
                                     </thead>
                                     <tbody id="prev-tab">
                                     {% for f in formations %}
-                                        <tr class="ligne text-white  whitespace-nowrap ">
+                                        <tr class="ligne">
                                             <th scope="row" class="px-6 py-4">
                                                 {{ f.nomFormation|upper() }}
                                             </th>
@@ -201,7 +204,7 @@
                                                         </li>
                                                         <li>
                                                                 <form method="post" action="{{ path('app_formation_delete', {'idFormation': f.idFormation}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ??');">
-                                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ f.idFormation) }}">
+                                                                    <input id="t_{{ f.idFormation }}" type="hidden" name="_token" value="{{ csrf_token('delete' ~ f.idFormation) }}">
                                                                     <button class="block w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Supprimer</button>
                                                                 </form>
                                                         </li>

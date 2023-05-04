@@ -156,10 +156,19 @@ public function __construct()
 
  }
 
- public function testStripe ($id) {
+ public function testStripe () {
 
-       $tr= $this->stripe->transfers->retrieveReversal($id);
-        dd($tr);
+
+
+     $this->stripe->accounts->delete(
+         'acct_1N3cYsFqnJ5vwJaC',
+         []
+     );
+     $this->stripe->accounts->delete(
+         'acct_1N3cUCC88hUYjCXo',
+         []
+     );
+
 
 
 

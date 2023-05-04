@@ -48,7 +48,7 @@ class FormationController extends AbstractController
                 foreach ($ratings as $rating) {
                     $sum += $rating->getNote();
                 }
-                $sum = round($sum / count($ratings),2) ;
+                $sum = number_format($sum / count($ratings),2) ;
             }
             $name=$doctrine->getRepository(Formation::class)->getNomFormateur($f->getIdFormateur());
             $f->setNomFormateur($name);
@@ -236,7 +236,7 @@ class FormationController extends AbstractController
                     foreach ($ratings as $rating) {
                         $sum += $rating->getNote();
                     }
-                    $sum = round($sum / count($ratings),2) ;
+                    $sum = number_format($sum / count($ratings),2) ;
                 }
                 $name=$entityManager->getRepository(Formation::class)->getNomFormateur($f->getIdFormateur());
                 $f->setNomFormateur($name);
@@ -267,11 +267,14 @@ class FormationController extends AbstractController
         $stripe = new StripeService();
 
 
-        $percentageRefund = round($days / $duree,2) ;
+        $percentageRefund = number_format($days / $duree,2) ;
 
-        if ($days < 2 )
-         $stripe->refundMoney($user,$formation,$formateur,1);
-        else $stripe->refundMoney($user,$formation,$formateur,1-$percentageRefund);
+        if ($percentageRefund <1) {
+            if ($days < 2 )
+                $stripe->refundMoney($user,$formation,$formateur,1);
+            else $stripe->refundMoney($user,$formation,$formateur,1-$percentageRefund);
+        }
+
 
 
         $entityManager->remove($inscription);
@@ -306,7 +309,7 @@ class FormationController extends AbstractController
     public function delete(Request $request, Formation $formation, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
-        $formateur = $this->getUser();
+        $formateur = $formation->getIdFormateur();
         $ref = $request->headers->get('referer');
 
         if ($this->isCsrfTokenValid('delete'.$formation->getIdFormation(), $request->request->get('_token'))) {
@@ -319,13 +322,8 @@ class FormationController extends AbstractController
                     $i = $entityManager->getRepository(Inscription::class)->find($inscription->getIdInscription());
                     $customer = $inscription->getIdUser();
 
+                    $percentageRefund = number_format($this->calculateProgress($inscription,$entityManager) /100,2);
 
-                    $date = $inscription->getDateInscription();
-                    $today = new \DateTime();
-                    $diff = $today->diff($date)->d;
-                    $duree = $formation->getDuree() *7;
-
-                    $percentageRefund = round($diff / $duree,2) ;
                     if ($percentageRefund < 1)
                         $stripe->refundMoney($customer, $formation, $formateur, 1 - $percentageRefund);
 
@@ -340,13 +338,13 @@ class FormationController extends AbstractController
 
 
         if ( strpos($ref,'admin'))
-            return $this->redirectToRoute('app_admin_gererformation',[]);
+            return $this->redirectToRoute('app_admin_formation',[]);
         else  return $this->redirectToRoute('app_mes_formations', [], Response::HTTP_SEE_OTHER);
 
     }
 
     #[Route('/search',name: 'searchFormationName',methods:['GET'])]
-    public function searchFormations(Request $req,ManagerRegistry $doctrine,NormalizerInterface $normalizer,FormationRepository $fr)
+    public function searchFormations(Request $req,NormalizerInterface $normalizer,FormationRepository $fr)
     {
         $user = $this->getUser();
         $searchValue = $req->get('searchValue');
@@ -354,13 +352,12 @@ class FormationController extends AbstractController
         $maxPrix = $req->get('maxPrix');
         $minDur = $req->get('minDuree');
         $maxDur = $req->get('maxDuree');
-        $referer = $req->headers->get('referer');
-        if (strpos($referer,'mesformations'))
-        $formations = $fr->findformationByX($searchValue,$minPrix,$maxPrix,$minDur,$maxDur,$user->getIdUser());
-        else $formations =  $fr->findformationForAdmin($searchValue,'nomFormation');
 
+
+        $formations = $fr->findformationByX($searchValue,$minPrix,$maxPrix,$minDur,$maxDur,$user->getIdUser());
         $jsonContent = $normalizer->normalize($formations,'json');
         $retour = json_encode($jsonContent);
+
         return new Response($retour);
 
     }
@@ -390,20 +387,14 @@ class FormationController extends AbstractController
                 ]);
                 if  (isset($inscription)) {
                     $inscri = True;
-
-                    $dateinscription = $inscription->getDateInscription();
-                    $now = new \DateTime();
-                    $duree = $formation->getDuree() *7;
-                    $diff = $now->diff($dateinscription);
                     $userRating = $entityManager->getRepository(Rating::class)->findOneBy([
                       'idformation' => $formation->getIdFormation(),
                       'iduser' => $user->getIdUser()
                     ]);
                     isset($userRating) ? $userRating = $userRating->getNote() : $userRating = 0;
-                    if ($diff->days > 0) {
-                        $progress = floor(($diff->days / $duree)*100);
-                        if ($progress > 100) $progress = 100;
-                    }
+
+                    $progress = $this->calculateProgress($inscription,$entityManager);
+
                 }
             }
 
@@ -454,7 +445,7 @@ class FormationController extends AbstractController
             foreach ($ratings as $rating) {
                 $sum += $rating->getNote();
             }
-            $sum = round($sum / $total,2) ;
+            $sum = number_format($sum / $total,2) ;
 
         }
         return [
@@ -467,6 +458,31 @@ class FormationController extends AbstractController
             'perc_1_stars' => $perc_1stars,
         ];
     }
+    function calculateProgress($inscription,EntityManagerInterface $entityManager) :float {
+
+        $formation = $entityManager->getRepository(Formation::class)->find($inscription->getIdFormation());
+
+        $duree = $formation->getDuree() * 7;
+
+        $date = $inscription->getDateInscription();
+        $today = new \DateTime();
+
+        $finalday = clone $date;
+
+        $finalday->modify("+$duree days");
+
+        $diff1 = $date->diff($finalday);
+        $diff2 = $date->diff($today);
+        $timepassed = $diff2->y * 364 + $diff2->m * 12 + $diff2->d;
+        $totaltime = $diff1->y * 364 + $diff1->m * 12 + $diff1->d;
+
+
+        $percentage = ( number_format( $timepassed / $totaltime,2)*100);
+        if ($percentage > 100) $percentage = 100;
+
+        return $percentage;
+    }
+
 
 
 

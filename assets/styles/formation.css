@@ -52,10 +52,6 @@
 {
     padding: 1rem 1.5rem;
 }
-#new-tab tr td:nth-last-child(1),
-#new-tab tr td:nth-last-child(2) {
-    text-align: right;
-}
 
 
 .panel {

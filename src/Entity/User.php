@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 
 #[ORM\Table(name: 'user')]
@@ -82,7 +83,7 @@ class User implements UserInterface,PasswordAuthenticatedUserInterface
     private $email;
 
     /**
-     * @var string
+     * @var string @Ignore
      *
      */
     #[ORM\Column(name: 'mdp', type: 'string', length: 250, nullable: false)]
@@ -318,7 +319,7 @@ class User implements UserInterface,PasswordAuthenticatedUserInterface
     /**
      * The public representation of the user (e.g. a username, an email address, etc.)
      *
-     * @see UserInterface
+     * @see UserInterface @Ignore
      */
     public function getUserIdentifier(): string
     {
@@ -358,7 +359,7 @@ class User implements UserInterface,PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @see PasswordAuthenticatedUserInterface
+     * @see PasswordAuthenticatedUserInterface @Ignore
      */
     public function getPassword(): string
     {
@@ -376,7 +377,7 @@ class User implements UserInterface,PasswordAuthenticatedUserInterface
      * Returning a salt is only needed if you are not using a modern
      * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
      *
-     * @see UserInterface
+     * @see UserInterface @Ignore
      */
     public function getSalt(): ?string
     {
