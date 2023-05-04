@@ -1,13 +1,6 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
-app_user_reclamations:
-    path: '/user/{user_id}/reclamations'
-    controller: App\Controller\ReclamationController::index
-app_reclamation_messages:
-    path: '/reclamation/messages/{idReclamation}'
-    controller: 'App\Controller\ReclamationController::messages'
-login_success:
-    path: /login/success
-    controller: App\Controller\SecurityController::loginSuccess
+# config/routes.yaml
+
 

@@ -29,7 +29,7 @@ class ReclamationType extends AbstractType
                 'Reclamation sur un cours' => 'Reclamation sur un cours',
             ],
         ])
-        ->add('email')
+        
         
     ;
 }

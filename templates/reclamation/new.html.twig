@@ -1,21 +1,38 @@
+
 {% extends 'base.html.twig' %}
 
 {% block title %}New Reclamation{% endblock %}
 
 {% block content %}
-    <h1>Create new Reclamation</h1>
-
-    {% for label, messages in app.flashes() %}
-        {% for message in messages %}
-            <div class="alert alert-{{ label }}">
-               <div class="alert alert-danger">{{ message }}</div>
-
-            </div>
-        {% endfor %}
+    <div class="c1">
+				<h1
+						class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-6xl ">
+					<span class="text-blue-500 ">Formulaire de réclamation</span>
+				</h1>
+				<p class="text-lg font-normal text-gray-400 lg:text-xl ">Veuillez remplir ce formulaire pour soumettre une type de reclamation  ou un commentaire
+				</p>
+			</div>
+     {% for label, messages in app.flashes() %}
+    {% for message in messages %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+           <div class="alert alert-danger">{{ message }}</div>
+        </div>
     {% endfor %}
+{% endfor %}
+ <div class="container mx-auto px-4  ">
 
-    {{ include('reclamation/_form.html.twig') }}
+             <div class="my-4 md:px-12 flex flex-col  gap-10  mr-auto rounded-2xl shadow-2xl p-5">
+                 <div class="flex">
+                     <h1  class="uppercase text-white text-3xl">Ajouter Votre Reclamtion</h1>
+                 </div>
+{{ include('reclamation/_form.html.twig') }}
+</div>
+</div>
 
-    <a href="{{ path('app_reclamation_index') }}">back to list</a>
+
+<a href="{{ path('app_reclamation_front') }}" class="inline-block mt-4 px-4 py-2 bg-gray-800 text-white font-bold rounded">Mes Réclamations</a>
+
      
 {% endblock %}
+
+

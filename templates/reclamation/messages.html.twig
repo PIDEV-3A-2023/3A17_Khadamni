@@ -3,12 +3,39 @@
 {% block title %}Messages{% endblock %}
 
 {% block content %}
-    <h1>Messages</h1>
+    <h1 class="text-2xl font-bold mb-4">Messages</h1>
 
-    <p><strong>Sujet:</strong> {{ suiviReclamation.sujet }}</p>
-    <p><strong>Motif:</strong> {{ suiviReclamation.motif }}</p>
+<div class="w-1/2">
+  <table class="table-auto w-full border border-gray-300 rounded-lg overflow-hidden">
+    <thead class="bg-blue-500 text-white ml-2">
+      <tr>
+        <th class="px-4 py-2 text-center">Sujet</th>
+        <th class="px-4 py-2 text-center">Motif</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-gray-300">
+        <td class="px-4 py-2">{{ suiviReclamation.sujet }}</td>
+        <td class="px-4 py-2">{{ suiviReclamation.motif }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    {{ form_end(form) }}
+
+
+
+
+
+
+
+
+
+
+    <div class="mt-6 w-1/2 mx-auto">
+        {{ form_start(form) }}
+        {{ form_row(form.avis, {'attr': {'class': 'border border-gray-300 rounded-lg py-2 px-4 block w-full focus:outline-none focus:border-blue-500', 'placeholder': 'Ajouter votre avis ici'}}) }}
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-200">Submit</button>
+        {{ form_end(form) }}
+    </div>
 {% endblock %}

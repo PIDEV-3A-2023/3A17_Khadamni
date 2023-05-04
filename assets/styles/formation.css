@@ -1,0 +1,180 @@
+.contenu {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 45px;
+
+}
+.heading {
+    margin-top: 55px;
+}
+.cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:25px;
+
+}
+.cards > div {
+    border-radius: 20px;
+    border: 10px solid transparent;
+    background: rgba(255, 255, 255, 0.09);
+    padding: 25px;
+
+}
+.cards-grid {
+
+    margin-top: 6px;
+    padding: 15px;
+    grid-gap: 20px;
+    flex:1;
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+
+}
+.forma-card {
+    justify-self: center;
+
+}
+
+#prev-tab tr,
+#new-tab tr {
+    background: rgb(255,255,255,0.1);
+    color: white;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+#prev-tab tr td,
+#new-tab tr td,
+#new-tab th
+{
+    padding: 1rem 1.5rem;
+}
+#new-tab tr td:nth-last-child(1),
+#new-tab tr td:nth-last-child(2) {
+    text-align: right;
+}
+
+
+.panel {
+    display: flex;
+    justify-content: center;
+    column-gap: 1rem;
+    background: rgb(255,255,255,0.1);
+
+}
+
+.ligne {
+    background: rgb(255,255,255,0.15);
+    font-weight: 500;
+    white-space: nowrap;
+    color: white;
+}
+.dropdown-btn {
+    position: relative;
+    display: inline-flex;
+
+
+}
+#menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width:118px ;
+
+
+}
+#menu-btn > svg {
+    margin-left: auto;
+}
+.Btntxt {
+    flex:1;
+    text-align: center;
+}
+
+.dropdown-btn > button {
+    cursor: pointer;
+}
+
+.drop {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    text-align: center;
+
+
+}
+.drop > li > button {
+    width: 100%;
+}
+
+.drop.hidden {
+    display: none;
+}
+
+.f-cont {
+    background: rgb(255,255,255,0.3);
+    padding: 30px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto;
+    gap: 15px;
+
+}
+.f-info {
+    background: rgb(255,255,255,0.8);
+    border-radius: 7px;
+    grid-column: 2/-1;
+    grid-row: 1/ span 2 ;
+    display: flex;
+    flex-direction: column;
+}
+.f-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border-radius: 7px;
+    margin: 15px;
+    height: 100%;
+    position: relative;
+}
+.f-stats {
+    background: rgb(255,255,255,0.8);
+    border-radius: 7px;
+    grid-row: 2/-1;
+    grid-column: 1/2;
+    padding: 25px;
+
+}
+.f-prog {
+    background: rgb(255,255,255,0.8);
+    border-radius: 7px;
+    grid-row: 1/2;
+    grid-column: 1/2;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+
+}
+
+#m-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.h-star {
+    width: 1.25rem;
+    height: 1.25rem;
+    padding: 1px;
+}
+

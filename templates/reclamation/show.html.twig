@@ -2,52 +2,42 @@
 
 {% block title %}Reclamation{% endblock %}
 
-{% block body %}
-    <h1>Reclamation</h1>
+{% block content %}
+    <h1 class="text-2xl font-bold mb-4">Reclamation</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>IdReclamation</th>
-                <td>{{ reclamation.idReclamation }}</td>
-            </tr>
-            <tr>
-                <th>DateReclamation</th>
-                <td>{{ reclamation.dateReclamation ? reclamation.dateReclamation|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ reclamation.description }}</td>
-            </tr>
-            <tr>
-                <th>TypeReclamation</th>
-                <td>{{ reclamation.typeReclamation }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ reclamation.email }}</td>
-            </tr>
-            <tr>
-                <th>nombre vue</th>
-                <td>{{ reclamation.nbr_vue }}</td>
-            </tr>
-<tr>
-                <th>Avis</th>
-                <td>{{ suiviReclamation.avis }}</td>
-            </tr>
+    <div class="shadow overflow-hidden rounded border-b border-gray-200">
+        <table class="min-w-full divide-y divide-gray-200">
+            <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap font-bold">IdReclamation</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ reclamation.idReclamation }}</td>
+                </tr>
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap font-bold">DateReclamation</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ reclamation.dateReclamation ? reclamation.dateReclamation|date('Y-m-d') : '' }}</td>
+                </tr>
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap font-bold">Description</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ reclamation.description }}</td>
+                </tr>
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap font-bold">TypeReclamation</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ reclamation.typeReclamation }}</td>
+                </tr>
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap font-bold">Avis</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ suiviReclamation.avis }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
+    <div class="mt-6">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-200">Submit</button>
+        {{ form_end(form) }}
+    </div>
 
-        </tbody>
-    </table>
-     {{ form_start(form) }}
-    {{ form_widget(form) }}
-   
-    <button class="btn">{{ button_label|default('modifier') }}</button>
-{{ form_end(form) }}
-
-    <a href="{{ path('app_reclamation_index') }}">back to list</a>
-
-    
-
-   
+    <a href="{{ path('app_reclamation_index') }}" class="mt-4 inline-block underline text-blue-500 hover:text-blue-700">back to list</a>
 {% endblock %}

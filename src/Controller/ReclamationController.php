@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use DateTime;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use App\Entity\SuiviReclamation;
+use App\Entity\User;
 use App\Form\SuiviReclamationType;
 use Symfony\Component\Mime\Message;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -62,28 +63,31 @@ class ReclamationController extends AbstractController
     #[Route('/stat', name: 'app_reclamation_stat')]
 public function stat(ChartBuilderInterface $chartBuilder, EntityManagerInterface $entityManager): Response
 {
+    $chart = $chartBuilder->createChart(Chart::TYPE_BAR);
+    $chart2 = $chartBuilder->createChart(Chart::TYPE_PIE);
    
 $x=0;
 $y=0;
 $z=0;
 
-    $suiviReclamation = $entityManager
+
+$suiviReclamation = $entityManager
     ->getRepository(SuiviReclamation::class)
     ->findAll();
 
 
-    $chart = $chartBuilder->createChart(Chart::TYPE_BAR);
+    
 for($i=0;$i<count($suiviReclamation);$i++){
     if($suiviReclamation[$i]->getEtatReclamation()=="en_cours"){
         $x+=1;
     }else 
-    if($suiviReclamation[$i]->getEtatReclamation()=="non traitée"){
+    if($suiviReclamation[$i]->getEtatReclamation()=="non traitee"){
         $y+=1;
 }else {$z+=1;} 
 }
 
     $chart->setData([
-        'labels' => ['En Cours', 'Non Traitée', 'Traité'],
+        'labels' => ['En Cours', 'non Traité', 'Traité'],
         'datasets' => [
             [
                 'label' => 'Réclamations',
@@ -103,9 +107,54 @@ for($i=0;$i<count($suiviReclamation);$i++){
         ],
     ]);
 
-    return $this->render('reclamation/stat.html.twig', [
-        'chart' => $chart,
-    ]);
+
+    $reclamations = $entityManager->getRepository(Reclamation::class)->findAll();
+
+// Initialize counts for each year to zero
+$reclamations2021 = 0;
+$reclamations2022 = 0;
+$reclamations2023 = 0;
+
+// Loop through all reclamations and count the ones for each year
+foreach ($reclamations as $reclamation) {
+    $year = $reclamation->getDateReclamation()->format('Y');
+
+    if ($year == '2021') {
+        $reclamations2021++;
+    } elseif ($year == '2022') {
+        $reclamations2022++;
+    } elseif ($year == '2023') {
+        $reclamations2023++;
+    }
+}
+
+// Set the chart data using the counts for each year
+$chart2->setData([
+    'labels' => ['2021', '2022', '2023'],
+    'datasets' => [
+        [
+            'label' => 'Réclamations',
+            'backgroundColor' => ['#007bff', '#28a745', '#dc3545'],
+            'borderColor' => ['#007bff', '#28a745', '#dc3545'],
+            'data' => [$reclamations2021, $reclamations2022, $reclamations2023],
+        ],
+    ],
+]);
+
+$chart2->setOptions([
+    'scales' => [
+        'y' => [
+            'suggestedMin' => 0,
+            'suggestedMax' => 100,
+        ],
+    ],
+]);
+
+return $this->render('reclamation/stat.html.twig', [
+    'chart' => $chart,
+    'chart2' =>$chart2
+
+]);
 }
 
    #[Route('/modifier/{id}', name: 'app_reclamation_etat')]
@@ -123,10 +172,11 @@ for($i=0;$i<count($suiviReclamation);$i++){
   #[Route('/front', name: 'app_reclamation_front', methods: ['GET'])]
     public function front(EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $user = $this->getUser();
         $reclamations = $entityManager
             ->getRepository(Reclamation::class)
-            ->findAll();
-
+            ->findBy(['idUser' => $user->getIdUser()]);
         return $this->render('reclamation/front.html.twig', [
             'reclamations' => $reclamations,
         ]);
@@ -136,7 +186,8 @@ for($i=0;$i<count($suiviReclamation);$i++){
   public function new(Request $request, EntityManagerInterface $entityManager): Response
 {
     $reclamation = new Reclamation();
-
+    $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+    $user = $this->getUser();
     // Set the default value for the dateReclamation field
     $date = new DateTime();
     $formattedDate = $date->format('Y-m-d');
@@ -148,6 +199,8 @@ for($i=0;$i<count($suiviReclamation);$i++){
 $badWords = file($badWordsFile, FILE_IGNORE_NEW_LINES);
     $pattern = '/\b(' . implode('|', $badWords) . ')\b/i';
     if ($form->isSubmitted() && $form->isValid()) {
+        $reclamation->setIdUser($user);
+
         // Detect bad words in the description
         $description = $form->get('description')->getData();
         if (preg_match($pattern, $description)) {
@@ -176,9 +229,8 @@ $badWords = file($badWordsFile, FILE_IGNORE_NEW_LINES);
  #[Route('/{idReclamation}', name: 'app_reclamation_show')]
     public function show(Reclamation $reclamation,EntityManagerInterface $entityManager,Request $request): Response
     {
-        $reclamation->setNbr_vue($reclamation->getNbr_vue() + 1);
-        $entityManager->flush();
-
+        
+        
 
         $suiviReclamation = $entityManager
     ->getRepository(SuiviReclamation::class)
@@ -194,15 +246,22 @@ $badWords = file($badWordsFile, FILE_IGNORE_NEW_LINES);
         
             if ($suivi) {
                 $suivi->setEtatReclamation($form->get("etatReclamation")->getData());
+                $suivi->setSujet($form->get("sujet")->getData());
+                $suivi->setMotif($form->get("motif")->getData());
                 
                 $entityManager->flush();
-            } else {
-                // Handle the case where the entity is not found
-            }
+                if ($suivi->getEtatReclamation()== "traitee") {
+                   
+                    $user = $entityManager->getRepository(User::class)->find($reclamation->getIdUser()->getIdUser());
+                    return $this->redirectToRoute('app_sms', ['tel' => $user->getNumTel()]);
+                   
+                } 
+                
+            } 
         
-            return $this->redirectToRoute('app_reclamation_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_reclamation_back', [], Response::HTTP_SEE_OTHER);
         }
-         return $this->renderForm('reclamation/show.html.twig', [
+         return $this->renderForm('admin/EditRec.html.twig', [
             'reclamation' => $reclamation,
             'form'=>$form , 
             'suiviReclamation'=>$suiviReclamation,
@@ -228,7 +287,7 @@ $badWords = file($badWordsFile, FILE_IGNORE_NEW_LINES);
                 $entityManager->flush();
                 return $this->redirectToRoute('app_reclamation_front', [], Response::HTTP_SEE_OTHER);
             } else {
-                $this->addFlash('warning', 'La modification de la réclamation est interdite après 24 heures.');
+                $this->addFlash('warning', 'La modification de la réclamation est interdite après 24 heures ');
             }
         }
     
@@ -238,18 +297,20 @@ $badWords = file($badWordsFile, FILE_IGNORE_NEW_LINES);
         ]);
     }
 
-    #[Route('/{idReclamation}', name: 'app_reclamation_delete', methods: ['POST'])]
+    #[Route('/del/{idReclamation}', name: 'app_reclamation_delete', methods: ['POST'])]
     public function delete(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
     {
+        
         if ($this->isCsrfTokenValid('delete'.$reclamation->getIdReclamation(), $request->request->get('_token'))) {
             $entityManager->remove($reclamation);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_reclamation_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_reclamation_back', [], Response::HTTP_SEE_OTHER);
     }
 
-    
+
+
     #[Route('reclamation/repondre/{idReclamation}', name: 'app_reclamation_repondre', methods: ['GET', 'POST'])]
     public function repondre(Request $request, EntityManagerInterface $entityManager, $idReclamation)
     {

@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block content %}
+    <div>
+
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>NumTel</th>
+                <th>Adresse</th>
+                <th>CentreIntere</th>
+                <th>AdresseEntreprise</th>
+                <th>NomEntreprise</th>
+                <th>Email</th>
+                <th>Cv</th>
+                <th>Age</th>
+                <th>actions</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr>
+                <td>{{ user.nom }}</td>
+                <td>{{ user.prenom }}</td>
+                <td>{{ user.numTel }}</td>
+                <td>{{ user.adresse }}</td>
+                <td>{{ user.centreIntere }}</td>
+                <td>{{ user.adresseEntreprise }}</td>
+                <td>{{ user.nomEntreprise }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.cv }}</td>
+                <td>{{ user.age }}</td>
+
+                <td>
+                    <a href="{{ path('app_user_show', {'idUser': user.idUser}) }}">show</a>
+                    <a href="{{ path('app_user_edit', {'idUser': user.idUser}) }}">edit</a>
+                </td>
+            </tr>
+
+
+            </tbody>
+        </table>
+    </div>
+
+
+
+{% endblock %}

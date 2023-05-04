@@ -8,22 +8,32 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
 
+
+import 'flowbite';
+
+
 // start the Stimulus application
 import './bootstrap';
 
 
-var toTopButton = document.getElementById('to-top-button');
+let toTopButton = document.getElementById('to-top-button');
 
-// Show/hide the button based on the scroll position
-window.addEventListener('scroll', function () {
-    if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-        toTopButton.classList.remove('invisible');
-    } else {
-        toTopButton.classList.add('invisible');
-    }
-});
+ if (toTopButton !== null) {
+     window.addEventListener('scroll', function () {
+         if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+             toTopButton.classList.remove('invisible');
+         } else {
+             toTopButton.classList.add('invisible');
+         }
+     });
 
-// Scroll to the top of the document when the button is clicked
-toTopButton.addEventListener('click', function () {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-});
+
+     toTopButton.addEventListener('click', function () {
+         window.scrollTo({ top: 0, behavior: 'smooth' });
+     });
+ }
+
+
+
+
+

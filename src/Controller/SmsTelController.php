@@ -17,10 +17,13 @@ class SmsTelController extends AbstractController
     #[Route('/app-sms', name: 'app_sms', methods: ['POST','GET'])]
     public function sendSMS(Request $request)
 {
-    $toPhoneNumber = $request->request->get('toPhoneNumber');
+    $toPhoneNumber = '92499407';
+    $userNumber = $request->get('tel');
+    
+   
     
     $sid = 'AC365277a31739ad33daf6760f7ebeb80b';
-    $token = 'fdaece6c4fb34bd8deb46a6113e9442f';
+    $token = 'f8851176af25402a87b7156f8245f418';
     $client = new Client($sid, $token);
     $message = $client->messages->create(
         "+216".$toPhoneNumber,

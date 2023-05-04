@@ -20,7 +20,9 @@ class EtatReclamationType extends AbstractType
                     'Non traitee' => 'non_traitee',
                 ],
                 'placeholder' => 'Select status', // Optional placeholder
-            ]);
+            ])
+            ->add('sujet')
+            ->add('motif');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
