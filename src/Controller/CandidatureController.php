@@ -39,6 +39,13 @@ class CandidatureController extends AbstractController
         $user = $this->getUser();
         $emploi = $entityManager->getRepository(Emploi::class)->find($IdEmploi);
 
+        $candiat = $entityManager->getRepository(Candidature::class)->findOneBy([
+            'idEmploi' => $IdEmploi,
+            'idUser' => $user->getIdUser()
+        ]);
+        if (isset($candiat)) {
+            return $this->redirectToRoute('app_candidature_index');
+        }
         $candidature = new Candidature();
         $candidature->setDate(new DateTime());
         $candidature->setIdUser($user);
@@ -120,6 +127,7 @@ class CandidatureController extends AbstractController
             . "Note Mois de 10: " . $totalUnder10 . " (" . round($percentageUnder25, 2) . "%)\n"
             . "Note entre 10 et 15: " . $totalBetween10And15 . " (" . round($percentageBetween25And50, 2) . "%)\n"
             . "Note 20: " . $totalOver20 . " (" . round($percentageOver50, 2) . "%)\n";
+
 
         // Affichage du rapport dans une vue
         return $report;

@@ -130,25 +130,24 @@ class ChatController extends AbstractController
     #[Route('/google/calendar', name: 'google_calendar')]
     public function request(Google_Client $client): Response
     {
-
-
         // Authenticate the client using the client ID and secret
         $client->setClientId('494911486130-rs5j70t5h9g4i52rb4nlc360uavojcjp.apps.googleusercontent.com');
         $client->setClientSecret('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');
         $client->setRedirectUri('app_home');
         $client->setDeveloperKey('AIzaSyB1QlTTUZfXSol-TRMikmcqmxH6cY6rYKk');
 
-        // Create a new Google Calendar service
-        $calendar = new Google_Service_Calendar_Event($client);
+        // Set up the Google Calendar service
+        $service = new Google_Service_Calendar($client);
 
         // Get the user's calendar events
-        $events = $calendar->events->listEvents('primary');
+        $events = $service->events->listEvents('primary');
 
         // Render the events in a Twig template
         return $this->render('google/calendar.html.twig', [
             'events' => $events,
         ]);
     }
+
 
 
 
