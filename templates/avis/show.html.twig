@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'baseBack.html.twig' %}
 
 {% block title %}Avis{% endblock %}
 
@@ -31,7 +31,7 @@
     </table>
     </div>
 
-    <img src="{{ asset('uploads/my-image.jpg') | imagine_filter('thumbnail') }}" alt="My Image">
+    {# <img src="{{ asset('uploads/my-image.jpg') | imagine_filter('thumbnail') }}" alt="My Image"> #}
 
 
     <a href="{{ path('app_avis_edit', {'idAvis': avi.idAvis}) }}">Modifier</a>

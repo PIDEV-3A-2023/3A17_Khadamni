@@ -41,19 +41,6 @@
     "knplabs/knp-paginator-bundle": {
         "version": "v5.9.0"
     },
-    "liip/imagine-bundle": {
-        "version": "2.10",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "1.8",
-            "ref": "d1227d002b70d1a1f941d91845fcd7ac7fbfc929"
-        },
-        "files": [
-            "./config/packages/liip_imagine.yaml",
-            "./config/routes/liip_imagine.yaml"
-        ]
-    },
     "phpunit/phpunit": {
         "version": "9.6",
         "recipe": {
@@ -67,6 +54,9 @@
             "./phpunit.xml.dist",
             "./tests/bootstrap.php"
         ]
+    },
+    "pyrrah/openweathermap-bundle": {
+        "version": "v1.1.0"
     },
     "sensio/framework-extra-bundle": {
         "version": "6.2",

@@ -33,15 +33,16 @@
 
     <img src="{{ asset('uploads/evenements/' ~ evenement.imageFilename) }}" alt="{{ evenement.nomEvenement }}">
 
-
+    {#
     {% if weather %}
         <h3>Weather</h3>
         <p>Temperature: {{ weather.temperature }}°C</p>
         <p>Description: {{ weather.description }}</p>
         <img src="{{ weather.icon }}" alt="Weather icon">
     {% endif %}
+    #}
 
-    <button class="btn btn-primary" onclick="window.location.href='{{ path('app_avis_index', {'idevenement': evenement.idevenement}) }}'">Voir les avis</button>
+    <button class="btn btn-primary" onclick="window.location.href='{{ path('app_avis_front', {'idevenement': evenement.idevenement}) }}'">Voir les avis</button>
     <button class="btn btn-primary" onclick="window.location.href='{{ path('app_evenement_front') }}'">Retour</button>
 
 {% endblock %}

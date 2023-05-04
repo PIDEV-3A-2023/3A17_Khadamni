@@ -3,37 +3,95 @@
 namespace App\Controller;
 
 use App\Entity\Avis;
+use App\Form\AvisType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class AvisFrontController extends AbstractController
-{
-    #[Route('/avis', name: 'app_avis_front')]
-    public function index(Request $request, PaginatorInterface $paginator): Response
-    {
-        $$queryBuilder = $this->getDoctrine()->getRepository(Avis::class)->createQueryBuilder('a');
+{   
 
-        $pagination = $paginator->paginate(
+    private $paginator;
+
+    public function __construct(PaginatorInterface $paginator)
+    {
+        $this->paginator = $paginator;
+    }
+
+    #[Route('/avis', name: 'app_avis_front')]
+
+    public function index(Request $request): Response
+    {
+        $orderBy = $request->query->get('order_by', 'date_desc');
+        
+        $repository = $this->getDoctrine()->getRepository(Avis::class);
+        $queryBuilder = $repository->createQueryBuilder('a');
+        
+        if ($orderBy === 'date_asc') {
+            $queryBuilder->orderBy('a.dateCreation', 'ASC');
+        } else {
+            $queryBuilder->orderBy('a.dateCreation', 'DESC');
+        }
+        
+        $avisPaginated = $this->paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            10
+            4 // items per page
         );
-    
+
+        $totalResults = $avisPaginated->getTotalItemCount();
+        $currentPage = $avisPaginated->getCurrentPageNumber();
+        $perPage = $avisPaginated->getItemNumberPerPage();
+
+        $startResult = ($currentPage - 1) * $perPage + 1;
+        $endResult = min($currentPage * $perPage, $totalResults);
+
+        $resultMessage = "Affichage $startResult-$endResult de $totalResults avis";
+
         return $this->render('avis/index_front.html.twig', [
-            'avis' => $pagination,
+            'avis' => $avisPaginated,
+            'resultMessage' => $resultMessage,
         ]);
+
     }
 
-    #[Route('/avis/{idAvis}', name: 'app_avis_show', methods: ['GET'])]
-    public function show(Avis $avi): Response
+    /*
+    public function index(Request $request)
     {
-        return $this->render('avis/show.html.twig', [
-            'avi' => $avi,
+        $orderBy = $request->query->get('order_by', 'date_desc');
+
+        $repository = $this->getDoctrine()->getRepository(Avis::class);
+        $queryBuilder = $repository->createQueryBuilder('a');
+        if ($orderBy === 'date_asc') {
+            $queryBuilder->orderBy('a.dateCreation', 'ASC');
+        } else {
+            $queryBuilder->orderBy('a.dateCreation', 'DESC');
+        }
+        $query = $queryBuilder->getQuery();
+        $paginator = $this->get('knp_paginator');
+        $avis = $paginator->paginate($query, $request->query->getInt('page', 1), 10);
+
+        $totalResults = $evenementsPaginated->getTotalItemCount();
+        $currentPage = $evenementsPaginated->getCurrentPageNumber();
+        $perPage = $evenementsPaginated->getItemNumberPerPage();
+
+        $startResult = ($currentPage - 1) * $perPage + 1;
+        $endResult = min($currentPage * $perPage, $totalResults);
+
+        $resultMessage = "Affichage $startResult-$endResult de $totalResults avis";
+
+        return $this->render('avis/index.html.twig', [
+            'avis' => $avis,
+            'resultMessage' => $resultMessage,
         ]);
-    }
+    }*/
+
+
+    
 
     #[Route('/avis/new', name: 'app_avis_create', methods: ['GET', 'POST'])]
     public function create(Request $request, ValidatorInterface $validator): Response
@@ -55,4 +113,5 @@ class AvisFrontController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 }

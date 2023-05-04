@@ -30,7 +30,10 @@
         </tbody>
     </table>
     </div>
-    {{ knp_pagination_render(pagination) }}
+    <div class="navigation flex justify-center mb-8">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+    
 
     <a href="{{ path('app_avis_edit', {'idAvis': avi.idAvis}) }}">Modifier</a>
 

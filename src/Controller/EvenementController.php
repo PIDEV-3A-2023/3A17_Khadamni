@@ -20,8 +20,11 @@ class EvenementController extends AbstractController
             ->getRepository(Evenement::class)
             ->findAll();
 
+        //$totalResults = count($evenements);
+
         return $this->render('evenement/index.html.twig', [
             'evenements' => $evenements,
+            //'totalResults' => $totalResults,
         ]);
     }
 

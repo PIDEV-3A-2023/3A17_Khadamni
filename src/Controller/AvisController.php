@@ -25,7 +25,7 @@ class AvisController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_avis_new', methods: ['GET', 'POST'])]
+    /*#[Route('/new', name: 'app_avis_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $avi = new Avis();
@@ -43,9 +43,9 @@ class AvisController extends AbstractController
             'avi' => $avi,
             'form' => $form,
         ]);
-    }
+    } */
 
-    #[Route('/{idAvis}', name: 'app_avis_show', methods: ['GET'])]
+    #[Route('/back/{idAvis}', name: 'app_avis_show', methods: ['GET'])]
     public function show(Avis $avi): Response
     {
         return $this->render('avis/show.html.twig', [

@@ -9,6 +9,16 @@
             </h1>
 
     <div style="width:50%">
+        <form action="{{ path('app_avis_front') }}" method="GET">
+            <div class="form-group">
+                <label for="order_by">Order by:</label>
+                <select id="order_by" name="order_by" class="form-control" onchange="this.form.submit()">
+                    <option value="date_asc" {% if app.request.query.get('order_by') == 'date_asc' %}selected{% endif %}>Date Ascending</option>
+                    <option value="date_desc" {% if app.request.query.get('order_by') == 'date_desc' %}selected{% endif %}>Date Descending</option>
+                </select>
+            </div>
+        </form>
+
         <table class="table table-striped table-hover">
         <thead>
             <tr>
@@ -37,7 +47,12 @@
         {% endfor %}
         </tbody>
     </table>
-   </div> 
+
+    <div>
+        Affichage de {{ totalResults }} avis
+    </div>
+
+    </div> 
            <button class="btn btn-primary" onclick="window.location.href='{{ path('app_avis_create') }}'">Laisser un avis</button>
 
 

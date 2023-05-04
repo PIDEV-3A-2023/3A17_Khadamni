@@ -38,16 +38,35 @@ class EvenementFrontController extends AbstractController
 
     public function index(Request $request, PaginatorInterface $paginator): Response
     {
-        $evenements = $this->getDoctrine()->getRepository(Evenement::class)->findAll();
-
+        $orderBy = $request->query->get('order_by', 'date_desc');
+        
+        $repository = $this->getDoctrine()->getRepository(Evenement::class);
+        $queryBuilder = $repository->createQueryBuilder('e');
+        
+        if ($orderBy === 'date_asc') {
+            $queryBuilder->orderBy('e.dateevenement', 'ASC');
+        } else {
+            $queryBuilder->orderBy('e.dateevenement', 'DESC');
+        }
+        
         $evenementsPaginated = $paginator->paginate(
-            $evenements,
+            $queryBuilder,
             $request->query->getInt('page', 1),
-            9 // items per page
+            4 // items per page
         );
+        
+        $totalResults = $evenementsPaginated->getTotalItemCount();
+        $currentPage = $evenementsPaginated->getCurrentPageNumber();
+        $perPage = $evenementsPaginated->getItemNumberPerPage();
+
+        $startResult = ($currentPage - 1) * $perPage + 1;
+        $endResult = min($currentPage * $perPage, $totalResults);
+
+        $resultMessage = "Affichage $startResult-$endResult de $totalResults événement(s)";
 
         return $this->render('evenement/index_front.html.twig', [
             'evenements' => $evenementsPaginated,
+            'resultMessage' => $resultMessage
         ]);
     }
 
