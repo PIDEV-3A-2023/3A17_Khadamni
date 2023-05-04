@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Formation;
 use App\Entity\Inscription;
-use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

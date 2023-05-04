@@ -473,8 +473,8 @@ class FormationController extends AbstractController
 
         $diff1 = $date->diff($finalday);
         $diff2 = $date->diff($today);
-        $timepassed = $diff2->y * 364 + $diff2->m * 12 + $diff2->d;
-        $totaltime = $diff1->y * 364 + $diff1->m * 12 + $diff1->d;
+        $timepassed = $diff2->y * 364 + $diff2->m * 30 + $diff2->d;
+        $totaltime = $diff1->y * 364 + $diff1->m * 30 + $diff1->d;
 
 
         $percentage = ( number_format( $timepassed / $totaltime,2)*100);
