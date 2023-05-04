@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Avis;
 use App\Entity\Evenement;
+use App\Form\AvisType;
 use App\Service\MeteoConceptService;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -123,10 +126,16 @@ class EvenementFrontController extends AbstractController
     }*/
 
     #[Route('/evenement/{idevenement}', name: 'app_evenement_showFront', methods: ['GET'])]
-    public function show(Evenement $evenement): Response
+    public function show(Evenement $evenement,EntityManagerInterface $entityManager,Request $request): Response
     {
+        $avis = $entityManager
+            ->getRepository(Avis::class)
+            ->findBy(['idEvenement' => $evenement->getIdevenement()]);
+
         return $this->render('evenement/show_front.html.twig', [
             'evenement' => $evenement,
+            'avis' => $avis,
+
         ]);
     }
 

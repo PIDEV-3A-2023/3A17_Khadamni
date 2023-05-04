@@ -1,0 +1,279 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+   <style>
+       .star-light
+       {
+           color:#e9ecef;
+       }
+       .submit_star {
+           cursor: pointer;
+       }
+   </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+        $(document).ready(function(){
+            const note = document.getElementById('note');
+            const avis_modal = document.getElementById('avis-modal');
+            const alert = document.getElementById('empty-note')
+            let rating_data = 0;
+
+            if (avis_modal) {
+                avis_modal.addEventListener('blur', (e) =>{
+                    if(document.activeElement.classList.contains('main') && ( e.relatedTarget === null || (e.relatedTarget.id !== 'actu-btn'))) {
+                        reset_background();
+                        rating_data = 0;
+                        note.textContent = "";
+                    }
+                });
+            }
+
+
+            function reset_background()
+            {
+                alert.classList.add('hidden')
+                for(let count = 1; count <= 5; count++)
+                {
+                    $('#submit_star_'+count).addClass('star-light');
+                    $('#submit_star_'+count).removeClass('text-yellow-400');
+
+                }
+            }
+            $(document).on('mouseenter mouseleave', '.submit_star', function(){
+
+                rating_data = $(this).data('rating');
+                note.textContent = rating_data + '/5';
+                reset_background();
+                for(let count = 1; count <= rating_data; count++)
+                {
+                    $('#submit_star_'+count).removeClass('star-light');
+                    $('#submit_star_'+count).addClass('text-yellow-400');
+                }
+
+            });
+
+            $(document).on('click' , '#confirm-btn', function () {
+                if (rating_data !== 0) {
+                    const thebtn = document.getElementById('actu-btn');
+                    let url = "{{ path('app_new_rating', { 'id' : formation.idFormation , 'note' : 'RATING_DATA_PLACEHOLDER'}) }}";
+                    url = url.replace('RATING_DATA_PLACEHOLDER', rating_data);
+                    thebtn.setAttribute('href',url);
+                }
+                else {
+                    alert.classList.remove('hidden')
+
+                }
+            })
+
+
+
+        });
+    </script>
+
+{% endblock %}
+
+
+{% block content %}
+        <div class="container f-cont rounded shadow-2xl">
+
+             <div class="f-info">
+                 <div class="f-details">
+                     {% if inscrit == 'True' %}
+                         <div id="popup-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                             <div class="relative w-full max-w-md max-h-full">
+                                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 w-full">
+                                     <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-hide="popup-modal">
+                                         <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                         <span class="sr-only">Close modal</span>
+                                     </button>
+                                     <div class="p-6 text-center ">
+                                         <svg aria-hidden="true" class="mx-auto mb-4 text-gray-400 w-14 h-14 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                         <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Etes vous sure vous voulez annuler votre inscription?</h3>
+                                         <div class="text-sm text-blue-800">Si votre inscription n'a pas dépassé 48 heures, </div>
+                                         <div class="mb-5 text-sm text-blue-800">vous serez remboursé(e) totalement.</div>
+                                             <a data-modal-hide="popup-modal" type="button" class="text-white bg-red-600 hover:bg-red-800  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+                                                href="{{ path('app_formation_refund',{ 'id': formation.idFormation}) }}">Oui</a>
+                                         <button data-modal-hide="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Non</button>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                         <button data-modal-target="popup-modal" data-modal-toggle="popup-modal" id="m-btn" class="inline-flex items-center justify-center px-2 py-1 text-base font-medium text-center text-white bg-blue-700 rounded hover:bg-blue-800">
+                             <a>Annuler Inscription</a>
+                         </button>
+                     {% else %}
+
+                         {% if mine != "True" %}
+                             <a href="{{ path('app_formation_checkout',{ 'id': formation.idFormation}) }}" id="m-btn" class="flex items-center gap-x-1  px-2 py-1 text-base font-medium text-center text-white bg-blue-700 rounded hover:bg-blue-800">
+                                 S'inscrire
+                                 <svg aria-hidden="true" class="w-5 h-5 mr-2 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
+                             </a>
+                         {% endif %}
+
+                     {% endif %}
+                     <h1 class="mb-3 mt-7 text-5xl text-blue-700 font-extrabold">{{ formation.nomFormation|upper }}</h1>
+
+
+                     <div class="flex items-center mb-3">
+                         {% if stats['rating'] != 0 %}
+                         <p class="text-blue-900 font-medium mr-2">Rating:</p>
+                         {% for i in range(1, stats['rating']|round(0, 'floor') ) %}
+                             <svg aria-hidden="true" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Fourth star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                         {% endfor %}
+                         {% set x = 5 - stats['rating'] %}
+                         {% if x>0 and x < 1 %}
+                             <svg class="h-star w-5 h-4 text-yellow-400 bg-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 640 512"><path d="M341.5 13.5C337.5 5.2 329.1 0 319.9 0s-17.6 5.2-21.6 13.5L229.7 154.8 76.5 177.5c-9 1.3-16.5 7.6-19.3 16.3s-.5 18.1 5.9 24.5L174.2 328.4 148 483.9c-1.5 9 2.2 18.1 9.7 23.5s17.3 6 25.3 1.7l137-73.2 137 73.2c8.1 4.3 17.9 3.7 25.3-1.7s11.2-14.5 9.7-23.5L465.6 328.4 576.8 218.2c6.5-6.4 8.7-15.9 5.9-24.5s-10.3-14.9-19.3-16.3L410.1 154.8 341.5 13.5zM320 384.7V79.1l52.5 108.1c3.5 7.1 10.2 12.1 18.1 13.3l118.3 17.5L423 303c-5.5 5.5-8.1 13.3-6.8 21l20.2 119.6L331.2 387.5c-3.5-1.9-7.4-2.8-11.2-2.8z"/></svg>
+                         {% else %}
+                             {% set y = x - x|round(0, 'floor') %}
+                             {% if y>0 and y < 1   %}
+                                 <svg class="h-star text-yellow-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 640 512"><path d="M341.5 13.5C337.5 5.2 329.1 0 319.9 0s-17.6 5.2-21.6 13.5L229.7 154.8 76.5 177.5c-9 1.3-16.5 7.6-19.3 16.3s-.5 18.1 5.9 24.5L174.2 328.4 148 483.9c-1.5 9 2.2 18.1 9.7 23.5s17.3 6 25.3 1.7l137-73.2 137 73.2c8.1 4.3 17.9 3.7 25.3-1.7s11.2-14.5 9.7-23.5L465.6 328.4 576.8 218.2c6.5-6.4 8.7-15.9 5.9-24.5s-10.3-14.9-19.3-16.3L410.1 154.8 341.5 13.5zM320 384.7V79.1l52.5 108.1c3.5 7.1 10.2 12.1 18.1 13.3l118.3 17.5L423 303c-5.5 5.5-8.1 13.3-6.8 21l20.2 119.6L331.2 387.5c-3.5-1.9-7.4-2.8-11.2-2.8z"/></svg>
+                             {% endif %}
+                             {% if x|round(0, 'floor') > 0 %}
+                                 {%  for i in range(1,x|round(0, 'floor')  )%}
+                                     <svg aria-hidden="true" class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Fifth star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                 {% endfor %}
+                             {% endif %}
+                         {% endif %}
+
+                         <p class="ml-2 text-sm font-medium text-blue-900">{{ stats['rating'] }}/5</p>
+                         {% endif %}
+                     </div>
+                     <div class="text-left">
+                         <div class="text-blue-900 font-medium">Durée: {{ formation.duree }} semaines</div>
+                         <div class="text-blue-900 font-medium">Donnée par : {{ formation.nomFormateur }}</div>
+                         <div class="text-blue-900 text-xl font-bold">Prix : {{ formation.prix }} TND</div>
+                     </div>
+                 </div>
+                 <div>
+                     <img class="h-full w-full mx-auto rounded-b-lg" src="{{ asset('formationBG.jpeg') }}" alt="product image" />
+                 </div>
+             </div>
+
+            <div class="f-prog">
+                {% if inscrit == 'True' %}
+                <div>
+                    <div class="block text-sm text-left font-medium text-gray-900">Votre Progrès:</div>
+                    <div class="w-full bg-white rounded-full">
+                        <div class="bg-blue-600 text-xs font-medium text-yellow-300 text-center p-0.5 leading-none rounded-full" style="width: {{ progressPercentage }}%">
+                            {{ progressPercentage }}%</div>
+                    </div>
+                </div>
+                {% endif %}
+                <div>
+                    <label for="message" class="block  text-sm text-left font-medium text-gray-900">Déscription de la formation {{ formation.nomFormation }}:</label>
+                    <textarea id="message" rows="10" class="resize-none block p-2.5 w-full text-sm placeholder-gray-800 bg-gray-50 rounded-lg border border-gray-300" placeholder="{{ formation.description }}." disabled></textarea>
+                </div>
+            </div>
+
+            <div class="f-stats">
+                <div class="flex items-center">
+                    <p class="mb-3 block text-sm text-left font-medium text-gray-900">Le nombre de personnes inscrites à la formation {{ formation.nomFormation }} : <span class="font-bold text-blue-900 text-xl">{{ nbInscrits }}</span></p>
+                    {% if inscrit %}
+                        <div id="avis-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                            <div class="relative w-full max-w-md max-h-full">
+                                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 w-full">
+                                    <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-hide="avis-modal">
+                                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                        <span class="sr-only">Close modal</span>
+                                    </button>
+                                    <div class="p-6 text-center ">
+                                        <svg  aria-hidden="true"  class="mx-auto mb-4 text-gray-400 w-14 h-14 dark:text-gray-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg>
+                                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Donner votre avis sur la formation {{ formation.nomFormation }}</h3>
+                                        <div class="rating">
+
+                                            <h4 class="text-center mt-2 mb-4">
+                                                <i class="fas fa-star star-light submit_star mr-1" id="submit_star_1" data-rating="1"></i>
+                                                <i class="fas fa-star star-light submit_star mr-1" id="submit_star_2" data-rating="2"></i>
+                                                <i class="fas fa-star star-light submit_star mr-1" id="submit_star_3" data-rating="3"></i>
+                                                <i class="fas fa-star star-light submit_star mr-1" id="submit_star_4" data-rating="4"></i>
+                                                <i class="fas fa-star star-light submit_star mr-1" id="submit_star_5" data-rating="5"></i>
+                                            </h4>
+                                            <h2 id="note" class="text-xl text-yellow-600 font-medium" style="min-height: 1em;"></h2>
+                                            <h2 id="empty-note" class="text-sm text-red-600 font-medium hidden">Veuillez donner une note avant de soumettre votre évaluation.</h2>
+                                        </div>
+                                        <button data-modal-hide="popup-modal" id="confirm-btn" type="button" class="mt-5 text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                                            <a id="actu-btn" href="#">Confirmer</a>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button data-modal-target="avis-modal" data-modal-toggle="avis-modal" class="ml-auto inline-flex items-center justify-center  px-2 py-1 text-base font-medium text-center text-white bg-blue-700 rounded hover:bg-blue-800">
+                            <a>Donner votre Avis</a>
+                        </button>
+                    {% endif %}
+                </div>
+                <div class="ratings">
+                    <div class="flex items-center justify-between">
+                        <p class="text-left block text-sm text-left font-medium text-gray-900 mr-2">{{ stats['total'] }} évaluations au total</p>
+                        <div class="flex items-center">
+                            {% if userRating != 0 %}
+                                <p class="text-blue-900 font-medium mr-2">Votre note:</p>
+                                {% for i in range(1, userRating ) %}
+                                    <svg aria-hidden="true" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Fourth star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                {% endfor %}
+                                {% set x = 5 - userRating  %}
+                                    {% if x > 0 %}
+                                        {%  for i in range(1,x  )%}
+                                            <svg aria-hidden="true" class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Fifth star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                        {% endfor %}
+                                    {% endif %}
+                                <p class="ml-2 text-sm font-medium text-blue-900">{{ userRating  }}/5</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+
+
+                    <div>
+                        <div class="flex items-center mt-4">
+                            <span class="text-sm font-medium text-blue-600 dark:text-blue-500">5 stars</span>
+                            <div class="w-2/4 h-5 mx-4 bg-white rounded dark:bg-gray-700">
+                                <div class="h-5 bg-yellow-400 rounded" style="width: {{ stats['perc_5_stars'] }}%"></div>
+                            </div>
+                            <span class="text-sm font-medium text-blue-600 dark:text-blue-500">{{ stats['perc_5_stars'] }}%</span>
+                        </div>
+                        <div class="flex items-center mt-4">
+                            <span class="text-sm font-medium text-blue-600 dark:text-blue-500">4 stars</span>
+                            <div class="w-2/4 h-5 mx-4 bg-white rounded dark:bg-gray-700">
+                                <div class="h-5 bg-yellow-400 rounded" style="width: {{ stats['perc_4_stars'] }}%"></div>
+                            </div>
+                            <span class="text-sm font-medium text-blue-600 dark:text-blue-500">{{ stats['perc_4_stars'] }}%</span>
+                        </div>
+                        <div class="flex items-center mt-4">
+                            <span class="text-sm font-medium text-blue-600 dark:text-blue-500">3 stars</span>
+                            <div class="w-2/4 h-5 mx-4 bg-white rounded dark:bg-gray-700">
+                                <div class="h-5 bg-yellow-400 rounded" style="width: {{ stats['perc_3_stars'] }}%"></div>
+                            </div>
+                            <span class="text-sm font-medium text-blue-600 dark:text-blue-500">{{ stats['perc_3_stars'] }}%</span>
+                        </div>
+                        <div class="flex items-center mt-4">
+                            <span class="text-sm font-medium text-blue-600 dark:text-blue-500">2 stars</span>
+                            <div class="w-2/4 h-5 mx-4 bg-white rounded dark:bg-gray-700">
+                                <div class="h-5 bg-yellow-400 rounded" style="width: {{ stats['perc_2_stars'] }}%"></div>
+                            </div>
+                            <span class="text-sm font-medium text-blue-600 dark:text-blue-500">{{ stats['perc_2_stars'] }}%</span>
+                        </div>
+                        <div class="flex items-center mt-4">
+                            <span class="text-sm font-medium text-blue-600 dark:text-blue-500">1 star</span>
+                            <div class="w-2/4 h-5 mx-4 bg-white rounded dark:bg-gray-700">
+                                <div class="h-5 bg-yellow-400 rounded" style="width: {{ stats['perc_1_stars'] }}%"></div>
+                            </div>
+                            <span class="text-sm font-medium text-blue-600 dark:text-blue-500">{{ stats['perc_1_stars'] }}%</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+{% endblock %}

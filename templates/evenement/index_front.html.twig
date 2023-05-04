@@ -9,15 +9,33 @@
     <div style="width:50%">
         <form action="{{ path('app_evenement_front') }}" method="GET">
             <div class="form-group">
-                <label for="order_by">Order by:</label>
+                <label for="order_by text-white font-medium">Trier par:</label>
                 <select id="order_by" name="order_by" class="form-control" onchange="this.form.submit()">
-                    <option value="date_asc" {% if app.request.query.get('order_by') == 'date_asc' %}selected{% endif %}>Date Ascending</option>
-                    <option value="date_desc" {% if app.request.query.get('order_by') == 'date_desc' %}selected{% endif %}>Date Descending</option>
+                    <option value="date_asc" {% if app.request.query.get('order_by') == 'date_asc' %}selected{% endif %}>Date ascendante</option>
+                    <option value="date_desc" {% if app.request.query.get('order_by') == 'date_desc' %}selected{% endif %}>Date Descendante</option>
                 </select>
             </div>
         </form>
+        <div class="cards-grid w-full rounded shadow-2xl">
+            {% for evenement in evenements %}
+                <div class="forma-card w-full max-w-sm bg-blue-200 bg-opacity-60 rounded-lg">
 
-        <table class="table table-striped table-hover">
+                    <img class="h-48 w-full mx-auto rounded-t-lg" src="{{ asset('formationBG.jpeg') }}" alt="product image" />
+
+                    <div class="px-5 pb-5">
+
+                        <h5 class="text-xl font-semibold tracking-tight text-blue-700">{{ evenement.nomevenement|upper() }}</h5>
+                        <h3 class="text-left text-sm font-medium text-blue-900">{{ evenement.dateevenement ? evenement.dateevenement|date('Y-m-d') : '' }}</h3>
+                        <div class="flex items-center justify-between">
+                            <span class="text-3xl font-bold text-blue-900">{{ evenement.inviter }}</span>
+                            <a href="{{ path('app_evenement_showFront', {'idevenement': evenement.idevenement}) }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Afficher</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {#         <table class="table table-striped table-hover">
         <thead>
             <tr>
                 <th>Nom événement</th>
@@ -42,10 +60,11 @@
             </tr>
         {% endfor %}
         </tbody>
-    </table>
+    </table> #}
+
     </div>
 
-    <div>
+    <div class="text-white font-medium mb-2">
         {{ resultMessage }}
     </div>
 

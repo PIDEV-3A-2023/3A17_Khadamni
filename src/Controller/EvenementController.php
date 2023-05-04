@@ -20,11 +20,11 @@ class EvenementController extends AbstractController
             ->getRepository(Evenement::class)
             ->findAll();
 
-        //$totalResults = count($evenements);
+        $totalResults = count($evenements);
 
-        return $this->render('evenement/index.html.twig', [
+        return $this->render('admin/EvenementsBack.twig', [
             'evenements' => $evenements,
-            //'totalResults' => $totalResults,
+            'totalResults' => $totalResults,
         ]);
     }
 
@@ -84,7 +84,7 @@ class EvenementController extends AbstractController
         ]);
     }
 
-    #[Route('/{idevenement}/edit', name: 'app_evenement_edit', methods: ['GET', 'POST'])]
+    #[Route('/{idevenement}/edit', name: 'app_evenement_e0dit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Evenement $evenement, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(EvenementType::class, $evenement);

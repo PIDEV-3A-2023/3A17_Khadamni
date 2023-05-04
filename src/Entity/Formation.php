@@ -2,7 +2,11 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\FormationRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Formation
@@ -10,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Table(name: 'formation')]
 #[ORM\Index(name: 'id_formateur_idx_idx', columns: ['id_formateur'])]
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: FormationRepository::class)]
 class Formation
 {
     /**
@@ -27,6 +31,8 @@ class Formation
      *
      */
     #[ORM\Column(name: 'nom_formation', type: 'string', length: 45, nullable: false)]
+    #[Assert\NotBlank(message: 'nomFormation ne doit pas etre vide')]
+    #[Assert\Length(min: 4,minMessage: "le nom doit contenir au moins 4 caracteres")]
     private $nomFormation;
 
     /**
@@ -34,6 +40,8 @@ class Formation
      *
      */
     #[ORM\Column(name: 'description', type: 'string', length: 45, nullable: false)]
+    #[Assert\NotBlank(message: 'description ne doit pas etre vide')]
+    #[Assert\Length(min: 10,minMessage: "la déscription doit contenir au moins 10 caracteres")]
     private $description;
 
     /**
@@ -41,6 +49,8 @@ class Formation
      *
      */
     #[ORM\Column(name: 'duree', type: 'integer', nullable: false)]
+    #[Assert\NotBlank(message: 'duree ne doit pas etre vide')]
+    #[Assert\GreaterThanOrEqual(1,message: "la durée doit etre supérieur à 1")]
     private $duree;
 
     /**
@@ -48,6 +58,8 @@ class Formation
      *
      */
     #[ORM\Column(name: 'prix', type: 'integer', nullable: false)]
+    #[Assert\NotBlank(message: 'prix ne doit pas etre vide')]
+    #[Assert\GreaterThanOrEqual(1,message: "le prix doit etre supérieur à 1")]
     private $prix;
 
     /**
@@ -57,6 +69,26 @@ class Formation
     #[ORM\JoinColumn(name: 'id_formateur', referencedColumnName: 'id_user')]
     #[ORM\ManyToOne(targetEntity: 'User')]
     private $idFormateur;
+
+    private $nomFormateur;
+    private float $rating;
+
+    /**
+     * @return float
+     */
+    public function getRating(): float
+    {
+        return $this->rating;
+    }
+
+    /**
+     * @param float $rating
+     */
+    public function setRating(float $rating): void
+    {
+        $this->rating = $rating;
+    }
+
 
     public function getIdFormation(): ?int
     {
@@ -73,6 +105,16 @@ class Formation
         $this->nomFormation = $nomFormation;
 
         return $this;
+    }
+
+    public function setNomFormateur($nomFormateur): void
+    {
+        $this->nomFormateur = $nomFormateur;
+    }
+
+    public function getNomFormateur()
+    {
+        return $this->nomFormateur;
     }
 
     public function getDescription(): ?string
@@ -122,6 +164,12 @@ class Formation
 
         return $this;
     }
+    public function __toString()
+    {
+        return $this->getNomFormation(); // or any other property that uniquely identifies the entity
+    }
+
+
 
 
 }

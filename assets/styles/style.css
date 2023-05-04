@@ -1,5 +1,4 @@
 .main {
-
     background: linear-gradient(to top right,#8097db,#16525e);
     background-attachment: fixed;
     height: 100vh;
@@ -7,9 +6,22 @@
     margin: 0;
     display: flex;
     flex-direction: column;
+
 }
 *:focus {
     outline: 0 !important;
+}
+
+.content {
+    margin-top: 40px;
+    flex:1;
+    position: relative;
+    bottom:0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
 }
 
 .inp {
@@ -33,11 +45,9 @@
 #sub {
 
     display: block;
-    margin-top: 15px;
+    margin-top: 25px;
     margin-left: auto;
     margin-right: auto;
-    background-color:#10B981 ;
-
 
 }
 .contact {
@@ -52,18 +62,10 @@
     text-align: center;
     padding: 20px;
 }
-.content {
-    margin-top: 40px;
-    flex:1;
-    position: relative;
-    bottom:0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 
-}
+
 footer {
-    margin-top: 100px;
+    margin-top: 50px;
     border-top: 2px solid white;
 
 }
