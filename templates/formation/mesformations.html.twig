@@ -1,0 +1,232 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        footer {
+            margin-top: 0; !important;
+        }
+        .slider-range-display {
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            color: #333;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 5px;
+            width: 130px;
+        }
+
+    </style>
+{% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('search') }}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+
+
+
+    <script>
+
+        $( function() {
+            $( "#price-slider" ).slider({
+                range: true,
+                min: 1,
+                max: 5000,
+                values: [ 1, 5000 ],
+                slide: function( event, ui ) {
+                    $( "#amount" ).val( ui.values[ 0 ]+" - " + ui.values[ 1 ] + "TND" );
+                },
+                stop: function( event, ui ) {}
+            });
+            $( "#amount" ).val(  $( "#price-slider" ).slider( "values", 0 ) +
+                " - " + $( "#price-slider" ).slider( "values", 1 ) +" TND");
+        } );
+
+        $( function() {
+            $( "#duree-slider" ).slider({
+                range: true,
+                min: 1,
+                max: 30,
+                values: [ 1, 30 ],
+                slide: function( event, ui ) {
+                    $( "#duree" ).val( ui.values[ 0 ]+" - " + ui.values[ 1 ] + " semaines" );
+                },
+                stop: function( event, ui ) {}
+            });
+            $( "#duree" ).val(  $( "#duree-slider" ).slider( "values", 0 ) +
+                " - " + $( "#duree-slider" ).slider( "values", 1 ) +" semaines");
+        } );
+
+
+    </script>
+
+{% endblock %}
+
+{% block content %}
+
+        {% if verified == 'False' %}
+            <div class="panel shadow-2xl h-auto flex items-center justify-center">
+                {% if encours == true %}
+                    <div class="bg-green-500 self-center align-middle flex flex-col items-center justify-center text-center border border-green-600 text-white px-16 py-6 rounded relative shadow-2xl " role="alert">
+                    <div>
+                        <p class="font-medium">
+                            Votre compte est en cours d'activation. Veuillez patienter, cela peut prendre quelques minutes!
+                        </p>
+                    </div>
+                    </div>
+                    {% else %}
+                <div class="bg-red-100 self-center align-middle flex flex-col items-center justify-center text-center border border-red-400 text-red-700 px-16 py-6 rounded relative shadow-2xl " role="alert">
+                <div>
+                    <p class="font-medium">
+                        Pour gagner de l'argent avec Khadamni et créer des formations, vous devez activer vos méthodes de paiement.
+                    </p>
+                    <p class="text-sm mt-2">
+                        Veuillez <a href="{{ path('app_payment_activate') }}" class="text-red-700 font-bold">cliquer ici</a> pour activer vos méthodes de paiement.
+                    </p>
+
+                </div>
+                </div>
+                    {% endif %}
+            </div>
+
+        {% else %}
+            <div class="container px-4 mx-auto">
+                <div class="flex flex-wrap">
+                    <!-- Filter section -->
+                    <div class="w-full md:w-1/4 px-4">
+                        <div class="p-4 rounded">
+                            <!-- Filter content -->
+                            <h3 class="text-xl font-bold mb-4 text-white">Filtres de recherche</h3>
+                            <div class="relative">
+                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+                         </div>
+                    <input type="text" id="search-dropdown" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search" required>
+                     </div>
+                            <div class="p-5">
+                <div class="mb-2 flex items-center whitespace-nowrap">
+                    <label for="amount" class="text-white mr-1 font-semibold text-medium">Prix[min-max]</label>
+                    <input class="rounded text-center p-0 slider-range-display" type="text" id="amount" readonly>
+                </div>
+                <div id="price-slider"></div>
+            </div>
+             <div class="p-5">
+                <div class="mb-2 flex items-center whitespace-nowrap">
+                    <label for="duree" class="text-white mr-1 font-semibold text-medium">Durée[min-max]</label>
+                    <input class="rounded text-center p-0 m-0 slider-range-display" type="text" id="duree" readonly>
+                </div>
+                <div id="duree-slider"></div>
+             </div>
+                            <div>
+                                <p id="res" class="font-medium mb-2 h-10 w-full text-center py-2"> </p>
+
+                            </div>
+                            <div>
+                                <button id="reset-btn" class="text-white bg-green-500 hover:bg-green-600  focus:outline-none  font-medium rounded-lg text-sm px-4 py-2 text-center">Réinitialiser</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Table section -->
+                    <div class="w-full md:w-3/4 px-4">
+                        <div class="p-4 rounded">
+                            <!-- Table content -->
+                            <div>
+                                <table class="text-sm text-left w-full">
+                                    <caption class="p-5 text-lg font-bold text-left  text-white shadow-2xl">
+                                        <div class="flex">
+                                            <div>
+                                                Mes Formations:
+                                                <p class="mt-1 text-sm font-normal white">Vous pouvez gérer vos formations éxistantes ou ajouter une nouvelle formation.</p>
+                                            </div>
+
+                                            <a href="{{ path('app_formation_new') }}" class="ml-auto inline-flex items-center justify-center self-end px-2 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                                                Ajouter une formation
+                                                <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                            </a>
+                                        </div>
+                                    </caption>
+
+
+
+                                    <thead class="text-xs  whitespace-nowrap uppercase bg-gray-700 text-gray-300">
+
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            Nom du Formation
+                                        </th>
+                                        <th scope="col"  class="px-6 py-3" >
+                                            Déscription
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Durée
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Prix
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            <span class="sr-only">Actions</span>
+                                        </th>
+
+
+                                    </tr>
+                                    </thead>
+                                    <tbody id="prev-tab">
+                                    {% for f in formations %}
+                                        <tr class="ligne">
+                                            <th scope="row" class="px-6 py-4">
+                                                {{ f.nomFormation|upper() }}
+                                            </th>
+                                            <td class="px-6 py-4" style="min-width: 250px;">
+                                                {{ f.description }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{ f.duree }} semaines
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{ f.prix }} TND
+                                            </td>
+                                            <td class="px-6 py-4">
+
+                                                <button id="{{ 'dropdownDefaultButton' ~ f.idFormation }}" data-dropdown-toggle="{{ 'dropdown' ~ f.idFormation }}" class="text-white bg-blue-700 hover:bg-blue-800 mb-0 focus:outline-none  font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center " type="button">Actions<svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button>
+                                                <!-- Dropdown menu -->
+                                                <div id="{{ 'dropdown' ~ f.idFormation }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow">
+                                                    <ul class="py-2 text-sm text-gray-700" aria-labelledby="{{ 'dropdownDefaultButton' ~ f.idFormation }}">
+                                                        <li>
+                                                            <a href="{{ path('app_show_formation',{'id':f.idFormation}) }}" class="block text-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Consulter</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ path('app_formation_edit',{'idFormation':f.idFormation}) }}" class="block text-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Modifier</a>
+                                                        </li>
+                                                        <li>
+                                                                <form method="post" action="{{ path('app_formation_delete', {'idFormation': f.idFormation}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ??');">
+                                                                    <input id="t_{{ f.idFormation }}" type="hidden" name="_token" value="{{ csrf_token('delete' ~ f.idFormation) }}">
+                                                                    <button class="block w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Supprimer</button>
+                                                                </form>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                    <tbody id="new-tab"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        {% endif %}
+
+
+
+{% endblock %}

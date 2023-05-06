@@ -1,0 +1,121 @@
+{% extends 'admin/AdminDashboard.html.twig' %}
+
+
+
+
+{% block emplois %}
+	<li class="active">
+		<a href="{{ path('app_emploi_index') }}">
+			<i class="now-ui-icons design_bullet-list-67"></i>
+			<p>Les emplois</p>
+		</a>
+	</li>
+{% endblock %}
+{% block body %}
+	<div class="content">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-header">
+						<h4 class="card-title">
+							Gérer les emplois</h4>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive">
+							<table class="table">
+								<thead class=" text-primary">
+								<th>
+									ID
+								</th>
+								<th>
+									Titre
+								</th>
+								<th>
+									Description
+								</th>
+								<th>
+									Salaire
+								</th>
+								<th>
+									Niveau Experience
+								</th>
+								<th>
+									Type Contrat
+								</th>
+								<th>
+									Date Publication
+								</th>
+								<th class="text-left">
+									Supprimer
+								</th>
+								</thead>
+								<tbody>
+								{% for emploi in emplois %}
+									<tr>
+										<td>
+											{{ emploi.idEmploi }}
+										</td>
+										<td>
+											{{ emploi.titre }}
+										</td>
+										<td>
+											{{ emploi.description }}
+										</td>
+										<td>
+											{{ emploi.salaire }}
+											TND
+										</td>
+										<td>
+											{{ emploi.niveauExperience }}
+										</td>
+										<td>
+											{{ emploi.typeContrat }}
+										</td>
+										<td>
+											{{ emploi.datePublication ? emploi.datePublication|date('Y-m-d') : '' }}
+										</td>
+
+
+										<td>
+											<form method="post" action="{{ path('app_emploi_delete', {'idEmploi': emploi.idEmploi}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+												<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ emploi.idEmploi) }}">
+												<button class="btn">
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 24 24">
+														<path d="M0 0h24v24H0V0z" fill="none"/>
+														<path d="M19 7h-3V6c0-1.1-.9-2-2-2H10c-1.1 0-2 .9-2 2v1H5v2h14V7zm-9-1h4v1h-4V6zM4.5 9h15l-1.39 12.63c-.08.69-.67 1.37-1.36 1.37H7.35c-.69 0-1.28-.68-1.36-1.37L4.5 9zm7.5 10c.92 0 1.67.75 1.67 1.67S13.92 22 13 22s-1.67-.75-1.67-1.67.75-1.67 1.67-1.67zm4.92-7l-.71-4H9.79l-.71 4h9.34z"/>
+													</svg>
+												</button>
+											</form>
+										</td>
+									</tr>
+
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						<a href="{{ path('app_emploi_new') }}" class="block text-white hover:no-underline font-bold py-2 px-4  mt-3">Ajouter emploi</a>
+					</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Create New Emploi</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+
+				<button type="submit" class="btn btn-primary">Add Emploi</button>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+
+

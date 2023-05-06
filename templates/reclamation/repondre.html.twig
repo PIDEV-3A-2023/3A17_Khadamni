@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Répondre à la réclamation n°{{ reclamation.idReclamation }}{% endblock %}
+
+{% block content %}
+    <h1>Répondre à la réclamation n°{{ reclamation.idReclamation }}</h1>
+
+{{ form_start(form) }}
+{{ form_row(form.sujet) }}
+{{ form_row(form.motif) }}
+
+<button type="submit" class="btn btn-primary">Envoyer</button>
+{{ form_end(form) }}
+
+
+{% endblock %}

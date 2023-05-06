@@ -1,0 +1,168 @@
+{% extends 'admin/AdminDashboard.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+
+
+    </style>
+{% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="{{ asset('AdminDashboard/js/core/bootstrap.min.js') }}"></script>
+        <script>
+            $(document).ready( function () {
+                $('.delModal').on('click' , function () {
+
+                    idFormation = $(this).data('id')
+                    if ($('#table-'+idFormation).children().length === 0) {
+                        $.ajax({
+                            url: '/admin/formation/listeInscrits', // replace with the URL of your controller action
+                            type: 'GET',
+                            'data' : {
+                                'id' : idFormation,
+                            },
+                            success: function(response) {
+                                let data = JSON.parse(response);
+                                let rows = '';
+                                $.each(data, function(i, item) {
+                                    rows += '<tr>';
+                                    rows += '<td>' + item.inscription.idInscription + '</td>';
+                                    rows += '<td>' + item.inscription.idUser.email + '</td>';
+                                    rows += '<td>' + item.progress + '%' + '</td>';
+                                    rows += '<td>' + item.inscription.idFormation.prix + ' TND' + '</td>';
+                                    rows += '<td>' + item.refund  + ' TND' + '</td>';
+                                    rows += '</tr>';
+                                });
+                                $('#table-'+idFormation).html(rows);
+                            },
+                            error: function(xhr, status, error) {
+                                // handle any error
+                                console.log(error);
+                            }
+                        })
+                    }
+
+                })
+
+            })
+        </script>
+    {% endblock %}
+
+{% block formations %}
+    <li class="active">
+        <a href="tables.html">
+            <i class="now-ui-icons design_bullet-list-67"></i>
+            <p>Les Formations</p>
+        </a>
+    </li>
+{% endblock %}
+{% block body %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">
+                                Gérer les formations:</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class=" text-primary">
+                                    <th>
+                                        Nom Formation
+                                    </th>
+                                    <th>
+                                        Description
+                                    </th>
+                                    <th>
+                                        Duree
+                                    </th>
+                                    <th>
+                                        Prix
+                                    </th>
+                                    <th>
+                                        Supprimer
+                                    </th>
+                                    </thead>
+                                    <tbody>
+                                    {% for formation in formations %}
+                                        <tr>
+                                            <td>
+                                                {{ formation.NomFormation|upper() }}
+                                            </td>
+                                            <td>
+                                                {{ formation.description }}
+                                            </td>
+                                            <td>
+                                                {{ formation.duree  }} semaines
+                                            </td>
+                                            <td>
+                                                {{ formation.prix }}
+                                                TND
+                                            </td>
+                                              <td>
+
+                                                  <button class="btn delModal" type="button" data-toggle="modal" data-target="#exampleModalCenter{{ formation.idFormation }}" data-id="{{ formation.idFormation }}">
+                                                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 24 24">
+                                                          <path d="M0 0h24v24H0V0z" fill="none"/>
+                                                          <path d="M19 7h-3V6c0-1.1-.9-2-2-2H10c-1.1 0-2 .9-2 2v1H5v2h14V7zm-9-1h4v1h-4V6zM4.5 9h15l-1.39 12.63c-.08.69-.67 1.37-1.36 1.37H7.35c-.69 0-1.28-.68-1.36-1.37L4.5 9zm7.5 10c.92 0 1.67.75 1.67 1.67S13.92 22 13 22s-1.67-.75-1.67-1.67.75-1.67 1.67-1.67zm4.92-7l-.71-4H9.79l-.71 4h9.34z"/>
+                                                      </svg>
+                                                  </button>
+                                                  <div class="modal fade" id="exampleModalCenter{{ formation.idFormation }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                          <div class="modal-content">
+                                                              <div class="modal-header">
+                                                                  <h5 class="modal-title" id="exampleModalLongTitle">Liste des utilisateurs concernés</h5>
+                                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                      <span aria-hidden="true">&times;</span>
+                                                                  </button>
+                                                              </div>
+                                                              <div class="modal-body d-flex flex-column">
+                                                                  <table class="table table-bordered">
+                                                                      <thead>
+                                                                      <tr>
+                                                                          <th>ID</th>
+                                                                          <th>Utilisateur</th>
+                                                                          <th>Progrès</th>
+                                                                          <th>Prix</th>
+                                                                          <th>Refund</th>
+                                                                      </tr>
+                                                                      </thead>
+                                                                      <tbody id="table-{{ formation.idFormation }}">
+                                                                      </tbody>
+                                                                  </table>
+                                                              </div>
+                                                              <div class="modal-footer d-flex justify-content-center">
+                                                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+
+                                                                  <div>
+                                                                      <form method="post" action="{{ path('app_formation_delete', {'idFormation': formation.idFormation}) }}" onsubmit="return confirm('Êtes-vous sûr(e) de vouloir supprimer cet élément ?');">
+                                                                          <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ formation.idFormation) }}">
+                                                                          <button class="btn btn-danger ml-2">Confirmer  </button>
+                                                                      </form>
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+
+                                                  <!-- Modal -->
+                                              </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+</div>
+{% endblock %}
+
+
+

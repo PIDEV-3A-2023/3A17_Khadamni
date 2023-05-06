@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+{% block javascripts %}
+	<script>
+		const myForm = document.getElementById('myForm');
+
+myForm.onsubmit = async (e) => {
+e.preventDefault();
+var topic = document.getElementById('topic').value;
+var duration = document.getElementById('duration').value;
+
+let response = await fetch('{{ path('app_zoom') }}', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+},
+body: JSON.stringify(
+{'topic': topic, 'duration': duration}
+)
+});
+
+if (! response.ok) {
+throw new Error (`HTTP error! status: ${
+response.status
+}`);
+}
+
+let result = await response.json();
+console.log(result);
+}
+	</script>
+{% endblock %}
+
+{% block content %}
+	<div class="container mx-auto p-8">
+		<div class="bg-white rounded-lg shadow-lg px-4 py-6">
+			<div
+				class="flex justify-center items-center mb-4">{# <img src="https://picsum.photos/600/400/?random" alt="zoom" class="w-16 h-16 rounded-full"> #}
+			</div>
+
+			<form id="myForm" class="flex flex-col">
+				<label for="topic" class="text-lg font-medium mb-2">
+					Topic:
+				</label>
+				<input type="text" name="topic" id="topic" class="border border-gray-400 rounded-lg py-2 px-4 mb-4">
+
+				<label for="duration" class="text-lg font-medium mb-2">
+					Duration:
+				</label>
+				<input type="number" name="duration" id="duration" class="border border-gray-400 rounded-lg py-2 px-4 mb-4 ">
+
+				<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+					Send
+				</button>
+			</form>
+		</div>
+		{% if startUrl != '' %}
+			<div class="bg-white rounded-lg shadow-lg mt-8 py-6 px-4 " id="result">
+
+				<p class="text-lg font-medium mb-2 text-left">
+					Click to :
+					<a href="{{ startUrl }}" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">
+						Start Meeting
+						<svg aria-hidden="true" class="w-5 h-5 ml-1" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+							<path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+						</svg>
+					</a>
+
+				</p>
+
+
+				<p class="text-lg font-medium mb-2 text-left">
+					Join :
+					<span class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 underline">
+						{{ joinUrl }}</span>
+
+
+				</p>
+				<p class="text-lg font-medium mb-2 text-left">
+					Meeting password :
+					<span class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 underline">
+						{{ mdp }}
+					</span>
+				</p>
+			</div>
+		{% endif %}
+	</div>
+
+{% endblock %}

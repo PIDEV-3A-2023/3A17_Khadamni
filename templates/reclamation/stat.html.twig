@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+  <h1 class="text-3xl font-bold mb-4">Statistiques des réclamations</h1>
+
+  <div class="flex  gap-10 mb-8 w-full p-10 ">
+    <div class="bg-white rounded-lg shadow-lg p-4 w-1/2 ml-3">
+      <h2 class="text-xl font-bold mb-4">Nombre de réclamations par année</h2>
+      <div class="flex justify-center">
+        <div class="w-full">
+          {{ render_chart(chart) }}
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-lg shadow-lg w-1/2 p-4">
+      <h2 class="text-xl font-bold mb-4">Répartition des réclamations</h2>
+      <div class="flex justify-center">
+        <div class="w-full">
+          {{ render_chart(chart2) }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

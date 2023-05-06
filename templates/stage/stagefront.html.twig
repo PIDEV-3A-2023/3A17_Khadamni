@@ -1,0 +1,233 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+	<link rel="icon" type="image/x-icon" href="{{ asset('LOGOKHADAMNI.png') }}">
+
+	<style>
+		.cards-grid {
+
+			margin-top: 6px;
+			padding: 15px;
+			grid-gap: 20px;
+			flex: 1;
+			display: grid;
+			grid-auto-flow: row;
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+		}
+		.forma-card {
+			justify-self: center;
+
+		}
+	</style>
+	{{ encore_entry_link_tags('app') }}
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		function filter() {
+let type = $('#my-select').val();
+const checked = $('input[type="checkbox"]:checked');
+let oldgrid = $('#old-grid')
+let newgrid = $('#new-grid')
+let values = []
+
+checked.each(function () {
+values.push(($(this).val()));
+});
+
+$.ajax({
+url: '/stage/filtrer',
+'method': 'GET',
+'data': {
+'type': type,
+'niveau_etude': values
+},
+success: function (retour) {
+let data = JSON.parse(retour);
+
+if (Object.keys(data).length === 0) {
+newgrid.hide()
+newgrid.empty()
+oldgrid.show().fadeIn('fast')
+
+} else {
+oldgrid.hide().fadeOut('fast')
+newgrid.empty()
+newgrid.show().fadeIn('fast')
+newgrid.html('');
+$.each(data, function (i, obj) {
+console.log(obj)
+
+newgrid.append(`<div class="forma-card w-full max-w-sm bg-white bg-opacity-80 rounded-lg">
+                        <img class="h-48 w-full mx-auto rounded-t-lg" src="{{ asset('stageImg.png') }}" alt="product image"/>
+                        <div class="px-5 pb-5">
+                            <h5 class="text-2xl font-bold tracking-tight text-cyan-900">Poste: ${
+obj.poste
+}</h5>
+                            <h3 class="text-left text-sm font-medium text-blue-900">Adresse: ${
+obj.adresseStage
+}</h3>
+                            <h3 class="text-left text-sm font-medium text-blue-900">Durée: ${
+obj.dureeStage
+}</h3>
+                            <h3 class="text-left text-sm font-bold text-blue-900">Type: ${
+obj.typeStage.toUpperCase()
+}</h3>
+                            <div class="flex items-center justify-between">
+                                <span class="text-2xl font-bold text-cyan-800">${
+obj.nomEntreprise
+}</span>
+                                 <a href="/stage/postuler/${
+obj.idStage
+}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Postuler</a>
+                            </div>
+                        </div>
+
+
+                    </div>`);
+});
+
+
+}
+
+},
+error: function (xhr, status, error) {
+console.log("Error: " + error + ' ' + status);
+
+}
+
+})
+
+
+}
+function reset() {
+$('#my-select').prop('selectedIndex', 0);
+$('input[type="checkbox"]').prop('checked', false);
+let oldgrid = $('#old-grid')
+let newgrid = $('#new-grid')
+newgrid.hide()
+newgrid.empty()
+oldgrid.show().fadeIn('fast')
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+
+$('input[type="checkbox"]').on('click', filter);
+$('#my-select').on('change', filter)
+$('#reset').on('click', reset)
+
+
+})
+	</script>
+{% endblock %}
+
+{% block content %}
+
+
+	<div class="contenu-stage">
+		<div>
+			<h1 class="mb-4 text-3xl font-extrabold  text-white md:text-5xl lg:text-6xl">
+				Obtenir de l'experience en IT avec
+				<span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">Khadamni</span>
+			</h1>
+			<p class="text-lg font-normal text-gray-200 lg:text-xl ">PLus de 1000 opportunités de Stage</p>
+		</div>
+
+
+		<div class="flex gap-4">
+
+			<div class="w-full md:w-1/4 px-4 bg-white bg-opacity-20 rounded  ">
+				<div
+					class="p-4 rounded flex-grow">
+					<!-- Filter content -->
+					<h3 class="text-xl font-bold mb-4 text-white text-center">Filtres</h3>
+					<div class="mb-2">
+						<label for="my-select" class="text-white font-medium text-left mr-1">Type de Stages:</label>
+						<select id="my-select" name="my-select" class="rounded">
+							<option value="all">Tous</option>
+							<option value="payant">Payant</option>
+							<option value="non_payant">Non Payant</option>
+						</select>
+					</div>
+
+					<div class="flex flex-col items-start">
+						<label for="filter" class="text-white font-medium ml-1">Niveau d'éducation :</label>
+						<div class="mt-2 space-y-2">
+
+							<div class="flex items-center">
+								<input type="checkbox" id="bac" name="education-level" value="bac" class="mr-2 border-none outline-none focus:outline-none focus:ring-0 focus:border-none">
+								<label for="bac" class="text-blue-900 font-medium">Bac</label>
+							</div>
+							<div class="flex items-center">
+								<input type="checkbox" id="bac1" name="education-level" value="bac_1" class="mr-2 border-none outline-none focus:outline-none focus:ring-0 focus:border-none">
+								<label for="bac1" class="text-blue-900 font-medium">Bac+1</label>
+							</div>
+							<div class="flex items-center">
+								<input type="checkbox" id="bac2" name="education-level" value="bac_2" class="mr-2 border-none outline-none focus:outline-none focus:ring-0 focus:border-none">
+								<label for="bac2" class="text-blue-900 font-medium">Bac+2</label>
+							</div>
+							<div class="flex items-center">
+								<input type="checkbox" id="bac3" name="education-level" value="bac_3" class="mr-2 border-none outline-none focus:outline-none focus:ring-0 focus:border-none">
+								<label for="bac3" class="text-blue-900 font-medium">Bac+3</label>
+							</div>
+							<div class="flex items-center">
+								<input type="checkbox" id="bac4" name="education-level" value="bac_4" class="mr-2 border-none outline-none focus:outline-none focus:ring-0 focus:border-none">
+								<label for="bac4" class="text-blue-900 font-medium">Bac+4</label>
+							</div>
+							<div class="flex items-center">
+								<input type="checkbox" id="bac5" name="education-level" value="bac_5" class="mr-2 border-none outline-none focus:outline-none focus:ring-0 focus:border-none">
+								<label for="bac5" class="text-blue-900 font-medium">Bac+5</label>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div>
+					<button id="reset" class="mb-1 text-white bg-green-500 hover:bg-green-600 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 text-center">Réinitialiser</button>
+				</div>
+			</div>
+
+
+			<div class="cards-grid rounded shadow-2xl mt-5" id="old-grid">
+
+				{% for stage in stages %}
+					<div class="forma-card w-full max-w-sm bg-white bg-opacity-80 rounded-lg">
+
+						<img class="h-48 w-full mx-auto rounded-t-lg" src="{{ asset('stageImg.png') }}" alt="product image"/>
+
+						<div class="px-5 pb-5">
+
+							<h5 class="text-2xl font-bold tracking-tight text-cyan-900">Poste:
+								{{ stage.poste }}</h5>
+							<h3 class="text-left text-sm font-medium text-blue-900">Adresse:
+								{{ stage.adresseStage }}</h3>
+							<h3 class="text-left text-sm font-medium text-blue-900">Durée:
+								{{ stage.dureeStage }}</h3>
+							<h3 class="text-left text-sm font-bold text-blue-900">Type:
+								{{ stage.typeStage|upper() }}</h3>
+							<div class="flex items-center justify-between">
+								<span class="text-2xl font-bold text-cyan-800">
+									{{ stage.nomEntreprise }}
+								</span>
+								<a href="{{ path('app_stage_postuler', {'idStage': stage.idStage}) }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Postuler</a>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+
+
+			</div>
+			<div class="cards-grid rounded shadow-2xl mt-5" id="new-grid" style="display: none"></div>
+
+		</div>
+		<div class="mb-6 lg:mb-0 flex-initial justify-center items-center shrink w-full lg:w-5/12 lg:pr-3">
+			{% include 'map/index.html.twig' with {'class': 'text-sm'} %}
+		</div>
+	</div>
+
+
+
+
+{% endblock %}

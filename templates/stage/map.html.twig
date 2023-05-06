@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <!-- Include Leaflet library and dependencies -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha384-mwHJQlR1/whr7Vj+QC6U5Os6uFKX9eG7Cp8OxhB7uvJNAKUi/G0jE8bWB1JgyzC9"
+      crossorigin=""/>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"
+      integrity="sha384-TDlUv/ZoEjyTwl2LRiH1DkpsVQLKj6Z5U6qvkpY9OMJvN8/ZiW4b3qjKTVa/UC7Y"
+      crossorigin=""></script>
+    <!-- Include Leaflet Routing Machine library -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-routing-machine@3.2.15/dist/leaflet-routing-machine.css"
+      integrity="sha384-KT9sdGQUuV7ryHy2jY1V7lPRjzLbwlMv6Q2ww1/uO9F8I42jUljy1Uzc0YUoNTB8"
+      crossorigin=""/>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-routing-machine@3.2.15/dist/leaflet-routing-machine.min.js"
+      integrity="sha384-cJRNcudGtr9Xn5W5IJRk5m5AamMHd6mK8WPMRsARlKQ2B20CZZJXkSTjKvtG6tcY"
+      crossorigin=""></script>
+    <!-- Include Leaflet Control Geocoder library -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+  </head>
+  <body>
+    <div id="map" style="height: 100%;"></div>
+    <script>
+      // Create a Leaflet map and add it to the "map" div
+      var carte = L.map('map').setView([48.8534, 2.3488], 13);
+
+      // Create a Tile layer for the map background
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="https

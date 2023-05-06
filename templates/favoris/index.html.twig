@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+
+{% block stylesheets %}
+	<link rel="icon" type="image/x-icon" href="{{ asset('LOGOKHADAMNI.png') }}">
+	<link rel="stylesheet" href="{{ asset('formation.css') }}">
+	{{ encore_entry_link_tags('app') }}
+{% endblock %}
+
+
+{% block content %}
+	<div class="contenu">
+		<div>
+			<h1 class="mb-4 text-3xl font-extrabold  text-white md:text-5xl lg:text-6xl">
+				Développez votre carrière en IT avec
+				<span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">Khadamni</span>
+			</h1>
+			<p class="text-lg font-normal text-gray-300 lg:text-xl ">Suivez vos emplois favoris en informatique En utilisant Khadamni, vous pouvez économiser du temps et de l'énergie en évitant de chercher des offres d'emploi qui ne correspondent pas à vos critères. Au lieu de cela, vous pouvez vous concentrer sur les offres qui vous intéressent vraiment et maximiser vos chances d'obtenir un emploi qui vous convient parfaitement</p>
+		</div>
+
+
+		<div class="heading">
+
+
+			<div class="tableformations">
+
+				<div class="relative overflow-x-auto  border-2 border-white border-opacity-5 shadow-2xl sm:rounded-lg">
+					<table class="w-full text-sm text-left text-gray-400">
+
+
+						<thead class=" uppercase font-medium bg-white bg-opacity-40 text-blue-600">
+
+							<tr>
+								<th scope="col" class="px-6 py-3">
+									Nom du Emploi
+								</th>
+								<th scope="col" class="px-6 py-3">
+									Salaire
+								</th>
+
+								<th scope="col" class="px-6 py-3">
+									Déscription
+								</th>
+								<th scope="col" class="px-6 py-3">
+									Date De Publication
+								</th>
+
+								<th scope="col" class="px-6 py-3">
+									<span class="sr-only">Edit</span>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="prev-tab">
+							{% for favori in favoris %}
+								<tr>
+									<td>
+										{{ favori.idEmploi.getTitre() }}
+									</td>
+									<td>
+										{{ favori.idEmploi.getSalaire() }}
+										TND
+									</td>
+
+									<td>{{ favori.idEmploi.getDescription() }}
+									</td>
+									<td>
+										{{ favori.idEmploi.getDatePublication().format('Y-m-d') }}
+									</td>
+
+									<td>
+										<form method="post" action="{{ path('app_favoris_delete', {'idFavoris': favori.idFavoris}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+											<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ favori.idFavoris) }}">
+											<button class="btn">
+												<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 24 24">
+													<path d="M0 0h24v24H0V0z" fill="none"/>
+													<path d="M19 7h-3V6c0-1.1-.9-2-2-2H10c-1.1 0-2 .9-2 2v1H5v2h14V7zm-9-1h4v1h-4V6zM4.5 9h15l-1.39 12.63c-.08.69-.67 1.37-1.36 1.37H7.35c-.69 0-1.28-.68-1.36-1.37L4.5 9zm7.5 10c.92 0 1.67.75 1.67 1.67S13.92 22 13 22s-1.67-.75-1.67-1.67.75-1.67 1.67-1.67zm4.92-7l-.71-4H9.79l-.71 4h9.34z"/>
+												</svg>
+											</button>
+										</form>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+						<tbody id="new-tab"></tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>{% endblock %}

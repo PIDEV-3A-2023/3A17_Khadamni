@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Prerequis{% endblock %}
+
+{% block body %}
+    <h1>Prerequis</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdPrerequis</th>
+                <td>{{ prerequi.idPrerequis }}</td>
+            </tr>
+            <tr>
+                <th>NiveauEtude</th>
+                <td>{{ prerequi.niveauEtude }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ prerequi.description }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_prerequis_index') }}">back to list</a>
+
+    <a href="{{ path('app_prerequis_edit', {'idPrerequis': prerequi.idPrerequis}) }}">edit</a>
+
+    {{ include('prerequis/_delete_form.html.twig') }}
+{% endblock %}

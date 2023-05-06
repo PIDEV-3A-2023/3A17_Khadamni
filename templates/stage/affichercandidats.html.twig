@@ -1,0 +1,31 @@
+
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1 class="text-3xl text-white font-medium mb-5">Liste des candidats</h1>
+    <div>
+        <table class="min-w-full shadow-xl  divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+            <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prénom</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Numéro</th>
+
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+            {% for candidat in candidats %}
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ candidat.nom }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ candidat.prenom }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ candidat.email }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ candidat.numTel }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes emplois favoris
+{% endblock %}
+
+{% block content %}
+	<h1>Mes emplois favoris</h1>
+	{% if emplois is empty %}
+		<p>Aucun emploi favori pour le moment.</p>
+	{% else %}
+		<ul>
+			{% for emploi in emplois %}
+				<li>{{ emploi.titre }}</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+{% endblock %}

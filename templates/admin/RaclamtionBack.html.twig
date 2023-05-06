@@ -1,0 +1,92 @@
+{% extends 'admin/AdminDashboard.html.twig' %}
+
+
+
+
+
+ {% block reclamations %}
+     <li class="active">
+         <a href="{{ path('app_reclamation_back') }}">
+             <i class="now-ui-icons design_bullet-list-67"></i>
+             <p>Les Réclamations</p>
+         </a>
+     </li>
+ {% endblock %}
+{% block body %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">
+                                Gérer les réclamations:</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                   	<thead class=" text-primary">
+												<th>
+													ID RÉCLAMATION
+
+												</th>
+												<th>
+													DATE RÉCLAMATION
+												</th>
+												<th>
+													DESCRIPTION
+
+												</th>
+												<th>
+													TYPE RÉCLAMATION
+
+												</th>
+                                                <th>
+                                                    ETAT RÉCLAMATION
+
+                                                </th>
+
+												
+												
+												<th class="text-left">
+													Action
+												</th>
+											</thead>
+                                    <tbody>
+                                    {% for reclamation in reclamations %}
+                                        <tr>
+                                            <td>
+                                                {{ reclamation.idReclamation }}
+                                            </td>
+                                            <td>
+                                               {{ reclamation.dateReclamation ? reclamation.dateReclamation|date('Y-m-d') : '' }}
+                                            </td>
+                                            <td>
+                                                {{ reclamation.description }}
+                                            </td>
+                                            <td>
+                                                {{ reclamation.typeReclamation }}
+
+                                            </td>
+                                            <td>
+                                                {{ reclamation.etat }}
+
+                                            </td>
+
+                                              <td>
+                    <a href="{{ path('app_reclamation_show', {'idReclamation': reclamation.idReclamation}) }}"class="font-medium text-blue-600 dark:text-blue-500 hover:underline border-2">show</a>
+                    {{ include('reclamation/_delete_form.html.twig') }}
+                </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+</div>
+{% endblock %}
+
+
+

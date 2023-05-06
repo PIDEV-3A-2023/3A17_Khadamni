@@ -1,0 +1,89 @@
+{% extends 'admin/AdminDashboard.html.twig' %}
+
+{% block dash %}
+	<li class="active">
+		<a href="{{ path('app_admin_maindashboard') }}">
+			<i class="now-ui-icons design_app"></i>
+			<p>Dashboard</p>
+		</a>
+	</li>
+{% endblock %}
+
+{% block body %}
+
+	<div class="content">
+		<div class="row">
+			<div class="col-lg-4 col-md-6">
+				<div class="card  card-tasks">
+					<div class="card-header ">
+						<h4 class="card-title">Stats des utilisateurs par age</h4>
+					</div>
+					<div class="card-body ">
+						<div class="table-full-width table-responsive">
+							{{render_chart(chart3)}}
+						</div>
+					</div>
+					<div class="card-footer ">
+						<hr>
+						<div class="stats">
+							<i class="now-ui-icons loader_refresh spin"></i>
+							Updated 3 minutes ago
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="card  card-tasks">
+					<div class="card-header ">
+						<h4 class="card-title">Stats par état de réclamation</h4>
+					</div>
+					<div class="card-body ">
+						<div class="table-full-width table-responsive">
+							{{render_chart(chart)}}
+						</div>
+					</div>
+					<div class="card-footer ">
+						<hr>
+						<div class="stats">
+							<i class="now-ui-icons loader_refresh spin"></i>
+							Updated 3 minutes ago
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header">
+						<h4 class="card-title">
+							Stats des réclamations</h4>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive">
+							{{render_chart(chart2)}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 ">
+				<div class="card card-chart">
+					<div class="card-header">
+						<h5 class="card-category">Totale des utilisateurs</h5>
+						<h4 class="card-title">{{user}}</h4>
+						<h5 class="card-category">totale des emplois</h5>
+						<h4 class="card-title">{{emploi}}</h4>
+						<h5 class="card-category">Totale des formation</h5>
+						<h4 class="card-title">{{formation}}</h4>
+
+					</div>
+					<div class="card-body">
+						<div class="chart-area">
+							<canvas id="lineChartExample"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="w-full p-10">
+        <h1 class="text-2xl text-white font-bold">Statistiques des ages</h1>
+
+        <div class="w-full mx-5 p-10 bg-white">{{ render_chart(chart) }}</div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Emploi
+{% endblock %}
+
+{% block content %}
+	<h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white text-center">
+		Ajouter
+		<span class="text-blue-600 dark:text-blue-500">un Emploi</span>
+
+	</h1>
+
+	{{ include('emploi/_form.html.twig') }}
+
+
+{% endblock %}

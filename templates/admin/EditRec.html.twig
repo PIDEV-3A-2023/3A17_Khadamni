@@ -1,0 +1,103 @@
+{% extends 'admin/AdminDashboard.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+
+
+    </style>
+{% endblock %}
+
+  
+
+
+{% block formations %}
+    <li class="active">
+        <a href="tables.html">
+            <i class="now-ui-icons design_bullet-list-67"></i>
+            <p>Les Formations</p>
+        </a>
+    </li>
+{% endblock %}
+{% block body %}
+      <div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Gérer les Reclamations:</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="text-primary">
+                            <tr>
+                                <th>ID RÉCLAMATION</th>
+                                <th>DATE RÉCLAMATION</th>
+                                <th>DESCRIPTION</th>
+                                <th>TYPE RÉCLAMATION</th>
+                                <th> AVIS </th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ reclamation.idReclamation }}</td>
+                                <td>{{ reclamation.dateReclamation ? reclamation.dateReclamation|date('Y-m-d') : '' }}</td>
+                                <td>{{ reclamation.description }}</td>
+                                <td>{{ reclamation.typeReclamation }}</td>
+                                <td>{{ suiviReclamation.avis }}</td>
+                            </tr>
+                        
+                        </tbody>
+
+
+                       
+                    </table>
+                   <div class="row">
+						<div class="col-md-8">
+							<div class="card">
+								<div class="card-header">
+									<h5 class="title"> Traitement De Reclamation</h5>
+								</div>
+								<div class="card-body">
+									<form method="post">
+										{{ form_row(form._token) }}
+										<div class="mb-3">
+											<label for="{{ form.sujet.vars.id }}" class="form-label">Sujet</label>
+											{{ form_widget(form.sujet, {'attr': {'class': 'form-control'}}) }}
+											
+										</div>
+										<div class="mb-3">
+											<label for="{{ form.motif.vars.id }}" class="form-label">Message</label>
+											{{ form_widget(form.motif, {'attr': {'class': 'form-control'}}) }}
+										
+										</div>
+
+                                        <div class="mb-3">
+											<label for="{{ form.etatReclamation.vars.id }}" class="form-label">Etat</label>
+											{{ form_widget(form.etatReclamation, {'attr': {'class': 'form-control'}}) }}
+										
+										</div>
+										
+										
+										
+					
+										<div class="mb-3">
+											<button type="submit" class="btn btn-primary">Envoyer</button>
+										</div>
+									</form>
+
+
+								</div>
+							</div>
+						</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+

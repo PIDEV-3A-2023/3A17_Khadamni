@@ -1,0 +1,69 @@
+{# {% extends 'base.html.twig' %}
+
+{% block title %}New Evenement{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4 text-3xl font-extrabold  text-white md:text-5xl lg:text-6xl">
+                Créer un nouvel
+                <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">évènement</span>
+            </h1>
+
+    {{ include('evenement/_form.html.twig') }}
+
+    <a href="{{ path('app_evenement_index') }}">Retour</a>
+{% endblock %}
+#}
+
+
+{% extends 'base.html.twig'%}
+
+
+ {% block content %}
+
+     <div>
+         <!-- COMPONENT CODE -->
+         <div class="container mx-auto  px-4 ">
+
+             <div class="my-4 md:px-12 flex flex-col  gap-10  mr-auto rounded-2xl shadow-2xl">
+                 <div class="text-center">
+                     <h1  class="font-bold uppercase text-center text-white text-5xl">Ajouter un evenement</h1>
+                 </div>
+                 {{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
+                 <div>
+                     {{ form_label(form.nomevenement,'Nom évènement') }}
+                     {{ form_widget(form.nomevenement) }}
+                     {{ form_errors(form.nomevenement) }}
+                     <div class="grid  gap-5 grid-cols-2 mt-7">
+                         <div>
+                             {{ form_row(form.dateevenement) }}
+                         </div>
+                         <div>
+                             {{ form_label(form.inviter,'Invité') }}
+                             {{ form_widget(form.inviter) }}
+                             {{ form_errors(form.inviter) }}
+                         </div>
+                     </div>
+                     <div class="mt-7">
+                         {{ form_label(form.descriptionevenement,'Description') }}
+                         {{ form_widget(form.descriptionevenement) }}
+                         {{ form_errors(form.descriptionevenement) }}
+                     </div>
+                     <div>
+                         {{ form_label(form.imageFile) }}
+                         {{ form_widget(form.imageFile) }}
+                         {{ form_errors(form.imageFile) }}
+                     </div>
+                 </div>
+
+                 <div class="my-2 self-center">
+                     <button class="block uppercase text-sm font-bold tracking-wide bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded my-10 mx-auto  w-auto  ">
+                         Ajouter
+                     </button>
+                 </div>
+                 {{ form_end(form) }}
+             </div>
+         </div>
+     </div>
+
+ {% endblock %}
+

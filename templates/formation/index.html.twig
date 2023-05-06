@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script defer src="{{ asset('search.js') }}"></script>
+
+{% endblock %}
+
+
+
+{% block content %}
+    <div class="contenu">
+        {% for flashMessage in app.session.flashbag.get('info') %}
+            <div class="alert alert-info bg-green-500 flex flex-col w-full items-center justify-center text-center border border-green-600 text-white  py-4 mb-6 font-medium rounded relative shadow-2xl">
+                {{ flashMessage }}</div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('error') %}
+            <div class="alert alert-info bg-red-100 flex flex-col w-full items-center justify-center text-center border border-red-400 text-red-700   py-4 mb-6 font-medium rounded relative shadow-2xl">
+                {{ flashMessage }}</div>
+        {% endfor %}
+        <div>
+            <h1 class="mb-4 text-3xl font-extrabold  text-white md:text-5xl lg:text-6xl">
+                Développez votre carrière en IT avec
+                <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">Khadamni</span>
+            </h1>
+            <p class="text-lg font-normal text-gray-300 lg:text-xl ">Suivez des formations en informatique sur mesure avec Khadamni : un parcours pédagogique adapté à vos besoins !</p>
+        </div>
+
+        <div class="heading">
+
+            <h1 class="mb-4 text-3xl font-extrabold leading-none tracking-tight text-white">
+                Formation de
+                <mark class="px-2 text-white bg-blue-600 rounded bg-blue-500">QUALITÉ</mark>
+                avec nos meilleurs
+                <span class="underline underline-offset-3 decoration-8 decoration-blue-600 text-white">FORMATEURS</span>
+            </h1>
+
+
+
+        </div>
+        
+       
+        <div class="p-5 mt-10 text-lg font-bold text-left  text-white shadow-xl">
+            <div class="flex">
+                <div>
+                    Nos Formations:
+                    <p class="mt-1 text-sm font-normal white">Parcourez notre liste de formations conçues pour améliorer vos compétences dans le domaine de l'informatique.</p>
+                </div>
+                {% if app.user %}
+                <a href="{{ path('app_inscrit') }}" class="ml-auto inline-flex items-center justify-center self-end px-3 py-3 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800">
+                    Suivre mes inscriptions
+                    <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+            <div class="cards-grid rounded shadow-2xl">
+                {% for f in formations %}
+                <div class="forma-card w-full max-w-sm bg-blue-200 bg-opacity-60 rounded-lg">
+
+                        <img class="h-48 w-full mx-auto rounded-t-lg" src="{{ asset('formationBG.jpeg') }}" alt="product image" />
+
+                    <div class="px-5 pb-5">
+
+                            <h5 class="text-xl font-semibold tracking-tight text-blue-700">{{ f.nomFormation|upper() }}</h5>
+                        <h3 class="text-left text-sm font-medium text-blue-900">
+                            Durée: <span class="">{{ f.duree }} semaines</span>
+                        </h3>
+
+
+                        <div class="flex items-center mt-2.5 mb-5">
+                            <a class="text-blue-900 mr-2 font-medium">Par: {{ f.nomFormateur }} </a>
+                            {% if f.rating != 0 %}
+                                {% for i in range(1, f.rating|round(0, 'floor') ) %}
+                                    <svg aria-hidden="true" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Fourth star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                {% endfor %}
+                                {% set x = 5 - f.rating %}
+                                {% if x>0 and x < 1 %}
+                                    <svg class="h-star w-5 h-4 text-yellow-400 bg-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 640 512"><path d="M341.5 13.5C337.5 5.2 329.1 0 319.9 0s-17.6 5.2-21.6 13.5L229.7 154.8 76.5 177.5c-9 1.3-16.5 7.6-19.3 16.3s-.5 18.1 5.9 24.5L174.2 328.4 148 483.9c-1.5 9 2.2 18.1 9.7 23.5s17.3 6 25.3 1.7l137-73.2 137 73.2c8.1 4.3 17.9 3.7 25.3-1.7s11.2-14.5 9.7-23.5L465.6 328.4 576.8 218.2c6.5-6.4 8.7-15.9 5.9-24.5s-10.3-14.9-19.3-16.3L410.1 154.8 341.5 13.5zM320 384.7V79.1l52.5 108.1c3.5 7.1 10.2 12.1 18.1 13.3l118.3 17.5L423 303c-5.5 5.5-8.1 13.3-6.8 21l20.2 119.6L331.2 387.5c-3.5-1.9-7.4-2.8-11.2-2.8z"/></svg>
+                                {% else %}
+                                    {% set y = x - x|round(0, 'floor') %}
+                                    {% if y>0 and y < 1   %}
+                                        <svg class="h-star text-yellow-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 640 512"><path d="M341.5 13.5C337.5 5.2 329.1 0 319.9 0s-17.6 5.2-21.6 13.5L229.7 154.8 76.5 177.5c-9 1.3-16.5 7.6-19.3 16.3s-.5 18.1 5.9 24.5L174.2 328.4 148 483.9c-1.5 9 2.2 18.1 9.7 23.5s17.3 6 25.3 1.7l137-73.2 137 73.2c8.1 4.3 17.9 3.7 25.3-1.7s11.2-14.5 9.7-23.5L465.6 328.4 576.8 218.2c6.5-6.4 8.7-15.9 5.9-24.5s-10.3-14.9-19.3-16.3L410.1 154.8 341.5 13.5zM320 384.7V79.1l52.5 108.1c3.5 7.1 10.2 12.1 18.1 13.3l118.3 17.5L423 303c-5.5 5.5-8.1 13.3-6.8 21l20.2 119.6L331.2 387.5c-3.5-1.9-7.4-2.8-11.2-2.8z"/></svg>
+                                    {% endif %}
+                                    {% if x|round(0, 'floor') > 0 %}
+                                        {%  for i in range(1,x|round(0, 'floor')  )%}
+                                            <svg aria-hidden="true" class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Fifth star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endif %}
+                                <span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-3">{{ f.rating }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-3xl font-bold text-blue-900">{{ f.prix }}TND</span>
+                            <a href="{{ path('app_show_formation',{ 'id': f.idFormation}) }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Consulter</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+    </div>
+
+{% endblock %}
+
