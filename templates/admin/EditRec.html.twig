@@ -1,24 +1,16 @@
 {% extends 'admin/AdminDashboard.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <style>
 
 
-    </style>
-{% endblock %}
 
-  
-
-
-{% block formations %}
-    <li class="active">
-        <a href="tables.html">
-            <i class="now-ui-icons design_bullet-list-67"></i>
-            <p>Les Formations</p>
-        </a>
-    </li>
-{% endblock %}
+ {% block reclamations %}
+     <li class="active">
+         <a href="{{ path('app_reclamation_back') }}">
+             <i class="now-ui-icons design_bullet-list-67"></i>
+             <p>Les Réclamations</p>
+         </a>
+     </li>
+ {% endblock %}
 {% block body %}
       <div class="row">
     <div class="col-md-12">
@@ -35,7 +27,7 @@
                                 <th>DATE RÉCLAMATION</th>
                                 <th>DESCRIPTION</th>
                                 <th>TYPE RÉCLAMATION</th>
-                                <th> AVIS </th>
+
                                
                             </tr>
                         </thead>
@@ -45,7 +37,7 @@
                                 <td>{{ reclamation.dateReclamation ? reclamation.dateReclamation|date('Y-m-d') : '' }}</td>
                                 <td>{{ reclamation.description }}</td>
                                 <td>{{ reclamation.typeReclamation }}</td>
-                                <td>{{ suiviReclamation.avis }}</td>
+
                             </tr>
                         
                         </tbody>
@@ -53,7 +45,7 @@
 
                        
                     </table>
-                   <div class="row">
+                   <div class="row mx-auto">
 						<div class="col-md-8">
 							<div class="card">
 								<div class="card-header">

@@ -44,6 +44,7 @@ class AdminFormationController extends AbstractController
             else   $refund = number_format($formation->getPrix()-($formation->getPrix()*$progress/100),2);
 
 
+
             // add additional information to inscription array
             $inscriptionWithProgress = [
                 'inscription' => $inscription,

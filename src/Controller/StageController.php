@@ -100,7 +100,7 @@ class StageController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_stage_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_admin_stagesback', [], Response::HTTP_SEE_OTHER);
     }
 
 
@@ -139,7 +139,7 @@ class StageController extends AbstractController
             'idUser' => $user->getIdUser()
         ]);
         if (isset($candiat)) {
-            return $this->redirectToRoute('app_candidature_index');
+            return $this->redirectToRoute('app_candidaturestage_index');
         }
 
 
@@ -148,7 +148,7 @@ class StageController extends AbstractController
         $entityManager->flush();
 
 
-        return $this->redirectToRoute('app_candidature_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_candidaturestage_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/candidats/{idStage}', name: 'app_stage_candidats', methods: ['GET'])]
@@ -248,7 +248,6 @@ class StageController extends AbstractController
                 $prerequis = $entityManager->getRepository(Prerequis::class)->findOneBy(['idStage' => $stage->getIdStage()]);
                 if (isset($prerequis)) {
                     $niveau = $prerequis->getNiveauEtude();
-
                     if (in_array($niveau, $niv))
                         $FiltredStages[] = $stage;
                 }

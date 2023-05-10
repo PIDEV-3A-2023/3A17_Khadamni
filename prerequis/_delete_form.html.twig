@@ -1,4 +1,0 @@
-<form method="post" action="{{ path('app_prerequis_delete', {'idPrerequis': prerequi.idPrerequis}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ prerequi.idPrerequis) }}">
-    <button class="btn">Delete</button>
-</form>

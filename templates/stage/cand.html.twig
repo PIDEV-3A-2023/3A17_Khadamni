@@ -1,65 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block stylesheets %}
-	{{ parent() }}
-	<style>
-		footer {
-			margin-top: 0; !important;
-		}
-		.slider-range-display {
-			background-color: #f5f5f5;
-			border: 1px solid #ccc;
-			border-radius: 3px;
-			color: #333;
-			font-size: 14px;
-			font-weight: bold;
-			padding: 5px;
-			width: 130px;
-		}
-	</style>
-{% endblock %}
-{% block javascripts %}
-	{{ encore_entry_script_tags('app') }}
-	<script defer src="{{ asset('search.js') }}"></script>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
-	<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
 
-
-	<script>
-		$(function () {
-$("#price-slider").slider({
-range: true,
-min: 1,
-max: 5000,
-values: [
-1, 5000
-],
-slide: function (event, ui) {
-$("#amount").val(ui.values[0] + " - " + ui.values[1] + "TND");
-},
-stop: function (event, ui) {}
-});
-$("#amount").val($("#price-slider").slider("values", 0) + " - " + $("#price-slider").slider("values", 1) + " TND");
-});
-$(function () {
-$("#duree-slider").slider({
-range: true,
-min: 1,
-max: 30,
-values: [
-1, 30
-],
-slide: function (event, ui) {
-$("#duree").val(ui.values[0] + " - " + ui.values[1] + " semaines");
-},
-stop: function (event, ui) {}
-});
-$("#duree").val($("#duree-slider").slider("values", 0) + " - " + $("#duree-slider").slider("values", 1) + " semaines");
-});
-	</script>
-
-{% endblock %}
 
 {% block content %}
 
@@ -99,7 +40,7 @@ $("#duree").val($("#duree-slider").slider("values", 0) + " - " + $("#duree-slide
 
 						</tr>
 					</thead>
-					<tbody id="prev-tab">
+					<tbody>
 						{% for candidatures in candidatures %}
 							<tr class="ligne text-white  whitespace-nowrap ">
 								<th scope="row" class="px-6 py-4">
@@ -120,7 +61,7 @@ $("#duree").val($("#duree-slider").slider("values", 0) + " - " + $("#duree-slide
 							</tr>
 						{% endfor %}
 					</tbody>
-					<tbody id="new-tab"></tbody>
+
 				</table>
 			</div>
 		</div>

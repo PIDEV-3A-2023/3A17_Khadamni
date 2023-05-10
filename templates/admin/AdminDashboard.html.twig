@@ -94,6 +94,14 @@
                     </a>
                 </li>
                 {% endblock %}
+                {% block evenemnts %}
+                    <li>
+                        <a href="{{ path('app_evenement_index') }}">
+                            <i class="now-ui-icons design_bullet-list-67"></i>
+                            <p>Les evenements</p>
+                        </a>
+                    </li>
+                {% endblock %}
 
                 <li class="active-pro text-center font-weight-bold   rounded ">
                     <a class="text-info bg-light  opacity-3" href="{{ path('app_logout') }}">

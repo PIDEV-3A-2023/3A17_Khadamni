@@ -48,11 +48,18 @@ success: function (retour) {
 let data = JSON.parse(retour);
 
 if (Object.keys(data).length === 0) {
+	if ($('#res').length) {
+		$('#res').css({
+			'color': 'red',
+		})
+		$('#res').text('Aucun stage trouvé');
+	}
 newgrid.hide()
 newgrid.empty()
 oldgrid.show().fadeIn('fast')
 
 } else {
+	$('#res').text('');
 oldgrid.hide().fadeOut('fast')
 newgrid.empty()
 newgrid.show().fadeIn('fast')
@@ -104,6 +111,7 @@ console.log("Error: " + error + ' ' + status);
 }
 function reset() {
 $('#my-select').prop('selectedIndex', 0);
+$('#res').text('');
 $('input[type="checkbox"]').prop('checked', false);
 let oldgrid = $('#old-grid')
 let newgrid = $('#new-grid')
@@ -182,6 +190,7 @@ $('#reset').on('click', reset)
 							</div>
 						</div>
 					</div>
+					<p id="res" class="font-medium mb-2 h-10 w-full text-center py-2"> </p>
 
 				</div>
 				<div>

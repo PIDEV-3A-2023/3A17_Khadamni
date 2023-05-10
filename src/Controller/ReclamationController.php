@@ -276,8 +276,8 @@ return $this->render('reclamation/stat.html.twig', [
         
 
         $suiviReclamation = $entityManager
-    ->getRepository(SuiviReclamation::class)
-    ->findOneBy(['idReclamation' => $reclamation->getIdReclamation()]);
+        ->getRepository(SuiviReclamation::class)
+        ->findOneBy(['idReclamation' => $reclamation->getIdReclamation()]);
 
         $suivi = new SuiviReclamation() ; 
                 $form = $this->createForm(EtatReclamationType::class,$suivi);

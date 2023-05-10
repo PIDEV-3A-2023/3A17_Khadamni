@@ -108,6 +108,7 @@ class AdminController extends AbstractController
 
 
 
+
     #[Route('/admin/dash',name: 'app_admin_maindashboard')]
     public function mainDashboard(EntityManagerInterface $entityManager, ChartBuilderInterface $chartBuilder)
     {

@@ -5,7 +5,14 @@
         :root {
             --main-color: #4a76a8;
         }
-
+        footer {
+            margin-top: 0; !important;
+        }
+        .prof-m {
+            width: 100%;
+            height: 100%;
+            min-height: 800px;
+        }
         .bg-main-color {
             background-color: var(--main-color);
         }
@@ -29,14 +36,14 @@
 
 
 {% block content %}
-<div class="bg-gray-100  w-full h-full bg-opacity-80">
+<div class="prof-m bg-gray-100  bg-opacity-80">
 
 
 
-    <div class="container mx-auto my-5 p-5">
-        <div class="md:flex no-wrap md:-mx-2 ">
+
+        <div class="md:flex no-wrap md:-mx-2 container h-full mx-auto my-5 p-5">
             <!-- Left Side -->
-            <div class="w-full md:w-3/12 md:mx-2">
+            <div class="w-full h-full bg-white md:w-3/12 md:mx-2">
                 <!-- Profile Card -->
                 <div class="bg-white p-3 border-t-4 border-green-400">
                     <div class="image overflow-hidden">
@@ -104,7 +111,7 @@
                 <!-- End of friends card -->
             </div>
             <!-- Right Side -->
-            <div class="w-full md:w-9/12 mx-2 h-64">
+            <div class="w-full md:w-9/12 mx-2 h-full flex flex-col gap-5">
                 <!-- Profile tab -->
                 <!-- About Section -->
                 <div class="bg-white p-3 shadow-sm rounded-sm">
@@ -151,10 +158,10 @@
                 </div>
                 <!-- End of about section -->
 
-                <div class="my-4"></div>
+
 
                 <!-- Experience and education -->
-                <div class="bg-white p-3 shadow-sm rounded-sm">
+                <div class="bg-white p-3 shadow-sm  rounded-sm">
 
                     <div class="grid grid-cols-2">
                         <div>
@@ -168,7 +175,7 @@
                                 </span>
                                 <span class="tracking-wide">Experience</span>
                             </div>
-                            <ul class="list-inside space-y-2">
+                            <ul class="list-inside text-left space-y-2">
                                 <li>
                                     <div class="text-teal-600">Owner at Her Company Inc.</div>
                                     <div class="text-gray-500 text-xs">March 2020 - Now</div>
@@ -187,6 +194,15 @@
                                 </li>
                             </ul>
                         </div>
+
+                    </div>
+                    <!-- End of Experience and education grid -->
+                </div>
+                <!-- More -->
+                <div class="bg-white p-3 shadow-sm  rounded-sm">
+
+                    <div class="grid grid-cols-2">
+
                         <div>
                             <div class="flex items-center space-x-2 font-semibold text-gray-900 leading-8 mb-3">
                                 <span clas="text-green-500">
@@ -201,7 +217,7 @@
                                 </span>
                                 <span class="tracking-wide">Education</span>
                             </div>
-                            <ul class="list-inside space-y-2">
+                            <ul class="list-inside text-left space-y-2">
                                 <li>
                                     <div class="text-teal-600">Masters Degree in Oxford</div>
                                     <div class="text-gray-500 text-xs">March 2020 - Now</div>
@@ -213,12 +229,12 @@
                             </ul>
                         </div>
                     </div>
-                    <!-- End of Experience and education grid -->
+                    <!-- End of More -->
                 </div>
-                <div class="my-4"></div>
+
                 <!-- End of profile tab -->
             </div>
         </div>
-    </div>
+
 </div>
 {% endblock %}

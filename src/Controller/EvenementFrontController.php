@@ -53,57 +53,6 @@ class EvenementFrontController extends AbstractController
         ]);
     }
 
-    #[Route('/evenement/new', name: 'app_evenement_createFront', methods: ['GET', 'POST'])]
-    public function create(Request $request): Response
-    {
-        $evenement = new Evenement();
-
-        if ($request->isMethod('POST')) {
-            $nom = $request->request->get('nom');
-            $description = $request->request->get('description');
-            $inviter = $request->request->get('inviter');
-            $date = $request->request->get('date');
-
-            // Vérifier que les champs ne sont pas vides
-            if (empty($nom) || empty($description) || empty($inviter) || empty($date)) {
-                $this->addFlash('error', 'Tous les champs sont obligatoires.');
-                return $this->redirectToRoute('app_evenement_createFront');
-            }
-
-            // Vérifier que la date est valide
-            if (!\DateTime::createFromFormat('Y-m-d', $date)) {
-                $this->addFlash('error', 'La date n\'est pas valide.');
-                return $this->redirectToRoute('app_evenement_createFront');
-            }
-
-            // Si tout est OK, créer l'événement
-            $evenement->setNomevenement($nom);
-            $evenement->setDescriptionevenement($description);
-            $evenement->setInviter($inviter);
-            $evenement->setDateevenement(new \DateTime($date));
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($evenement);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'L\'événement a été créé avec succès.');
-            return $this->redirectToRoute('app_evenement_front');
-        }
-
-        return $this->render('evenement/edit.html.twig');
-    }
-    
-    /*#[Route('/evenement/{idevenement}', name: 'app_evenement_showFront', methods: ['GET'])]
-    public function show(Evenement $evenement, MeteoConceptService $meteoService): Response
-    {
-        // Get the weather information for the city where the event is taking place
-        $weather = $meteoService->getWeather($evenement->getCity());
-
-        return $this->render('evenement/show_front.html.twig', [
-            'evenement' => $evenement,
-            'weather' => $weather,
-        ]);
-    }*/
 
     #[Route('/evenement/{idevenement}', name: 'app_evenement_showFront', methods: ['GET'])]
     public function show(Evenement $evenement,EntityManagerInterface $entityManager,Request $request): Response
@@ -119,38 +68,5 @@ class EvenementFrontController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/evenement/cal", name="calendar_index", methods={"GET"})
-     */
-    public function calander(EntityManagerInterface $entityManager)
-    {
-    
-        $entityManager = $this->getDoctrine()->getManager();
-        $userId = 1;
-        $events = $entityManager->createQuery(
-            'SELECT e
-            FROM App\Entity\Evenement e
-            WHERE e.user = :userId'
-        )->setParameter('userId', $userId)
-        ->getResult();
-        
-
-        $rdvs = [];
-
-        foreach($events as $event){
-            $rdvs[] = [
-                'id' => $event->getIdEvent()->getIdEvent(),
-                'start' => $event->getIdEvent()->getDateDebut()->format('Y-m-d H:i:s'),
-                //'end' => $event->getIdEvent()->getDateFin()->format('Y-m-d H:i:s'),
-                'title' => $event->getIdEvent()->getNomEvent(),
-                'description' => $event->getIdEvent()->getDescriptionEvent(),
-                'backgroundColor' => $event->getIdEvent()->getRandom()
-            ];
-        }
-
-        $data = json_encode($rdvs);
-
-        return $this->render('calendrier.html.twig', compact('data'));
-    }
 
 }

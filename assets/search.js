@@ -18,57 +18,70 @@ function callback() {
     let value = $('#search-dropdown').val();
     let prix= [1,5000]
     let duree = [1,30]
+
     if ($('#price-slider').length)
         prix = $('#price-slider').slider("values");
     if ($('#duree-slider').length)
         duree =  $('#duree-slider').slider("values");
 
-    $.ajax({
-        url: "/formation/search",
-        type: 'GET',
-        data: {
-            'searchValue': value,
-            'minPrix' : prix[0],
-            'maxPrix' : prix[1],
-            'minDuree' : duree[0],
-            'maxDuree' : duree[1]
-        },
-        success: function (retour) {
-            let data = JSON.parse(retour);
-            if (Object.keys(data).length === 0) {
-                searchField.style = 'color:red';
-                if ($('#res').length) {
-                    $('#res').css({
-                        'color': 'red',
-                    })
-                    $('#res').text('Aucune résultat trouvée');
+    if(value.length == 0 && prix[0] == 1 && prix[1] == 5000 && duree[0] == 1 && duree[1] == 30)
+    {
+        searchField.style = 'color:blue';
+        $('#res').text('');
+        $('#search-dropdown').val('');
+        reset();
+
+    }
+    else {
+        $.ajax({
+            url: "/formation/search",
+            type: 'GET',
+            data: {
+                'searchValue': value,
+                'minPrix' : prix[0],
+                'maxPrix' : prix[1],
+                'minDuree' : duree[0],
+                'maxDuree' : duree[1]
+            },
+            success: function (retour) {
+                let data = JSON.parse(retour);
+                if (Object.keys(data).length === 0) {
+                    searchField.style = 'color:red';
+                    if ($('#res').length) {
+                        $('#res').css({
+                            'color': 'red',
+                        })
+                        $('#res').text('Aucune résultat trouvée');
+                    }
+
+                    reset();
+                } else {
+                    searchField.style = 'color:green';
+                    if ($('#res').length) {
+                        $('#res').css({
+                            'color': 'green',
+                        })
+                        $('#res').text(data.length + ' formations trouvées');
+                    }
+
+                    $('#prev-tab').hide().fadeOut('fast');
+                    $('#new-tab').empty();
+                    $('#new-tab').show().fadeIn('fast');
+
+                    FillUserArray(data);
                 }
 
-                reset();
-            } else {
-                searchField.style = 'color:green';
-                if ($('#res').length) {
-                    $('#res').css({
-                        'color': 'green',
-                    })
-                    $('#res').text(data.length + ' formations trouvées');
-                }
-
-                $('#prev-tab').hide().fadeOut('fast');
+            },
+            error: function (xhr, status, error) {
+                console.log("Error: " + error + ' ' + status);
+                $('#prev-tab').show();
                 $('#new-tab').empty();
-                $('#new-tab').show().fadeIn('fast');
-
-                FillUserArray(data);
             }
 
-        },
-        error: function (xhr, status, error) {
-            console.log("Error: " + error + ' ' + status);
-            $('#prev-tab').show();
-            $('#new-tab').empty();
-        }
+        });
+    }
 
-    });
+
 
 }
 
@@ -85,7 +98,6 @@ function FillUserArray(data) {
         $('#new-tab').append(
             '<tr class="ligne">' +
             '<th scope="row">' + obj.nomFormation.toUpperCase() + '</th>' +
-            '<td style="min-width: 250px;">' + obj.description + '</td>' +
             '<td>' + obj.duree + ' semaines</td>' +
             '<td>' + obj.prix + ' TND</td>' +
             '<td class="' + uniqueClassName + '"></td>' +
@@ -133,14 +145,6 @@ function FillUserArray(data) {
         };
 
 new Dropdown(dropdown, button, options);
-
-
-
-
-
-
-
-
 
 
 

@@ -27,15 +27,24 @@
                             success: function(response) {
                                 let data = JSON.parse(response);
                                 let rows = '';
-                                $.each(data, function(i, item) {
+                                if (data.length === 0) {
                                     rows += '<tr>';
-                                    rows += '<td>' + item.inscription.idInscription + '</td>';
-                                    rows += '<td>' + item.inscription.idUser.email + '</td>';
-                                    rows += '<td>' + item.progress + '%' + '</td>';
-                                    rows += '<td>' + item.inscription.idFormation.prix + ' TND' + '</td>';
-                                    rows += '<td>' + item.refund  + ' TND' + '</td>';
+                                    rows += '<td colspan="5" class="text-center">Aucun utilisateur inscrit</td>';
                                     rows += '</tr>';
-                                });
+
+                                }
+                                else {
+                                    $.each(data, function(i, item) {
+                                        rows += '<tr>';
+                                        rows += '<td>' + item.inscription.idInscription + '</td>';
+                                        rows += '<td>' + item.inscription.idUser.email + '</td>';
+                                        rows += '<td>' + item.progress.toFixed(2) + '%' + '</td>';
+                                        rows += '<td>' + item.inscription.idFormation.prix + ' TND' + '</td>';
+                                        rows += '<td>' + item.refund  + ' TND' + '</td>';
+                                        rows += '</tr>';
+                                    });
+                                }
+
                                 $('#table-'+idFormation).html(rows);
                             },
                             error: function(xhr, status, error) {
@@ -139,7 +148,7 @@
                                                                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
 
                                                                   <div>
-                                                                      <form method="post" action="{{ path('app_formation_delete', {'idFormation': formation.idFormation}) }}" onsubmit="return confirm('Êtes-vous sûr(e) de vouloir supprimer cet élément ?');">
+                                                                      <form method="post" action="{{ path('app_formation_delete', {'idFormation': formation.idFormation}) }}">
                                                                           <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ formation.idFormation) }}">
                                                                           <button class="btn btn-danger ml-2">Confirmer  </button>
                                                                       </form>

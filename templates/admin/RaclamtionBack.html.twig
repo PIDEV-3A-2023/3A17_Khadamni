@@ -25,7 +25,7 @@
                                 <table class="table">
                                    	<thead class=" text-primary">
 												<th>
-													ID RÉCLAMATION
+													ID
 
 												</th>
 												<th>
@@ -46,8 +46,8 @@
 
 												
 												
-												<th class="text-left">
-													Action
+												<th colspan="1">
+
 												</th>
 											</thead>
                                     <tbody>
@@ -71,10 +71,20 @@
 
                                             </td>
 
+
+
                                               <td>
-                    <a href="{{ path('app_reclamation_show', {'idReclamation': reclamation.idReclamation}) }}"class="font-medium text-blue-600 dark:text-blue-500 hover:underline border-2">show</a>
-                    {{ include('reclamation/_delete_form.html.twig') }}
-                </td>
+                                                  <div class="d-flex justify-content-between w-100">
+                                                      <a href="{{ path('app_reclamation_show', {'idReclamation': reclamation.idReclamation}) }}" class="btn btn-primary">Répondre</a>
+                                                      <a>
+                                                          <form method="post" action="{{ path('app_reclamation_delete', {'idReclamation': reclamation.idReclamation}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
+                                                              <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.idReclamation) }}">
+                                                              <button class="btn btn-danger">Supprimer</button>
+                                                          </form>
+                                                      </a>
+                                                  </div>
+
+                                              </td>
 
                                         </tr>
 

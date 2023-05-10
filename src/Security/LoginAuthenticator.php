@@ -37,7 +37,7 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
         $email = $request->request->get('email', '');
         $code = $this->session->get('info');
         $userCodeInput = $request->request->get('code');
-        if ($code != $userCodeInput) {
+       /* if ($code != $userCodeInput) {
             return new Passport(
                 new UserBadge('accessdenied'),
                 new PasswordCredentials($request->request->get('password', '')),
@@ -46,6 +46,7 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
                 ]
             );
         }
+       */
         
       
         $request->getSession()->set(Security::LAST_USERNAME, $email);
