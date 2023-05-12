@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('LOGOKHADAMNI.png') }}">
+
+    {{ encore_entry_link_tags('app') }}
+
+    <style>
+        .cards-grid {
+
+            margin-top: 6px;
+            padding: 15px;
+            grid-gap: 20px;
+            flex: 1;
+            display: grid;
+            grid-auto-flow: row;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+
+        }
+        .forma-card {
+            justify-self: center;
+
+        }
+    </style>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Function to check if all questions have been answered before submitting the form
+        function validateForm() {
+            // Get all the radio buttons in the form
+            const radioButtons = document.querySelectorAll('input[type="radio"]');
+            let unansweredQuestions = [];
+
+            // Loop through the radio buttons and check if any are unchecked
+            radioButtons.forEach(function (radioButton) {
+                const questionIndex = radioButton.name.replace('question', '');
+                const isChecked = radioButton.checked;
+                if (!isChecked) {
+                    unansweredQuestions.push(questionIndex);
+                }
+            });
+
+            if (unansweredQuestions.length > 0) {
+                const errorMessage = "Veuillez terminer le Quiz ";
+                alert(errorMessage);
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+{% endblock %}
+{% block content %}
+
+    <h1 class="text-5xl font-extrabold text-white">Quiz</h1>
+
+
+
+
+    <div class="w-full">
+            <form action="{{ path('app_user_quizsubmit') }}"  method="POST">
+
+                    <div class="cards-grid rounded shadow-2xl mt-5 w-full">
+                        {% for question in quiz %}
+                        <div class="forma-card w-full max-w-sm bg-white bg-opacity-80 rounded-lg">
+
+
+
+                            <div class="px-5 pb-5">
+
+
+                                <h3 class="text-left text-sm font-medium text-blue-900">
+                                    {{ question.question }}</h3>
+
+                                <div class="flex flex-col justify-between">
+                                    {% for key, answer in question.answers %}
+                                        <div class="flex items-center">
+                                            <input type="radio" name="question{{ loop.parent.loop.index }}" id="answer{{ loop.index }}" value="{{ key }}">
+                                            <label for="answer{{ loop.index }}">{{ answer }}</label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                <button type="submit" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center">Envoyer</button>
+
+
+
+
+            </form>
+        </div>
+
+
+
+
+
+{% endblock %}

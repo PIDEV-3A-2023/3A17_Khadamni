@@ -19,7 +19,7 @@ class EtatReclamationType extends AbstractType
                     'En cours' => 'en_cours',
                     'Non traitee' => 'non_traitee',
                 ],
-                'placeholder' => 'Select status', // Optional placeholder
+                'placeholder' => 'Choisir etat', // Optional placeholder
             ])
             ->add('sujet')
             ->add('motif');

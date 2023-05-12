@@ -9,7 +9,7 @@
 						class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-6xl ">
 					<span class="text-blue-500 ">Formulaire de réclamation</span>
 				</h1>
-				<p class="text-lg font-normal text-gray-400 lg:text-xl ">Veuillez remplir ce formulaire pour soumettre une type de reclamation  ou un commentaire
+				<p class="text-lg font-normal text-gray-400 lg:text-xl ">Veuillez remplir ce formulaire pour soumettre votre réclamation.
 				</p>
 			</div>
      {% for label, messages in app.flashes() %}
@@ -22,11 +22,34 @@
  <div class="container mx-auto px-4  ">
 
              <div class="my-4 md:px-12 flex flex-col  gap-10  mr-auto rounded-2xl shadow-2xl p-5">
-                 <div class="flex">
-                     <h1  class="uppercase text-white text-3xl">Ajouter Votre Reclamtion</h1>
+
+                 {{ form_start(form) }}
+                 <div class="flex flex-col">
+
+
+                     <div class="mt-8 text-left">
+                         {{ form_label(form.description, 'Description :', {'label_attr': {'class': ' text-white text-xl'}}) }}
+                         {{ form_widget(form.description, {'attr': {'class': 'block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-300 dark:border-gray-200 dark:placeholder-gray-200 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500'}}) }}
+
+                     </div>
+
+                     <div class="mt-8 text-left">
+                         {{ form_label(form.typeReclamation, 'Type de Reclamation :', {'label_attr': {'class': 'text-white text-xl'}}) }}
+                         {{ form_widget(form.typeReclamation, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-300 dark:border-gray-200 dark:placeholder-gray-200 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500'}}) }}
+
+                     </div>
+
+
                  </div>
-{{ include('reclamation/_form.html.twig') }}
-</div>
+                 <div class="mt-8">
+                     <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                         Ajouter
+                     </button>
+                 </div>
+                 {{ form_end(form) }}
+
+
+             </div>
 </div>
 
 

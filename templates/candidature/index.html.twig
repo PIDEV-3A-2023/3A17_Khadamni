@@ -1,23 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block stylesheets %}
-	{{ parent() }}
-	<style>
-		footer {
-			margin-top: 0; !important;
-		}
-		.slider-range-display {
-			background-color: #f5f5f5;
-			border: 1px solid #ccc;
-			border-radius: 3px;
-			color: #333;
-			font-size: 14px;
-			font-weight: bold;
-			padding: 5px;
-			width: 130px;
-		}
-	</style>
-{% endblock %}
+
 
 
 {% block content %}
@@ -117,8 +100,8 @@
 			<div
 				class="relative bg-white rounded-lg shadow dark:bg-gray-700">
 				<!-- Modal header -->
-				<div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-					<h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+				<div class="flex p-4 border-b rounded-t">
+					<h3 class="text-xl font-semibold text-gray-900">
 						Evaluation
 					</h3>
 					<button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
@@ -132,10 +115,11 @@
 				<!-- Modal body -->
 				<div class="p-6 space-y-6">
 					<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-						évaluation importante de la qualité des candidatures et de l'égalité des chances dans le processus de sélection en montrant le nombre et le pourcentage
+						Evaluation importante de la qualité des candidatures et de l'égalité des chances dans le processus de sélection en montrant le nombre et le pourcentage
+						de candidats ayant obtenu une note dans une plage de scores particulière.
 					</p>
 					<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-						de candidats ayant obtenu une note dans une plage de scores particulière.
+
 					</p>
 					<div class="border-t border-gray-200 pt-4">
 						<h4 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Rapport d'égalité des chances</h4>

@@ -19,9 +19,13 @@ class ReclamationType extends AbstractType
 {
     
     $builder
-        
-        ->add('description', TextareaType::class, [
-            'attr' => ['rows' => '5'],])
+
+        ->add('description',TextareaType::class,[
+            'attr' => ['placeholder' => 'votre réclamation ...',
+                'rows' => 5
+            ]
+        ])
+
         ->add('typeReclamation', ChoiceType::class, [
             'choices' => [
                 'Reclamation sur un Emploi' => 'Reclamation sur un Emploi',

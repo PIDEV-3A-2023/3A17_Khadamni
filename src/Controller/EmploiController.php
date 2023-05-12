@@ -2,12 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Candidature;
+use App\Entity\Candidaturestage;
 use App\Entity\Emploi;
 use App\Entity\Favoris;
 use App\Entity\User;
 use App\Form\EmploiType;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use FontLib\Table\Type\name;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +22,7 @@ class EmploiController extends AbstractController
     #[Route('/', name: 'app_emploi_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $emplois = $entityManager
             ->getRepository(Emploi::class)
             ->findAll();
@@ -45,7 +49,7 @@ class EmploiController extends AbstractController
         $emplois = $entityManager
             ->getRepository(Emploi::class)
             ->findAll();
-        $user = $this->getUser(); {
+        $user = $this->getUser();
             foreach ($emplois as $emploi) {
                 if (isset($user)) {
                     $Liked = $this->isLikedByUser($emploi->getIdEmploi(), $user->getIdUser(), $entityManager);
@@ -55,13 +59,44 @@ class EmploiController extends AbstractController
                     } else  $emploi->setLiked(false);
                 } else  $emploi->setLiked(false);
             }
-        }
+
         return $this->render('emploi/emploiF.html.twig', [
             'emplois' => $emplois,
 
 
         ]);
     }
+    #[Route('/mesemploisPage', name: 'app_emploi_mesemploi')]
+    public function mesEmploi(EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $user = $this->getUser();
+
+        $mesemplois = $entityManager->getRepository(Emploi::class)->findBy(['idUser'=>$user->getIdUser()]);
+
+        return $this->render('emploi/mesEmplois.html.twig', [
+            'emplois' => $mesemplois,
+        ]);
+    }
+   #[Route('/listeCandidats/{idEmploi}',name:'app_emploi_listedescandidats')]
+   public function listedescandidats(EntityManagerInterface $entityManager,$idEmploi) {
+
+       $candidatures = $entityManager->getRepository(Candidature::class)->findBy([
+           'idEmploi' => $idEmploi
+       ]);
+
+
+       $users = [];
+       foreach ($candidatures as $candidature) {
+           $user = $entityManager->getRepository(User::class)->find($candidature->getIdUser()->getIdUser());
+           $users[] = $user;
+       }
+
+       return $this->render('emploi/CandidatsEmploi.html.twig', [
+           'candidats' => $users,
+           'idEmploi' => $idEmploi
+       ]);
+   }
 
     #[Route('/new', name: 'app_emploi_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -79,7 +114,7 @@ class EmploiController extends AbstractController
             $entityManager->persist($emploi);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_emploi_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_emploi_mesemploi', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('emploi/new.html.twig', [
@@ -105,7 +140,7 @@ class EmploiController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_emploi_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_emploi_mesemploi', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('emploi/edit.html.twig', [
@@ -121,8 +156,13 @@ class EmploiController extends AbstractController
             $entityManager->remove($emploi);
             $entityManager->flush();
         }
+        $ref = $request->headers->get('referer');
+        if (!strpos($ref,'mesemploisPage'))  {
+            return $this->redirectToRoute('app_emploi_index', [], Response::HTTP_SEE_OTHER);
+        }
 
-        return $this->redirectToRoute('app_emploi_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_emploi_mesemploi',[]);
+
     }
 
     #[Route('/detailFront/{idEmploi}', name: 'detail_emploi_front', methods: ['GET'])]
@@ -142,7 +182,6 @@ class EmploiController extends AbstractController
     }
 
     #[Route('/emploiss/{idEmploi}/favoris', name: 'emploi_favoris', methods: ['POST'])]
-
     public function addFavoris(Emploi $emploi, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
@@ -164,34 +203,4 @@ class EmploiController extends AbstractController
 
 
 
-
-
-    // #[Route('/likedEmploi', name: 'app_emploi_liked', methods: ['GET'])]
-    // public function showLikedEmploi(EntityManagerInterface $entityManager): Response
-    // {
-    //     $userId = 1;
-    //     $favorisRepo = $entityManager->getRepository(Favoris::class);
-    //     // $emplois = $favorisRepo->findEmploisByUserId($userId);
-    //     $emplois = $favorisRepo->findAll();
-
-    //     return $this->render('emploi/favoris.html.twig', [
-    //         'emplois' => $emplois,
-    //     ]);
-    // }
-
-
-    // #[Route('/mesemplois', name: 'app_mesemplois', methods: ['GET'])]
-    // public function mesEmploi(EntityManagerInterface $entityManager): Response
-    // {
-    //     $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
-    //     $user = $this->getUser();
-    //     $emplois = $entityManager
-
-    //         ->getRepository(Emploi::class)
-    //         ->findBy(["idUser" => $user]);
-
-    //     return $this->render('Admin/mesemploi.html.twig', [
-    //         'emplois' => $emplois,
-    //     ]);
-    // }
 }

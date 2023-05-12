@@ -48,6 +48,8 @@ class MailerController extends AbstractController
         return $this->redirectToRoute('app_formation_index', [
         ]);
     }
+
+
 }
 
 

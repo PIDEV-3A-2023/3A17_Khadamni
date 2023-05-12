@@ -1,12 +1,12 @@
 {{ form_start(form) }}
-<div class="grid gap-6 mb-6 md:grid-cols-2">
+<div class="grid gap-6 mb-6 md:grid-cols-2 text-white">
 	<div>
-		{{ form_label(form.titre, 'Titre du poste', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
+		{{ form_label(form.titre, 'Titre du poste', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-white'}}) }}
 		{{ form_widget(form.titre, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-300 dark:border-gray-200 dark:placeholder-gray-400 dark:text-blackdark:focus:ring-blue-500 dark:focus:border-blue-500'}}) }}
 		{{ form_errors(form.titre) }}
 	</div>
 	<div>
-		{{ form_label(form.salaire, 'Salaire', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
+		{{ form_label(form.salaire, 'Salaire', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-white'}}) }}
 		{{ form_widget(form.salaire, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-300 dark:border-gray-200 dark:placeholder-gray-200 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500'}}) }}
 		<div class="text-red-500">
 			{{ form_errors(form.salaire) }}
@@ -14,25 +14,23 @@
 	</div>
 </div>
 <div class="mt-8">
-	{{ form_label(form.description, 'Description', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
+	{{ form_label(form.description, 'Déscription', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-white'}}) }}
 	{{ form_widget(form.description, {'attr': {'class': 'block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-300 dark:border-gray-200 dark:placeholder-gray-200 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500'}}) }}
 	{{ form_errors(form.description, {'class': 'appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}) }}
 </div>
 <div class="mt-8">
-	{{ form_label(form.niveauExperience, 'Niveau d\'expérience requis', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
+	{{ form_label(form.niveauExperience, 'Niveau d\'expérience requis', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-white'}}) }}
         {{ form_widget(form.niveauExperience, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-300 dark:border-gray-200 dark:placeholder-gray-200 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500'}}) }}
             {{ form_errors(form.niveauExperience) }}
     </div>
     <div class="mt-8">
-        {{ form_label(form.typeContrat, 'Type de contrat', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
+        {{ form_label(form.typeContrat, 'Type de contrat', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-white'}}) }}
         {{ form_widget(form.typeContrat, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-300 dark:border-gray-200 dark:placeholder-gray-200 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500'}}) }}
             {{ form_errors(form.typeContrat) }}
     </div>
  
      {{ form_errors(form.typeContrat)  }}
-    <div class="absolute top-0 right-0 px-3 py-2">
-      <i class="far fa-calendar-alt"></i>
-    </div>
+
 
 
     <div class="mt-8">

@@ -1,55 +1,77 @@
 {% extends 'base.html.twig' %}
 {% block javascripts %}
+	{{ parent() }}
 	<script>
-		const myForm = document.getElementById('myForm');
 
-myForm.onsubmit = async (e) => {
-e.preventDefault();
-var topic = document.getElementById('topic').value;
-var duration = document.getElementById('duration').value;
+			const myForm = document.getElementById('myForm');
+			myForm.onsubmit = async (e) => {
+				e.preventDefault();
+				let date = document.getElementById('date').value;
+				let heure = document.getElementById('heure').value;
+				let duration = document.getElementById('duration').value;
 
-let response = await fetch('{{ path('app_zoom') }}', {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json'
-},
-body: JSON.stringify(
-{'topic': topic, 'duration': duration}
-)
-});
+				let response = await fetch('{{ path('app_zoom',{'idEmploi':idEmploi,'idUser':idUser}) }}', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(
+							{
+								'date': date,
+								'duration': duration,
+								'heure' : heure
+							}
+					)
+				});
 
-if (! response.ok) {
-throw new Error (`HTTP error! status: ${
-response.status
-}`);
-}
+				if (! response.ok) {
+					throw new Error (`HTTP error! status: ${
+							response.status
+					}`);
+				}
 
-let result = await response.json();
-console.log(result);
-}
+				let result = await response.json();
+
+			}
+
+
+
+
 	</script>
 {% endblock %}
 
 {% block content %}
 	<div class="container mx-auto p-8">
+		{% for flashMessage in app.session.flashbag.get('info') %}
+			<div class="alert alert-info bg-green-500 flex flex-col w-full items-center justify-center text-center border border-green-600 text-white  py-4 mb-6 font-medium rounded relative shadow-2xl">
+				{{ flashMessage }}</div>
+		{% endfor %}
+		{% for flashMessage in app.session.flashbag.get('error') %}
+			<div class="alert alert-info bg-red-100 flex flex-col w-full items-center justify-center text-center border border-red-400 text-red-700   py-4 mb-6 font-medium rounded relative shadow-2xl">
+				{{ flashMessage }}</div>
+		{% endfor %}
 		<div class="bg-white rounded-lg shadow-lg px-4 py-6">
 			<div
 				class="flex justify-center items-center mb-4">{# <img src="https://picsum.photos/600/400/?random" alt="zoom" class="w-16 h-16 rounded-full"> #}
 			</div>
 
 			<form id="myForm" class="flex flex-col">
-				<label for="topic" class="text-lg font-medium mb-2">
-					Topic:
+				<label for="date" class="text-lg font-medium mb-2">
+					Date de l'entretien:
 				</label>
-				<input type="text" name="topic" id="topic" class="border border-gray-400 rounded-lg py-2 px-4 mb-4">
+				<input type="date" name="date" id="date" class="border border-gray-400 rounded-lg py-2 px-4 mb-4">
+				<label for="heure" class="text-lg font-medium mb-2">
+					Heure de l'entretien:
+				</label>
+				<input type="time" name="heure" id="heure" class="border border-gray-400 rounded-lg py-2 px-4 mb-4">
 
 				<label for="duration" class="text-lg font-medium mb-2">
-					Duration:
+					Durée:
 				</label>
 				<input type="number" name="duration" id="duration" class="border border-gray-400 rounded-lg py-2 px-4 mb-4 ">
 
 				<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-					Send
+					Envoyer
 				</button>
 			</form>
 		</div>

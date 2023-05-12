@@ -286,8 +286,8 @@ return $this->render('reclamation/stat.html.twig', [
             
             $suivi = $entityManager->getRepository(SuiviReclamation::class)->findOneBy(['idReclamation' => $reclamation->getIdReclamation()]);
 
-        
-            if ($suivi) {
+
+            if (isset($suivi)) {
                 $suivi->setEtatReclamation($form->get("etatReclamation")->getData());
                 $suivi->setSujet($form->get("sujet")->getData());
                 $suivi->setMotif($form->get("motif")->getData());
@@ -416,10 +416,11 @@ public function messages(Request $request, $idReclamation)
 
     $form = $this->createFormBuilder()
         ->add('avis', TextareaType::class, [
-            'label' => 'Avis'
-        ])
-        ->add('submit', SubmitType::class, [
-            'label' => 'Save'
+            'label' => 'Avis',
+            'attr' => [
+                'rows' => '6',
+                'cols' => '40'
+            ]
         ])
         ->getForm();
 

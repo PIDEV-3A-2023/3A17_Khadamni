@@ -27,6 +27,7 @@
                                 <th>DATE RÉCLAMATION</th>
                                 <th>DESCRIPTION</th>
                                 <th>TYPE RÉCLAMATION</th>
+                                <th>Avis du client</th>
 
                                
                             </tr>
@@ -37,6 +38,7 @@
                                 <td>{{ reclamation.dateReclamation ? reclamation.dateReclamation|date('Y-m-d') : '' }}</td>
                                 <td>{{ reclamation.description }}</td>
                                 <td>{{ reclamation.typeReclamation }}</td>
+                                <td> {{ suiviReclamation.avis }}</td>
 
                             </tr>
                         

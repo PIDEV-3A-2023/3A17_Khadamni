@@ -147,7 +147,7 @@ public function __construct()
     $this->suiviReclamations = new ArrayCollection();
 }
 
-public function getSuiviReclamations(): Collection
+public function getSuiviReclamations()
 {
     return $this->suiviReclamations;
 }

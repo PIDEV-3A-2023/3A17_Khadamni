@@ -100,7 +100,14 @@ class StageController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_admin_stagesback', [], Response::HTTP_SEE_OTHER);
+        $referer = $request->headers->get('referer');
+        if (strpos($referer,'admin')) {
+            return $this->redirectToRoute('app_admin_stagesback', [], Response::HTTP_SEE_OTHER);
+
+        }
+
+        return $this->redirectToRoute('app_stage_index',[]);
+
     }
 
 

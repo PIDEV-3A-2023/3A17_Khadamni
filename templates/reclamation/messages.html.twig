@@ -3,38 +3,39 @@
 {% block title %}Messages{% endblock %}
 
 {% block content %}
-    <h1 class="text-2xl font-bold mb-4 text-white">Messages</h1>
+  <div class="w-full mx-auto p-20">
+    <h1 class="text-3xl font-bold mb-8 text-white">Messages</h1>
 
-<div class="w-1/2">
-  <table class="table-auto w-full border border-gray-300 rounded-lg overflow-hidden">
-    <thead class="bg-blue-500 text-white ml-2">
-      <tr>
-        <th class="px-4 py-2 text-center">Sujet</th>
-        <th class="px-4 py-2 text-center">Motif</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="border-b border-gray-300">
-        <td class="px-4 py-2">{{ suiviReclamation.sujet }}</td>
-        <td class="px-4 py-2">{{ suiviReclamation.motif }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <div class="mt-6 w-1/2 mx-auto">
-        {{ form_start(form) }}
-        {{ form_row(form.avis, {'attr': {'class': 'border border-gray-300 rounded-lg py-2 px-4 block w-full focus:outline-none focus:border-blue-500', 'placeholder': 'Ajouter votre avis ici'}}) }}
-        {{ form_end(form) }}
+    <div class="bg-gray-100 rounded-lg p-4 mb-8 w-full">
+      <table class="table-auto w-full">
+        <thead class="bg-blue-500 text-white">
+        <tr>
+          <th class="px-4 py-2 text-center">Sujet</th>
+          <th class="px-4 py-2 text-center">Motif</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td class="px-4 py-2">{{ suiviReclamation.sujet }}</td>
+          <td class="px-4 py-2">{{ suiviReclamation.motif }}</td>
+        </tr>
+        </tbody>
+      </table>
     </div>
+
+    <div class="bg-gray-100 rounded-lg p-4 mb-8 w-full">
+      <h2 class="text-xl font-bold mb-4">Ajouter votre avis</h2>
+      {{ form_start(form) }}
+      {{ form_row(form.avis, {'attr': {'class': 'border border-gray-300 rounded-lg py-2 px-4 block w-full focus:outline-none focus:border-blue-500', 'placeholder': 'Ajouter votre avis ici'}}) }}
+      <div class="text-center mt-4">
+        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">Envoyer</button>
+      </div>
+      {{ form_end(form) }}
+    </div>
+
+    <div class="text-center">
+      <a href="{{ path('app_reclamation_front') }}" class="text-blue-700 hover:text-blue-900 font-bold">Retour à la page précédente</a>
+    </div>
+
+  </div>
 {% endblock %}

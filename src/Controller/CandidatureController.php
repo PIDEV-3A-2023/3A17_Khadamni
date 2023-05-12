@@ -122,14 +122,14 @@ class CandidatureController extends AbstractController
         $percentageOver50 = ($totalOver20 / $totalCandidates) * 100;
 
         // Génération du rapport
-        $report = "Rapport d'égalité des chances:\n\n"
-            . "Nombre total de candidatures: " . $totalCandidates . "\n"
-            . "Note Mois de 10: " . $totalUnder10 . " (" . round($percentageUnder25, 2) . "%)\n"
-            . "Note entre 10 et 15: " . $totalBetween10And15 . " (" . round($percentageBetween25And50, 2) . "%)\n"
-            . "Note 20: " . $totalOver20 . " (" . round($percentageOver50, 2) . "%)\n";
+        $report =
+             "Nombre total de candidatures: " . $totalCandidates . "\n"
+            . "Nombre de Notes Moins de 10: " . $totalUnder10 . " (" . round($percentageUnder25, 2) . "%)\n"
+            . "Nombre de Notes entre 10 et 15: " . $totalBetween10And15 . " (" . round($percentageBetween25And50, 2) . "%)\n"
+            . "Nombre de Notes égales à  20: " . $totalOver20 . " (" . round($percentageOver50, 2) . "%)\n";
 
-
+        $formattedReport = nl2br($report);
         // Affichage du rapport dans une vue
-        return $report;
+        return $formattedReport;
     }
 }
